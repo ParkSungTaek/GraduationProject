@@ -1,9 +1,146 @@
-<mxfile host="app.diagrams.net" modified="2023-03-10T07:18:10.271Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36" etag="kKjqaKlbRr4KuJh_XITW" version="21.0.6" type="github">
+<mxfile host="app.diagrams.net" modified="2023-03-10T07:56:59.528Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36" etag="H3orvgAJoFNUj97s6SON" version="21.0.6" type="github">
   <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
-    <mxGraphModel dx="1050" dy="541" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1105" dy="2907" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
         <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-6" value="GameManager" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="350" y="-2250" width="230" height="280" as="geometry">
+            <mxRectangle x="280" y="-1100" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-7" value="_soundManager" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-6">
+          <mxGeometry y="30" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-8" value="_networkManager" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-6">
+          <mxGeometry y="60" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-11" value="_DBManager" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-6">
+          <mxGeometry y="90" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-12" value="_poolingManager" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-6">
+          <mxGeometry y="120" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-13" value="_objManager" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-6">
+          <mxGeometry y="150" width="230" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-9" value="Item 3" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-6">
+          <mxGeometry y="180" width="230" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-10" value="" style="endArrow=none;html=1;rounded=0;exitX=0.009;exitY=-0.01;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.991;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="4SLkQNdMUHOu_BhptTHL-6" source="4SLkQNdMUHOu_BhptTHL-9" target="4SLkQNdMUHOu_BhptTHL-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="60" as="sourcePoint" />
+            <mxPoint x="226" y="120" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4SLkQNdMUHOu_BhptTHL-14" target="4SLkQNdMUHOu_BhptTHL-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="640" y="-2205" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-14" value="SoundManager" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="640" y="-2210" width="330" height="240" as="geometry">
+            <mxRectangle x="280" y="-1100" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-18" value="AudioSource[] _audioSources&amp;nbsp;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-14">
+          <mxGeometry y="30" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-19" value="Dictionary&amp;lt;string, AudioClip&amp;gt; _audioClips&amp;nbsp;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-14">
+          <mxGeometry y="60" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-37" value="AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-14">
+          <mxGeometry y="90" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-20" value="void Init()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-14">
+          <mxGeometry y="120" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-21" value="" style="endArrow=none;html=1;rounded=0;exitX=0.009;exitY=-0.01;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.991;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="4SLkQNdMUHOu_BhptTHL-14" source="4SLkQNdMUHOu_BhptTHL-20" target="4SLkQNdMUHOu_BhptTHL-20">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="60" as="sourcePoint" />
+            <mxPoint x="226" y="120" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-26" value="void Play(string path, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-14">
+          <mxGeometry y="160" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-36" value="void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-14">
+          <mxGeometry y="200" width="330" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4SLkQNdMUHOu_BhptTHL-38" target="4SLkQNdMUHOu_BhptTHL-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620" y="-1950" />
+              <mxPoint x="620" y="-2115" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-38" value="PoolManager" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="640" y="-1950" width="370" height="240" as="geometry">
+            <mxRectangle x="280" y="-1100" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-39" value="&lt;div&gt;Dictionary&amp;lt;string, Pool&amp;gt; _pool = new Dictionary&amp;lt;string, Pool&amp;gt;();&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-38">
+          <mxGeometry y="30" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-40" value="Transform _root;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-38">
+          <mxGeometry y="60" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-41" value="AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.Effect)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-38">
+          <mxGeometry y="90" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-42" value="void Init()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-38">
+          <mxGeometry y="120" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-43" value="" style="endArrow=none;html=1;rounded=0;exitX=0.009;exitY=-0.01;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.991;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="4SLkQNdMUHOu_BhptTHL-38" source="4SLkQNdMUHOu_BhptTHL-42" target="4SLkQNdMUHOu_BhptTHL-42">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="60" as="sourcePoint" />
+            <mxPoint x="226" y="120" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-44" value="void Play(string path, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-38">
+          <mxGeometry y="160" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-45" value="void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-38">
+          <mxGeometry y="200" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="4SLkQNdMUHOu_BhptTHL-46" target="4SLkQNdMUHOu_BhptTHL-39">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1020" y="-1920" />
+              <mxPoint x="1020" y="-1905" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-46" value="Pool" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;fontSize=12;" vertex="1" parent="WIyWlLk6GJQsqaUBKTNV-1">
+          <mxGeometry x="1030" y="-1920" width="370" height="180" as="geometry">
+            <mxRectangle x="280" y="-1100" width="60" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-47" value="&lt;div&gt;Stack&amp;lt;Poolable&amp;gt; _poolStack&lt;br&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-46">
+          <mxGeometry y="30" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-50" value="GameObject Original { get; private set; }" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-46">
+          <mxGeometry y="60" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-51" value="" style="endArrow=none;html=1;rounded=0;exitX=0.009;exitY=-0.01;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0.991;entryY=0.015;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="4SLkQNdMUHOu_BhptTHL-46" source="4SLkQNdMUHOu_BhptTHL-50" target="4SLkQNdMUHOu_BhptTHL-50">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="110" y="60" as="sourcePoint" />
+            <mxPoint x="226" y="120" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-52" value="Transform Root { get; set; }" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-46">
+          <mxGeometry y="100" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="4SLkQNdMUHOu_BhptTHL-53" value="void Play(AudioClip audioClip, Define.Sound type = Define.Sound.Effect, float pitch = 1.0f)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="4SLkQNdMUHOu_BhptTHL-46">
+          <mxGeometry y="140" width="370" height="40" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
