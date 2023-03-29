@@ -2,15 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolManager 
+namespace Client
 {
-
-    public void init()
+    public class PoolManager
     {
 
-    }
-    public void Clear()
-    {
+        public void init()
+        {
 
+        }
+        public void Clear()
+        {
+
+        }
     }
 }

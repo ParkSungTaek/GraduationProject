@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Client
 {
-    public class TowerController : MonoBehaviour
+    public class UI_Base : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()
@@ -18,4 +18,5 @@ namespace Client
 
         }
     }
+
 }

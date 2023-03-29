@@ -2,27 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MonsterController : Entity
+namespace Client
 {
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        init();
-    }
-    protected override void init()
-    {
-        //Move(GameManager.InGameData.MonsterSpawn.transform.position);
-    }
-
-    protected override void Dead()
+    public class MonsterController : Entity
     {
 
-    }
-    // Update is called once per frame
-    void FixedUpdate()
-    {
-        Move(GameManager.InGameData.MonsterSpawn.transform.position);
-    }
+        // Start is called before the first frame update
+        void Start()
+        {
+            init();
+        }
+        protected override void init()
+        {
+            //Move(GameManager.InGameData.MonsterSpawn.transform.position);
+        }
 
+        protected override void Dead()
+        {
+
+        }
+        // Update is called once per frame
+        void FixedUpdate()
+        {
+            Move(GameManager.InGameData.MonsterSpawn.transform.position);
+        }
+
+    }
 }

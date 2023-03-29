@@ -4,19 +4,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InputManager 
+namespace Client
 {
-    public Action KeyAction = null;
-    
-    bool _pressed = false;
-    float _pressedTime = 0;
-
-    public void init()
+    public class InputManager
     {
+        public Action KeyAction = null;
 
-    }
-    public void Clear()
-    {
+        bool _pressed = false;
+        float _pressedTime = 0;
 
+        public void init()
+        {
+
+        }
+        public void Clear()
+        {
+
+        }
     }
+
 }

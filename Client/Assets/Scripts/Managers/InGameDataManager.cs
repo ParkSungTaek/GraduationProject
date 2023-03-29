@@ -1,58 +1,63 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static Define;
+using static Client.Define;
 
-public class InGameDataManager
+namespace Client
 {
-    #region state machine
 
-    bool[] _state;
-    MonsterSpawn _monsterSpawn;
-    public MonsterSpawn MonsterSpawn { get { return _monsterSpawn.GetComponent<MonsterSpawn>(); } }
-    public void init()
+    public class InGameDataManager
     {
-        _state = new bool[(int)State.MaxCount];
-        if (_monsterSpawn == null)
-        {
-            GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
-            if (monsterSpawn == null)
-            {
-                monsterSpawn = new GameObject { name = "MonsterSpawn" };
-                monsterSpawn.AddComponent<MonsterSpawn>();
-            }
-            _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
+        #region state machine
 
-        }
-    }
-    
-    public void StateChange(State nowState)
-    {
-        for (State stat = 0; stat < State.MaxCount; stat++)
+        bool[] _state;
+        MonsterSpawn _monsterSpawn;
+        public MonsterSpawn MonsterSpawn { get { return _monsterSpawn.GetComponent<MonsterSpawn>(); } }
+        public void init()
         {
-            if (nowState == stat)
+            _state = new bool[(int)State.MaxCount];
+            if (_monsterSpawn == null)
             {
-                _state[(int)stat] = true;
-            }
-            else
-            {
-                _state[(int)stat] = false;
+                GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
+                if (monsterSpawn == null)
+                {
+                    monsterSpawn = new GameObject { name = "MonsterSpawn" };
+                    monsterSpawn.AddComponent<MonsterSpawn>();
+                }
+                _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
+
             }
         }
-        
-    }
-    public State Stat()
-    {
-        for (State stat = 0; stat < State.MaxCount; stat++)
-        {
-            if (_state[(int)stat])
-            {
-                return stat;
-            }
-        }
-        return State.End;
-    }
-    #endregion
 
-    
+        public void StateChange(State nowState)
+        {
+            for (State stat = 0; stat < State.MaxCount; stat++)
+            {
+                if (nowState == stat)
+                {
+                    _state[(int)stat] = true;
+                }
+                else
+                {
+                    _state[(int)stat] = false;
+                }
+            }
+
+        }
+        public State Stat()
+        {
+            for (State stat = 0; stat < State.MaxCount; stat++)
+            {
+                if (_state[(int)stat])
+                {
+                    return stat;
+                }
+            }
+            return State.End;
+        }
+        #endregion
+
+
+    }
+
 }

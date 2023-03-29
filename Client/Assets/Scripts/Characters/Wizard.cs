@@ -2,25 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Wizard : PlayerController
+namespace Client
 {
-    public override void IsAttack()
+    public class Wizard : PlayerController
     {
+        public override void IsAttack()
+        {
 
+        }
+        public override void IsSkill()
+        {
+
+        }
+
+        protected override void init()
+        {
+            _myClass = Define.Charcter.Wizard;
+            MaxHP = 98754321;
+            MoveSpeed = 10.0f;
+            AttackDMG = 10;
+            Position = Vector2.zero;// 시작위치
+
+
+        }
     }
-    public override void IsSkill()
-    {
-
-    }
-    
-    protected override void init()
-    {
-        _myClass = Define.Charcter.Wizard;
-        MaxHP = 98754321;
-        MoveSpeed = 10.0f;
-        AttackDMG = 10;
-        Position = Vector2.zero;// 시작위치
-
-
-}
 }

@@ -2,14 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NetworkManager 
+namespace Client
 {
-    public void init()
+    public class NetworkManager
     {
+        public void init()
+        {
 
-    }
-    public void Clear()
-    {
+        }
+        public void Clear()
+        {
 
+        }
     }
+
 }

@@ -2,125 +2,128 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SoundManager
+namespace Client
 {
-    AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
-    Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
-
-    public void init()
+    public class SoundManager
     {
-        GameObject root = GameObject.Find("@Sound");
+        AudioSource[] _audioSources = new AudioSource[(int)Define.Sound.MaxCount];
+        Dictionary<string, AudioClip> _audioClips = new Dictionary<string, AudioClip>();
 
-        if (root == null)
+        public void init()
         {
-            root = new GameObject { name = "@Sound" };
-            UnityEngine.Object.DontDestroyOnLoad(root);
-            string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
-            for (int i = 0; i < soundNames.Length - 1; i++)
+            GameObject root = GameObject.Find("@Sound");
+
+            if (root == null)
             {
-                GameObject go = new GameObject { name = soundNames[i] };
-                _audioSources[i] = go.AddComponent<AudioSource>();
-                go.transform.parent = root.transform;
+                root = new GameObject { name = "@Sound" };
+                UnityEngine.Object.DontDestroyOnLoad(root);
+                string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
+                for (int i = 0; i < soundNames.Length - 1; i++)
+                {
+                    GameObject go = new GameObject { name = soundNames[i] };
+                    _audioSources[i] = go.AddComponent<AudioSource>();
+                    go.transform.parent = root.transform;
+                }
+
+                _audioSources[(int)Define.Sound.BGM].loop = true;
+            }
+            else
+            {
+                string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
+                for (int i = 0; i < soundNames.Length - 1; i++)
+                {
+                    GameObject go = root.transform.Find(soundNames[i]).gameObject;
+                    _audioSources[i] = go.GetComponent<AudioSource>();
+                }
+
+                _audioSources[(int)Define.Sound.BGM].loop = true;
+
             }
 
-            _audioSources[(int)Define.Sound.BGM].loop = true;
+
         }
-        else
+
+        /// <summary>
+        /// SFX용 PlayOneShot으로 구현 
+        /// </summary>
+        /// <param name="SFXSound"> Define.SFX Enum 에서 가져오기를 바람 </param>
+        /// <param name="pitch"></param>
+
+        public void Play(Define.SFX SFXSound, float pitch = 1.0f)
         {
-            string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
-            for (int i = 0; i < soundNames.Length - 1; i++)
+            string path = Enum.GetName(typeof(Define.SFX), SFXSound);
+            AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.SFX);
+            Play(audioClip, Define.Sound.SFX, pitch);
+        }
+        /// <summary>
+        /// BGM용 Play로 구현
+        /// </summary>
+        /// <param name="BGMSound">Define.BGM Enum 에서 가져오기를 바람 </param>
+        /// <param name="pitch"></param>
+        public void Play(Define.BGM BGMSound, float pitch = 1.0f)
+        {
+            string path = Enum.GetName(typeof(Define.BGM), BGMSound);
+            AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.BGM);
+            Play(audioClip, Define.Sound.BGM, pitch);
+        }
+
+        public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.SFX, float pitch = 1.0f)
+        {
+            if (audioClip == null)
+                return;
+
+            if (type == Define.Sound.BGM)
             {
-                GameObject go = root.transform.Find(soundNames[i]).gameObject;
-                _audioSources[i] = go.GetComponent<AudioSource>();
+                AudioSource audioSource = _audioSources[(int)Define.Sound.BGM];
+                if (audioSource.isPlaying)
+                    audioSource.Stop();
+
+                audioSource.pitch = pitch;
+                audioSource.clip = audioClip;
+                audioSource.Play();
             }
-
-            _audioSources[(int)Define.Sound.BGM].loop = true;
-
+            else
+            {
+                AudioSource audioSource = _audioSources[(int)Define.Sound.SFX];
+                audioSource.pitch = pitch;
+                audioSource.PlayOneShot(audioClip);
+            }
         }
 
-
-    }
-
-    /// <summary>
-    /// SFX용 PlayOneShot으로 구현 
-    /// </summary>
-    /// <param name="SFXSound"> Define.SFX Enum 에서 가져오기를 바람 </param>
-    /// <param name="pitch"></param>
-
-    public void Play(Define.SFX SFXSound, float pitch = 1.0f)
-    {
-        string path = Enum.GetName(typeof(Define.SFX),SFXSound);
-        AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.SFX);
-        Play(audioClip, Define.Sound.SFX, pitch);
-    }
-    /// <summary>
-    /// BGM용 Play로 구현
-    /// </summary>
-    /// <param name="BGMSound">Define.BGM Enum 에서 가져오기를 바람 </param>
-    /// <param name="pitch"></param>
-    public void Play(Define.BGM BGMSound, float pitch = 1.0f)
-    {
-        string path = Enum.GetName(typeof(Define.BGM), BGMSound);
-        AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.BGM);
-        Play(audioClip, Define.Sound.BGM, pitch);
-    }
-
-    public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.SFX, float pitch = 1.0f)
-    {
-        if (audioClip == null)
-            return;
-
-        if (type == Define.Sound.BGM)
+        AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.SFX)
         {
-            AudioSource audioSource = _audioSources[(int)Define.Sound.BGM];
-            if (audioSource.isPlaying)
-                audioSource.Stop();
+            if (path.Contains("Sounds/") == false)
+                path = $"Sounds/{path}";
 
-            audioSource.pitch = pitch;
-            audioSource.clip = audioClip;
-            audioSource.Play();
-        }
-        else
-        {
-            AudioSource audioSource = _audioSources[(int)Define.Sound.SFX];
-            audioSource.pitch = pitch;
-            audioSource.PlayOneShot(audioClip);
-        }
-    }
+            AudioClip audioClip = null;
 
-    AudioClip GetOrAddAudioClip(string path, Define.Sound type = Define.Sound.SFX)
-    {
-        if (path.Contains("Sounds/") == false)
-            path = $"Sounds/{path}";
-
-        AudioClip audioClip = null;
-
-        if (type == Define.Sound.BGM)
-        {
-            audioClip = GameManager.Resource.Load<AudioClip>(path);
-        }
-        else
-        {
-            if (_audioClips.TryGetValue(path, out audioClip) == false)
+            if (type == Define.Sound.BGM)
             {
                 audioClip = GameManager.Resource.Load<AudioClip>(path);
-                _audioClips.Add(path, audioClip);
             }
+            else
+            {
+                if (_audioClips.TryGetValue(path, out audioClip) == false)
+                {
+                    audioClip = GameManager.Resource.Load<AudioClip>(path);
+                    _audioClips.Add(path, audioClip);
+                }
+            }
+
+            if (audioClip == null)
+                Debug.Log($"AudioClip Missing ! {path}");
+
+            return audioClip;
         }
 
-        if (audioClip == null)
-            Debug.Log($"AudioClip Missing ! {path}");
-
-        return audioClip;
-    }
-
-    public void Clear()
-    {
-        foreach (AudioSource audioSource in _audioSources)
+        public void Clear()
         {
-            audioSource.clip = null;
-            audioSource.Stop();
+            foreach (AudioSource audioSource in _audioSources)
+            {
+                audioSource.clip = null;
+                audioSource.Stop();
+            }
+            _audioClips.Clear();
         }
-        _audioClips.Clear();
     }
 }
