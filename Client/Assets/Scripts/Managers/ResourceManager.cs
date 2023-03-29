@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class ResourceManager 
 {
+
+
     //Dictionary<string,Object> 암튼암튼 캐싱은 여기서
+
+    Dictionary<Define.Item, Item> 인벤토리;
+
+
+
     public void init()
     {
 

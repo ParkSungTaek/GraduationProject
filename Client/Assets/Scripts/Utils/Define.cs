@@ -22,6 +22,9 @@ public class Define
     }
     public enum BGM
     {
+        
+
+
         MaxCount
     }
     public enum SFX
@@ -38,6 +41,18 @@ public class Define
 
         MaxCount
     }
+    public enum State
+    {
+        Play,
+        End,
+        Pause,
+        MaxCount
+    }
 
+
+    public enum Item
+    {
+        MaxCount
+    }
 
 }

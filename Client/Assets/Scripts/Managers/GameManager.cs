@@ -27,12 +27,9 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         init();
-    }
-
-    private void Update()
-    {
         
     }
+
     static void init()
     {
         if (_instance == null)
@@ -43,13 +40,17 @@ public class GameManager : MonoBehaviour
                 gm = new GameObject { name = "GameManager" };
                 gm.AddComponent<GameManager>();
             }
+            _instance = gm.GetComponent<GameManager>();
+            DontDestroyOnLoad(gm);
 
             _instance._inputManager.init();
             _instance._networkManager.init();
             _instance._poolManager.init();
             _instance._resourceManager.init();
             _instance._soundManager.init();
+            _instance._inGameDataManager.init();
 
+            _instance._inGameDataManager.StateChange(Define.State.Play);
         }
 
     }
@@ -60,7 +61,6 @@ public class GameManager : MonoBehaviour
         _instance._poolManager.Clear();
         _instance._resourceManager.Clear();
         _instance._soundManager.Clear();
-
     }
 
 }
