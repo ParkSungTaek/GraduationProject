@@ -33,7 +33,11 @@ public class Define
     {
         MaxCount
     }
+    public enum System
+    {
 
+        MaxCount
+    }
 
 
 }
