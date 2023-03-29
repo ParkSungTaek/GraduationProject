@@ -17,9 +17,18 @@ public class Define
     public enum Sound
     {
         BGM,
-        Effect,
+        SFX,
         MaxCount
     }
+    public enum BGM
+    {
+        MaxCount
+    }
+    public enum SFX
+    {
+        MaxCount
+    }
+
     public enum Button
     {
         MaxCount
