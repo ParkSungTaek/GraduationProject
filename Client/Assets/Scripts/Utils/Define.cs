@@ -63,5 +63,11 @@ namespace Client
             MaxCount
         }
 
+        public enum UIEvent
+        {
+            Click,
+            Drag,
+            MaxCount
+        }
     }
 }

@@ -13,13 +13,14 @@ namespace Client
         ResourceManager _resourceManager = new ResourceManager();
         SoundManager _soundManager = new SoundManager();
         InGameDataManager _inGameDataManager = new InGameDataManager();
+        UIManager _uiManager = new UIManager();
         public static InputManager Input { get { return Instance._inputManager; } }
         public static NetworkManager Network { get { return Instance._networkManager; } }
         public static PoolManager Pool { get { return Instance._poolManager; } }
         public static ResourceManager Resource { get { return Instance._resourceManager; } }
         public static SoundManager Sound { get { return Instance._soundManager; } }
         public static InGameDataManager InGameData { get { return Instance._inGameDataManager; } }
-
+        public static UIManager UI { get { return Instance._uiManager; } }
         #endregion
 
         public static void 의논이필요함()

@@ -6,17 +6,9 @@ namespace Client
 {
     public class UI_Scene : UI_Base
     {
-        // Start is called before the first frame update
-        void Start()
+        public override void Init()
         {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
+            GameManager.UI.SetCanvas(gameObject, false);
         }
     }
-
 }

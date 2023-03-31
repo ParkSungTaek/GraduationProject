@@ -6,17 +6,14 @@ namespace Client
 {
     public class UI_PopUp : UI_Base
     {
-        // Start is called before the first frame update
-        void Start()
+        public override void Init()
         {
-
+            GameManager.UI.SetCanvas(gameObject, true);
         }
 
-        // Update is called once per frame
-        void Update()
+        public virtual void ClosePopUpUI()
         {
-
+            GameManager.UI.ClosePopUpUI(this);
         }
     }
-
 }
