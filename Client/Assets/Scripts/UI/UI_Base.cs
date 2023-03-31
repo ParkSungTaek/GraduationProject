@@ -70,7 +70,19 @@ namespace Client
         /// <param name="type">이벤트 발생 조건</param>
         public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
         {
-            //*need : event 할당
+            UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);
+
+            switch(type)
+            {
+                case Define.UIEvent.Click:
+                    evt.OnClickHandler -= action;
+                    evt.OnClickHandler += action;
+                    break;
+                case Define.UIEvent.Drag:
+                    evt.OnDragHandler -= action;
+                    evt.OnDragHandler += action;
+                    break;
+            }
         }
     }
 }
