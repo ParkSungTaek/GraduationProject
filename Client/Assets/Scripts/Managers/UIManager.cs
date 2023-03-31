@@ -67,10 +67,13 @@ namespace Client
             if(string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
-            //*need : ui 积己
-            //*need : _sceneUI肺 汲沥
+            GameObject go = GameManager.Resource.Instantiate($"UI/Scene/{name}");
+            T sceneUI = Util.GetOrAddComponent<T>(go);
+            _sceneUI = sceneUI;
 
-            return default(T);
+            go.transform.SetParent(Root.transform);
+
+            return sceneUI;
         }
 
         /// <summary>
@@ -83,9 +86,13 @@ namespace Client
             if(string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
-            //*need : ui 积己
-            //*need : popup stack俊 push
-            return default(T);
+            GameObject go = GameManager.Resource.Instantiate($"UI/PopUp/{name}");
+            T popupUI = Util.GetOrAddComponent<T>(go);
+            _popupStack.Push(popupUI);
+
+            go.transform.SetParent(Root.transform);
+
+            return popupUI;
         }
 
         /// <summary>

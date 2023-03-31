@@ -40,6 +40,20 @@ namespace Client
             return Resources.Load<T>(path);
         }
 
+        public GameObject Instantiate(string path, Transform parent = null)
+        {
+            GameObject original = Load<GameObject>($"Prefabs/{path}");
+            if(original == null)
+            {
+                Debug.LogError($"Failed to load prefab : {path}");
+                return null;
+            }    
+
+            GameObject go = Object.Instantiate(original, parent);
+            go.name = original.name;
+            return go;
+        }
+
         public void Clear()
         {
 

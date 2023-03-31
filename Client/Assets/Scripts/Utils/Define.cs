@@ -63,10 +63,29 @@ namespace Client
             MaxCount
         }
 
+        /// <summary>
+        /// UI Event 종류 지정
+        /// </summary>
         public enum UIEvent
         {
             Click,
             Drag,
+        }
+
+        /// <summary>
+        /// Scene UI Prefab들 이름 지정
+        /// </summary>
+        public enum SceneUIs
+        {
+            TestScene,
+            MaxCount
+        }
+
+        /// <summary>
+        /// PopUp UI Prefab들 이름 지정
+        /// </summary>
+        public enum PopUpUIs
+        {
             MaxCount
         }
     }
