@@ -14,12 +14,14 @@ namespace Client
         }
         protected override void init()
         {
-            //Move(GameManager.InGameData.MonsterSpawn.transform.position);
+            MaxHP = 100;
+            AttackDMG = 5;
+            MoveSpeed = 3.0f;
         }
 
         protected override void Dead()
         {
-
+            Destroy(gameObject);
         }
         // Update is called once per frame
         void FixedUpdate()

@@ -35,14 +35,8 @@ namespace Client
         }
 
         public void Move(Vector3 _destPos)
-        {
-            Vector3 dir = _destPos - transform.position;
-            //dir.y = 0;
-
-            float moveDist = Mathf.Clamp(_moveSpeed * Time.deltaTime, 0, dir.magnitude);
-            transform.position += dir.normalized * moveDist;
-            //transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(dir), 20 * Time.deltaTime);
-
+        {            
+            transform.position = Vector3.MoveTowards(transform.position, _destPos, _moveSpeed * Time.deltaTime);
         }
     }
 }

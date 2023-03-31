@@ -56,6 +56,12 @@ namespace Client
         {
             MaxCount
         }
+        public enum Tag
+        {
+            Monster,
+            Tower,
+            MaxCount
+        }
 
     }
 }

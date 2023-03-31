@@ -20,7 +20,7 @@ namespace Client
         void init()
         {
             SpawnPoint = new GameObject[SpawnPointNum];
-            Monster = Resources.Load<GameObject>("Prefabs/Monster");
+            Monster = Resources.Load<GameObject>("Prefabs/Monster/Monster");
             for (int i = 0; i < SpawnPointNum; i++)
             {
                 SpawnPoint[i] = new GameObject { name = $"SpawnPoint{i}" };

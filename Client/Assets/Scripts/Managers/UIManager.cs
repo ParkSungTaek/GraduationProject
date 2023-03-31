@@ -17,6 +17,11 @@ namespace Client
 
         /// <summary>
         /// UI의 부모 
+        /// 
+        /// GameObject root 밖으로 빼고 
+        /// if(root == null)
+        ///     GameObject root = GameObject.Find("UIRoot");
+        /// 하면 좀 더 싸지 않을까...하는 생각을 한번 해봄. 왠지 엄청 자주 접근할것 같은데 매번 Find면 조금 마음 아프달까......
         /// </summary>
         public GameObject Root
         {

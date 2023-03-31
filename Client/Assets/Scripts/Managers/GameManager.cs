@@ -53,6 +53,8 @@ namespace Client
                 _instance._inGameDataManager.init();
 
                 _instance._inGameDataManager.StateChange(Define.State.Play);
+
+                //Instantiate(_instance._inGameDataManager.Tower.gameObject , _instance._inGameDataManager.MonsterSpawn.transform);
             }
 
         }
