@@ -6,10 +6,11 @@ using UnityEngine.EventSystems;
 
 namespace Client
 {
-    public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler
+    public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IDragHandler, IEndDragHandler
     {
         public Action<PointerEventData> OnClickHandler = null;
         public Action<PointerEventData> OnDragHandler = null;
+        public Action<PointerEventData> OnDragEndHandler = null;
 
         public void OnPointerClick(PointerEventData eventData)
         {
@@ -19,6 +20,11 @@ namespace Client
         public void OnDrag(PointerEventData eventData)
         {
             OnDragHandler?.Invoke(eventData);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            OnDragEndHandler?.Invoke(eventData);
         }
     }
 }

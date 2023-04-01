@@ -82,6 +82,10 @@ namespace Client
                     evt.OnDragHandler -= action;
                     evt.OnDragHandler += action;
                     break;
+                case Define.UIEvent.DragEnd:
+                    evt.OnDragEndHandler -= action;
+                    evt.OnDragEndHandler += action;
+                    break;
             }
         }
     }

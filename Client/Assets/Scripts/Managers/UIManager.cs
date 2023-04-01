@@ -44,9 +44,7 @@ namespace Client
         /// <param name="sort">canvas 정렬 여부(popup->true, scene->false)</param>
         public void SetCanvas(GameObject go, bool sort = true)
         {
-            Canvas canvas = go.GetComponent<Canvas>();
-            if(canvas == null)
-                canvas = go.AddComponent<Canvas>();
+            Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
 
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.overrideSorting = true;
@@ -105,7 +103,7 @@ namespace Client
 
             if (_popupStack.Peek() != popup)
             {
-                Debug.LogError("Pop Up Doesn't match. Can't close pop up.");
+                Debug.LogError("Pop Up doesn't match. Can't close pop up.");
                 return;
             }
 
