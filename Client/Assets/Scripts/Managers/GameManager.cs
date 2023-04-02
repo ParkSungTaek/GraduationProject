@@ -55,6 +55,21 @@ namespace Client
             }
 
         }
+        public static void GameOver()
+        {
+            Time.timeScale = 0;
+            InGameData.StateChange(Define.State.End);
+            Instantiate(GameManager.InGameData.GameOver).transform.parent = GameObject.Find("Canvas").transform;
+
+
+        }
+        public static void GameStart()
+        {
+            Time.timeScale = 1;
+            InGameData.StateChange(Define.State.Play);
+
+
+        }
         public static void Clear()
         {
             _instance._inputManager.Clear();

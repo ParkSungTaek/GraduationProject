@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Client
 {
@@ -10,10 +11,16 @@ namespace Client
         int _maxhp;
         int _attackDMG;
         float _moveSpeed;
+        float _attackSpeed;
         Vector2 _position;
+        Slider _hpBarSlider;
 
         protected int MaxHP { get { return _maxhp; } set { _maxhp = value; } }
+        protected int Nowhp { get { return _nowhp; } set { _nowhp = value; if (_nowhp < 0) { _nowhp = 0; } } }
+        public float AttackSpeed { get { return _attackSpeed; } set { _attackSpeed = value;} }
 
+        public Slider HpBarSlider { get { return _hpBarSlider; } set { _hpBarSlider = value; } }
+        
         protected float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
         public int AttackDMG { get { return _attackDMG; } set { _attackDMG = value; } }
         public Vector2 Position { get { return _position; } set { _position = value; } }
@@ -25,12 +32,20 @@ namespace Client
             init();
         }
 
-        public void BeAttacked(int DMG)
+        public virtual void BeAttacked(int DMG)
         {
             _nowhp -= DMG;
-            if (_nowhp < 0)
+            if (_nowhp <= 0)
             {
                 Dead();
+            }
+            if (_hpBarSlider != null)
+            {
+                _hpBarSlider.value = (float)Nowhp / (float)MaxHP;
+            }
+            else
+            {
+                Debug.Log($"{name} Don't have HpBar!");
             }
         }
 

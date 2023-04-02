@@ -1,56 +1,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static Client.Define;
 
 namespace Client
 {
     public class InGameDataManager
     {
-        #region state machine
-
-        bool[] _state;
         MonsterSpawn _monsterSpawn;
         TowerController _tower;
+        GameObject _monsterHpBar;
+        GameObject _gameOver;
+
 
         public MonsterSpawn MonsterSpawn { get { return _monsterSpawn; } }
         public TowerController Tower { get { return _tower; } }
+        public GameObject MonsterHpBar { get { return _monsterHpBar; } }
+        public GameObject GameOver { get { return _gameOver; } }
+
+
+        #region state machine
+
+        bool[] _state;
+
+
 
         /// <summary>
         /// 굳이 이런식으로 적어두는 이유는 Play누르기 전에 배치 해보고 Play해보고도 싶기 때문 
         /// 배치 하든 말든 하나만 잘 나오도록
         /// </summary>
-        public void init()
-        {
-            if (_state == null)
-            {
-                _state = new bool[(int)State.MaxCount];
-            }
-            if (_monsterSpawn == null)
-            {
-                GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
-                if (monsterSpawn == null)
-                {
-                    monsterSpawn = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Monster/MonsterSpawn"));
-                    monsterSpawn.name = "MonsterSpawn";
-                }
-                _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
-            }
 
-            if (_tower == null)
-            {
-                GameObject tower = GameObject.Find("Tower");
-                if (tower == null)
-                {
-                    tower = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Tower/Tower"));
-                    tower.name = "Tower";
-                }
-                _tower = tower.GetComponent<TowerController>();
-                
-            }
-
-
-        }
 
         public void StateChange(State nowState)
         {
@@ -80,6 +60,40 @@ namespace Client
         }
         #endregion
 
+        public void init()
+        {
+            if (_state == null)
+            {
+                _state = new bool[(int)State.MaxCount];
+            }
+            if (_monsterSpawn == null)
+            {
+                GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
+                if (monsterSpawn == null)
+                {
+                    monsterSpawn = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Monster/MonsterSpawn"));
+                    monsterSpawn.name = "MonsterSpawn";
+                }
+                _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
+            }
+
+            if (_tower == null)
+            {
+                GameObject tower = GameObject.Find("Tower");
+                if (tower == null)
+                {
+                    tower = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Tower/Tower"));
+                    tower.name = "Tower";
+                }
+                _tower = tower.GetComponent<TowerController>();
+
+            }
+
+            _monsterHpBar = Resources.Load<GameObject>("Prefabs/UI/MonsterHP");
+            _gameOver = Resources.Load<GameObject>("Prefabs/UI/GameOver");
+
+
+        }
 
     }
 
