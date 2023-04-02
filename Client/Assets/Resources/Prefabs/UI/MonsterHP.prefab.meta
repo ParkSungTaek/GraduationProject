@@ -1,9 +1,5 @@
 fileFormatVersion: 2
-<<<<<<< Updated upstream:Client/Assets/Resources/Prefabs/MonsterSpawn.prefab.meta
-guid: ad8e2837c2c48a348971814c01acda9c
-=======
-guid: 6fe48816a34653c41b7615cdc264f0d5
->>>>>>> Stashed changes:Client/Assets/Resources/Prefabs/UI/MonsterHP.prefab.meta
+guid: 73e926f80ffdcd0478e7b696311cae1e
 PrefabImporter:
   externalObjects: {}
   userData: 

@@ -59,7 +59,7 @@ namespace Client
         {
             Time.timeScale = 0;
             InGameData.StateChange(Define.State.End);
-            Instantiate(GameManager.InGameData.GameOver).transform.parent = GameObject.Find("Canvas").transform;
+            //Instantiate(GameManager.InGameData.GameOver).transform.parent;
 
 
         }

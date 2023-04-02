@@ -14,13 +14,16 @@ namespace Client
 
         float MonsterToMonster = 1.0f;
         float WaveToWave = 1.0f;
-
+        Transform _monsterHPCanvas;
+        public Transform MonsterHPCanvas { get { return _monsterHPCanvas; } }
 
 
         void init()
         {
             SpawnPoint = new GameObject[SpawnPointNum];
             Monster = Resources.Load<GameObject>("Prefabs/Monster/Monster");
+            _monsterHPCanvas = GameManager.UI.ShowSceneUI<UI_Scene>("MonsterHPCanvas").transform;
+
             for (int i = 0; i < SpawnPointNum; i++)
             {
                 SpawnPoint[i] = new GameObject { name = $"SpawnPoint{i}" };

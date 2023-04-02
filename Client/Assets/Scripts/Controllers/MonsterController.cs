@@ -27,7 +27,8 @@ namespace Client
             MoveSpeed = 3.0f;
             AttackSpeed = 1.0f;
             _monsterHpBar = Instantiate(GameManager.InGameData.MonsterHpBar);
-            _monsterHpBar.transform.parent = GameObject.Find("MonsterHPCanvas").transform;
+            _monsterHpBar.transform.parent = GameManager.InGameData.MonsterSpawn.MonsterHPCanvas;
+
             HpBarSlider = _monsterHpBar.GetComponent<Slider>();
 
         }
