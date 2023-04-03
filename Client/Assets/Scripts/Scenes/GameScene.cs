@@ -11,7 +11,6 @@ namespace Client
         {
             GameManager.InGameData.StateChange(Define.State.Play);
             GameManager.UI.ShowSceneUI<UI_GameScene>();
-
         }
     }
 }

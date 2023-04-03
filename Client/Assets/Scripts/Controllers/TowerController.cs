@@ -21,7 +21,7 @@ namespace Client
             _towerHpBar = Instantiate(Resources.Load<GameObject>("Prefabs/UI/TowerHP"));
             Tower_UI_Scene = GameManager.UI.ShowSceneUI<UI_Scene>("TowerHPCanvas").transform;
 
-            _towerHpBar.transform.parent = Tower_UI_Scene;
+            _towerHpBar.transform.SetParent(Tower_UI_Scene);
 
             HpBarSlider = _towerHpBar.GetComponent<Slider>();
 

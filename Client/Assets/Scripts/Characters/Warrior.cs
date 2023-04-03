@@ -9,11 +9,11 @@ namespace Client
     {
         public override void IsAttack()
         {
-
+            NearMoster().BeAttacked(AttackDMG);
         }
         public override void IsSkill()
         {
-
+            NearMoster().BeAttacked(Mathf.RoundToInt(AttackDMG * 1.5f));
         }
 
         protected override void init()

@@ -117,7 +117,7 @@ namespace Client
             if (_popupStack.Count <= 0) return;
 
             UI_PopUp popup = _popupStack.Pop();
-            Object.Destroy(popup);
+            UnityEngine.Object.Destroy(popup.gameObject);
             _order--;
         }
 

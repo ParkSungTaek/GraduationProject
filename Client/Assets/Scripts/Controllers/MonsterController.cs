@@ -27,7 +27,7 @@ namespace Client
             MoveSpeed = 3.0f;
             AttackSpeed = 1.0f;
             _monsterHpBar = Instantiate(GameManager.InGameData.MonsterHpBar);
-            _monsterHpBar.transform.parent = GameManager.InGameData.MonsterSpawn.MonsterHPCanvas;
+            _monsterHpBar.transform.SetParent(GameManager.InGameData.MonsterSpawn.MonsterHPCanvas);
 
             HpBarSlider = _monsterHpBar.GetComponent<Slider>();
 
@@ -35,6 +35,8 @@ namespace Client
 
         protected override void Dead()
         {
+            GameManager.InGameData.MonsterSpawn.Monsters.Remove(this);
+            Destroy(_monsterHpBar);
             Destroy(gameObject);
         }
         // Update is called once per frame

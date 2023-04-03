@@ -14,13 +14,22 @@ namespace Client
             Skill,
         }
 
-
+        /// <summary>
+        /// 내 직업
+        /// </summary>
         protected Define.Charcter _myClass;
-        List<Item> _items = new List<Item>(); //아이템을 +-하며 전체를 계속 참조할거라 List
+        /// <summary>
+        /// 현재 가지고 있는 아이템 리스트
+        /// </summary>
+        List<Item> _items = new List<Item>();
+
         public List<Item> MyItems { get { return _items; } }
         public Define.Charcter MyClass { get { return _myClass; } }
-        PlayerState _state = PlayerState.Idle;
 
+        /// <summary>
+        /// 현재 플레이어 상태
+        /// </summary>
+        PlayerState _state = PlayerState.Idle;
         /// <summary>
         /// 이동 방향 벡터
         /// </summary>
@@ -35,12 +44,21 @@ namespace Client
             transform.Translate(_moveDirection * Time.deltaTime * MoveSpeed);
         }
 
+        #region Joystick
+        /// <summary>
+        /// 조이스틱에 따라 방향 결정
+        /// </summary>
+        /// <param name="dir"></param>
         public void SetDirection(Vector2 dir)
         {
             _state = PlayerState.Move;
             _moveDirection = dir;
         }
+        /// <summary>
+        /// 조이스틱 조작 종료
+        /// </summary>
         public void StopMove() => _state = PlayerState.Idle;
+        #endregion Joystick
 
         private void FixedUpdate()
         {
@@ -48,9 +66,29 @@ namespace Client
                 IsMove();
         }
 
-        public MonsterController NearMoster()
+        /// <summary>
+        /// 가장 가까운 몬스터 반환
+        /// </summary>
+        protected MonsterController NearMoster()
         {
-            return new MonsterController();
+            List<MonsterController> monsters = GameManager.InGameData.MonsterSpawn.Monsters;
+
+            if (monsters.Count <= 0)
+                return null;
+
+            MonsterController nearMon = monsters[0];
+            float pivotDis = Vector3.Distance(transform.position, nearMon.transform.position);
+            for(int i = 1; i < monsters.Count;i++)
+            {
+                float currDis = Vector3.Distance(transform.position, monsters[i].transform.position);
+                if (currDis < pivotDis)
+                {
+                    pivotDis = currDis;
+                    nearMon = monsters[i];
+                }
+            }
+
+            return nearMon;
         }
     }
 }

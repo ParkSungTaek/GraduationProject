@@ -17,6 +17,12 @@ namespace Client
         Transform _monsterHPCanvas;
         public Transform MonsterHPCanvas { get { return _monsterHPCanvas; } }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        List<MonsterController> _monsters = new List<MonsterController>();
+        public List<MonsterController> Monsters { get { return _monsters; } }
+
 
         void init()
         {
@@ -46,7 +52,8 @@ namespace Client
             while (GameManager.InGameData.Stat() == Define.State.Play)
             {
 
-                Instantiate(Monster, SpawnPoint[Random.Range(0, SpawnPointNum)].transform);
+                MonsterController mon = Instantiate(Monster, SpawnPoint[Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
+                _monsters.Add(mon);
                 yield return new WaitForSecondsRealtime(MonsterToMonster);
             }
         }

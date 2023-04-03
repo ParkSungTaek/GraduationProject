@@ -1,12 +1,41 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 namespace Client
 {
     public class UI_GameScene : UI_Scene
     {
+        PlayerController _player;
+
+        enum GameObjects
+        {
+            joystickBG,
+            joystickHandle,
+        }
+
+        enum Buttons
+        {
+            AttackBtn,
+            SkillBtn,
+            ItemBtn,
+        }
+
+        public override void Init()
+        {
+            base.Init();
+            Bind<GameObject>(typeof(GameObjects));
+            Bind<Button>(typeof(Buttons));
+
+            JoystickBind();
+            ButtonBind();
+
+            GameObject playerGO = GameManager.Resource.Instantiate("Player/TestPlayer");
+            _player = Util.GetOrAddComponent<Warrior>(playerGO);
+        }
+
+
+        #region Joystick
         /// <summary>
         /// joystick handle 기본 위치
         /// </summary>
@@ -26,26 +55,6 @@ namespace Client
         /// </summary>
         Vector2 _directionVector = Vector2.zero;
 
-        PlayerController _player;
-
-        enum GameObjects
-        {
-            joystickBG,
-            joystickHandle,
-        }
-
-        public override void Init()
-        {
-            base.Init();
-            Bind<GameObject>(typeof(GameObjects));
-            JoystickBind();
-
-            GameObject playerGO = GameManager.Resource.Instantiate("Player/TestPlayer");
-            _player = Util.GetOrAddComponent<Warrior>(playerGO);
-        }
-
-
-        #region Joystick
         void JoystickBind()
         {
             GameObject joystickBG = Get<GameObject>((int)GameObjects.joystickBG);
@@ -85,5 +94,38 @@ namespace Client
             _player.StopMove();
         }
         #endregion Joystick
+
+        #region Buttons
+        void ButtonBind()
+        {
+            BindEvent(GetButton((int)Buttons.AttackBtn).gameObject, Btn_Attack);
+            BindEvent(GetButton((int)Buttons.SkillBtn).gameObject, Btn_Skill);
+            BindEvent(GetButton((int)Buttons.ItemBtn).gameObject, Btn_GetItem);
+        }
+
+        /// <summary>
+        /// 기본 공격 버튼
+        /// </summary>
+        void Btn_Attack(PointerEventData evt)
+        {
+            _player.IsAttack();
+        }
+
+        /// <summary>
+        /// 스킬 시전 버튼
+        /// </summary>
+        void Btn_Skill(PointerEventData evt)
+        {
+            _player.IsSkill();
+        }
+
+        /// <summary>
+        /// 아이템 뽑기 버튼
+        /// </summary>
+        void Btn_GetItem(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopUpUI<UI_GetItem>();
+        }
+        #endregion Buttons
     }
 }
