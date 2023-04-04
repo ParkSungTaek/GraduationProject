@@ -39,7 +39,7 @@ namespace Client
             GameManager.InGameData.Money += GameManager.InGameData.MoneyRewards;
             GameManager.InGameData.Score += GameManager.InGameData.ScoreRewards;
 
-            UI_GameScene.TextsAction.Invoke();
+            
             GameManager.InGameData.MonsterSpawn.Monsters.Remove(this);
             Destroy(_monsterHpBar);
             Destroy(gameObject);

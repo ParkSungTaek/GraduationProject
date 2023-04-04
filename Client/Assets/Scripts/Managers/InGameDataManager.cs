@@ -13,7 +13,15 @@ namespace Client
 
         #region Score & Money       
         int _money = 0;
-        public int Money { get { return _money; } set { _money = value; } }
+        public int Money { get { return _money; } set { 
+                _money = value; 
+                UI_GameScene.TextsAction.Invoke();
+                if (UI_GetItem.ShopAction != null)
+                {
+                    UI_GetItem.ShopAction.Invoke();
+                }
+            } 
+        }
 
         /* public readonly*/
         int _itemCost = 10;
@@ -31,7 +39,11 @@ namespace Client
         public int ScoreRewards { get { return _scoreRewards; } }
 
         int _score = 0;
-        public int Score { get { return _score; } set { _score = value; } }
+        public int Score { get { return _score; } 
+            set { _score = value; 
+                UI_GameScene.TextsAction.Invoke();
+            } 
+        }
 
         #endregion
 

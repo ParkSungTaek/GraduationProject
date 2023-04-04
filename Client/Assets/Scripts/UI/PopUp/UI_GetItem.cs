@@ -40,18 +40,30 @@ namespace Client
 
             BindEvent(GetButton((int)Buttons.CloseBtn).gameObject, Btn_Close);
             BindEvent(GetButton((int)Buttons.BuyBtn).gameObject, Btn_Buy);
-
+            Buy_ActiveControl();
+            for (int i = 0 ; i < GameManager.InGameData.MyInventory.Count; i++)
+            {
+                GetGameObject(i).GetComponent<TextMeshProUGUI>().text = GameManager.InGameData.MyInventory[i].Name;
+            }
+            
+        }
+        private void OnEnable()
+        {
+            ShopAction += Buy_ActiveControl;
         }
 
         #region Buttons
         void Btn_Close(PointerEventData evt)
         {
+            ShopAction -= Buy_ActiveControl;
+            ShopAction = null;
             GameManager.UI.ClosePopUpUI(this);
         }
 
         void Buy_ActiveControl()
         {
-            if(GameManager.InGameData.Money >= GameManager.InGameData.ItemCost)
+
+            if (GameManager.InGameData.Money >= GameManager.InGameData.ItemCost)
             {
                 GetButton((int)Buttons.BuyBtn).gameObject.SetActive(true);
             }
