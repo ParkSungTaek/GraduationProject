@@ -9,7 +9,9 @@ namespace Client
     {
         public override void IsAttack()
         {
-            NearMoster().BeAttacked(AttackDMG);
+            if (NearMoster() != null){
+                NearMoster().BeAttacked(AttackDMG);
+            }
         }
         public override void IsSkill()
         {

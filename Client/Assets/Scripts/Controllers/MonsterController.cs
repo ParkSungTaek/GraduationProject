@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 namespace Client
 {
     public class MonsterController : Entity
@@ -35,9 +36,15 @@ namespace Client
 
         protected override void Dead()
         {
+            GameManager.InGameData.Money += GameManager.InGameData.MoneyRewards;
+            GameManager.InGameData.Score += GameManager.InGameData.ScoreRewards;
+
+            UI_GameScene.TextsAction.Invoke();
             GameManager.InGameData.MonsterSpawn.Monsters.Remove(this);
             Destroy(_monsterHpBar);
             Destroy(gameObject);
+
+
         }
         // Update is called once per frame
         void FixedUpdate()

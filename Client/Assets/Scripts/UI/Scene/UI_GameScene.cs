@@ -1,13 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
+using System;
 
 namespace Client
 {
     public class UI_GameScene : UI_Scene
     {
         PlayerController _player;
-
+        public static Action TextsAction { get; private set; }
         enum GameObjects
         {
             joystickBG,
@@ -21,17 +23,27 @@ namespace Client
             ItemBtn,
         }
 
+        enum Texts 
+        { 
+            MoneyTxt,
+            ScoreTxt
+        }
+
+
         public override void Init()
         {
             base.Init();
             Bind<GameObject>(typeof(GameObjects));
             Bind<Button>(typeof(Buttons));
+            Bind<TextMeshProUGUI>(typeof(Texts));
+            
 
             JoystickBind();
             ButtonBind();
 
             GameObject playerGO = GameManager.Resource.Instantiate("Player/TestPlayer");
             _player = Util.GetOrAddComponent<Warrior>(playerGO);
+            TextsAction += TextUpdate;
         }
 
 
@@ -127,5 +139,16 @@ namespace Client
             GameManager.UI.ShowPopUpUI<UI_GetItem>();
         }
         #endregion Buttons
+
+
+        #region Texts
+
+        void TextUpdate()
+        {
+            GetText((int)Texts.MoneyTxt).text = $"Money: {GameManager.InGameData.Money}";
+            GetText((int)Texts.ScoreTxt).text = $"Score: {GameManager.InGameData.Score}";
+        }
+
+        #endregion
     }
 }

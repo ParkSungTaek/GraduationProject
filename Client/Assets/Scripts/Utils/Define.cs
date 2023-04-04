@@ -54,6 +54,10 @@ namespace Client
 
         public enum Item
         {
+            제출을_깜빡한_과제,
+            칠십칠중_순환참조_Class,
+            마감_하루전날_날아가버린_DB,
+            울리지_않은_자명종,
             MaxCount
         }
         public enum Tag

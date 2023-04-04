@@ -12,7 +12,7 @@ namespace Client
         float Xradius = 10;
         float yradius = 5;
 
-        float MonsterToMonster = 1.0f;
+        float MonsterToMonster = 2.0f;
         float WaveToWave = 1.0f;
         Transform _monsterHPCanvas;
         public Transform MonsterHPCanvas { get { return _monsterHPCanvas; } }

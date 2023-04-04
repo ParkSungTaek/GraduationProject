@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Client
 {
@@ -58,7 +59,9 @@ namespace Client
         }
         #region Get_Override
         protected GameObject GetGameObject(int idx) => Get<GameObject>(idx);
-        protected Text GetText(int idx) => Get<Text>(idx);
+        //protected Text GetText(int idx) => Get<Text>(idx);
+        protected TextMeshProUGUI GetText(int idx) => Get<TextMeshProUGUI>(idx);
+
         protected Image GetImage(int idx) => Get<Image>(idx);
         protected Button GetButton(int idx) => Get<Button>(idx);
         #endregion Get_Override

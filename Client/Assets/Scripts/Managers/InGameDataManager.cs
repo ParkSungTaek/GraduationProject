@@ -1,23 +1,77 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using static Client.Define;
 
 namespace Client
 {
     public class InGameDataManager
     {
+        GameObject _gameOver;
+        public GameObject GameOver { get { return _gameOver; } }
+
+
+        #region Score & Money       
+        int _money = 0;
+        public int Money { get { return _money; } set { _money = value; } }
+
+        /* public readonly*/
+        int _itemCost = 10;
+        /// <summary>
+        /// 이게 가격 변동이 있을 일이 있나?
+        /// </summary>
+        public int ItemCost { get { return _itemCost; } set { _itemCost = value; } }
+
+        int _moneyRewards = 5;
+        int _scoreRewards = 1;
+        /// <summary>
+        /// Wave 마다 올려줘야하나?
+        /// </summary>
+        public int MoneyRewards { get { return _moneyRewards; } }
+        public int ScoreRewards { get { return _scoreRewards; } }
+
+        int _score = 0;
+        public int Score { get { return _score; } set { _score = value; } }
+
+        #endregion
+
+
+        #region Item
+
+        public readonly int MAXITEMNUM = 8;
+        Item[] _itemDB;
+        List<Item> _myInventory;
+        public List<Item> MyInventory { get { return _myInventory; } }
+        public Item[] ItemDB { get { return _itemDB;} }
+
+
+
+        public void MyInventoryRandomADD() {
+            if (_myInventory.Count < MAXITEMNUM)
+            {
+                _myInventory.Add(_itemDB[UnityEngine.Random.Range(0, _itemDB.Length)]);
+            }
+            else
+            {
+
+            }
+        }
+
+        public void MyInventoryDelete(Item item)
+        {
+
+        }
+        #endregion
+
         MonsterSpawn _monsterSpawn;
         TowerController _tower;
         GameObject _monsterHpBar;
-        GameObject _gameOver;
+
 
 
         public MonsterSpawn MonsterSpawn { get { return _monsterSpawn; } }
         public TowerController Tower { get { return _tower; } }
         public GameObject MonsterHpBar { get { return _monsterHpBar; } }
-        public GameObject GameOver { get { return _gameOver; } }
 
 
         #region state machine
@@ -91,7 +145,20 @@ namespace Client
 
             _monsterHpBar = Resources.Load<GameObject>("Prefabs/UI/MonsterHP");
             _gameOver = Resources.Load<GameObject>("Prefabs/UI/GameOver");
+            
+            _itemDB = new Item[(int)Define.Item.MaxCount];
 
+            
+            string[] _itemDBstr = Enum.GetNames(typeof(Define.Item));
+            
+            for (int i = 0; i < (int)Define.Item.MaxCount; i++)
+            {
+                _itemDB[i] = new Item();
+                _itemDB[i].Name = _itemDBstr[i];
+                //Debug.Log(_itemDB[i].Name);
+            }
+            _myInventory = new List<Item>();
+            
 
         }
 
