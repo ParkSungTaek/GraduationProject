@@ -12,12 +12,6 @@ namespace Client
 
         Dictionary<Define.Item, Item> 인벤토리;
 
-
-
-        public void init()
-        {
-
-        }
         public T Load<T>(string path) where T : Object
         {
             //풀링 안한다고 했던가?
@@ -40,18 +34,21 @@ namespace Client
             return Resources.Load<T>(path);
         }
 
-        public GameObject Instantiate(string path, Transform parent = null)
+        public GameObject Instantiate(string path, Transform parent = null) => Instantiate<GameObject>(path, parent);
+
+        public T Instantiate<T>(string path, Transform parent = null) where T : UnityEngine.Object
         {
-            GameObject original = Load<GameObject>($"Prefabs/{path}");
-            if(original == null)
+            T prefab = Load<T>($"Prefabs/{path}");
+            if(prefab == null)
             {
                 Debug.LogError($"Failed to load prefab : {path}");
                 return null;
-            }    
+            }
 
-            GameObject go = Object.Instantiate(original, parent);
-            go.name = original.name;
-            return go;
+            T instance = UnityEngine.Object.Instantiate<T>(prefab, parent);
+            instance.name = prefab.name;
+
+            return instance;
         }
 
         public void Clear()

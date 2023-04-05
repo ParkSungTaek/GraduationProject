@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Reflection;
 
 namespace Client
 {
@@ -55,6 +56,31 @@ namespace Client
             Transform transform = FindChild<Transform>(go, name, recursive);
             if (transform == null) return null;
             return transform.gameObject;
+        }
+
+        
+        /// <summary>
+        /// json 파일 파싱하여 오브젝트로 반환
+        /// </summary>
+        public static Handler ParseJson<Handler>(string path = null, string handle = null)
+        {
+            if (string.IsNullOrEmpty(path))
+            {
+                string name = typeof(Handler).Name;
+                int idx = name.IndexOf("Handler");
+
+                path = string.Concat(name.Substring(0, idx), 's');
+                handle = path.ToLower();
+            }
+
+            TextAsset jsonTxt = Resources.Load<TextAsset>($"Jsons/{path}");
+            if(jsonTxt == null)
+            {
+                Debug.LogError($"Can't load json : {path}");
+                return default(Handler);
+            }
+            string json = jsonTxt.text;
+            return JsonUtility.FromJson<Handler>($"{{\"{handle}\" : {json} }}");
         }
     }
 }

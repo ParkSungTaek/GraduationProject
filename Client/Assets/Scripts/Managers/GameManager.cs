@@ -49,7 +49,6 @@ namespace Client
                 _instance._inputManager.init();
                 _instance._networkManager.init();
                 _instance._poolManager.init();
-                _instance._resourceManager.init();
                 _instance._soundManager.init();
                 _instance._inGameDataManager.init();
             }

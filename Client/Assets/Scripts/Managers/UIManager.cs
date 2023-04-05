@@ -15,10 +15,11 @@ namespace Client
         /// popup ui 정렬 순서를 위한 변수
         /// </summary>
         int _order = 1;
+
         /// <summary>
-        /// 현재 Scene의 기본 UI
+        /// popup 재사용을 위한 캐싱
         /// </summary>
-        UI_Scene _sceneUI = null;
+        Dictionary<System.Type, GameObject> _popupInstances = new Dictionary<System.Type, GameObject>();
 
         /// <summary>
         /// UI의 부모 
@@ -67,7 +68,6 @@ namespace Client
 
             GameObject go = GameManager.Resource.Instantiate($"UI/Scene/{name}");
             T sceneUI = Util.GetOrAddComponent<T>(go);
-            _sceneUI = sceneUI;
 
             go.transform.SetParent(Root.transform);
 
@@ -84,11 +84,25 @@ namespace Client
             if(string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
 
-            GameObject go = GameManager.Resource.Instantiate($"UI/PopUp/{name}");
-            T popupUI = Util.GetOrAddComponent<T>(go);
+            GameObject popup;
+            T popupUI;
+            if (_popupInstances.TryGetValue(typeof(T), out popup) == false)
+            {
+                popup = GameManager.Resource.Instantiate($"UI/PopUp/{name}");
+                _popupInstances.Add(typeof(T), popup);
+
+                popupUI = Util.GetOrAddComponent<T>(popup);
+            }
+            else
+            {
+                popupUI = Util.GetOrAddComponent<T>(popup);
+                popupUI.ReOpen();
+            }
+
             _popupStack.Push(popupUI);
 
-            go.transform.SetParent(Root.transform);
+            popup.transform.SetParent(Root.transform);
+            popup.SetActive(true);
 
             return popupUI;
         }
@@ -117,7 +131,8 @@ namespace Client
             if (_popupStack.Count <= 0) return;
 
             UI_PopUp popup = _popupStack.Pop();
-            UnityEngine.Object.Destroy(popup.gameObject);
+            popup.gameObject.SetActive(false);
+
             _order--;
         }
 
@@ -136,7 +151,7 @@ namespace Client
         public void Clear()
         {
             CloseAllPopUpUI();
-            _sceneUI = null;
+            _popupInstances.Clear();
         }
     }
 }

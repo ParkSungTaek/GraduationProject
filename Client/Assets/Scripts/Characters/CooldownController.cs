@@ -4,24 +4,16 @@ using UnityEngine;
 
 namespace Client
 {
-    public class SkillController
+    public class CooldownController
     {
         /// <summary>
         /// 플레이어의 쿨타임 정보
         /// </summary>
         float[] _cooldowns = new float[2];
-        /// <summary>
-        /// 스킬 사거리
-        /// </summary>
-        int[] _ranges = new int[2];
-        
-        /// <summary>
-        /// 플레이어 직업에 따라 사거리 불러오기
-        /// </summary>
-        /// <param name="character"></param>
-        public void LoadData(Define.Charcter character)
-        {
 
+        public void Clear()
+        {
+            for(int i = 0; i< _cooldowns.Length; i++) _cooldowns[i] = 0;
         }
 
         /// <summary>
@@ -33,17 +25,8 @@ namespace Client
         /// </summary>
         public bool CanSkill() => _cooldowns[1] <= 0;
 
-        /// <summary>
-        /// 기본 공격 사거리 반환
-        /// </summary>
-        public int GetAttackRange() => _ranges[0];
-        /// <summary>
-        /// 스킬 사거리 반환
-        /// </summary>
-        public int GetSkillRange() => _ranges[1];
 
-
-        IEnumerator CooldownCoroutine()
+        public IEnumerator CooldownCoroutine()
         {
             while(GameManager.InGameData.Stat() == Define.State.Play)
             {

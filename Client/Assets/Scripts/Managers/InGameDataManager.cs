@@ -47,6 +47,10 @@ namespace Client
 
         #endregion
 
+        /// <summary>
+        /// 플레이어 쿨타임 컨트롤러
+        /// </summary>
+        public CooldownController Cooldown { get; } = new CooldownController();
 
         #region Item
 
@@ -136,10 +140,8 @@ namespace Client
             {
                 GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
                 if (monsterSpawn == null)
-                {
-                    monsterSpawn = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Monster/MonsterSpawn"));
-                    monsterSpawn.name = "MonsterSpawn";
-                }
+                    monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn");
+
                 _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
             }
 
@@ -147,10 +149,8 @@ namespace Client
             {
                 GameObject tower = GameObject.Find("Tower");
                 if (tower == null)
-                {
-                    tower = UnityEngine.Object.Instantiate(Resources.Load<GameObject>("Prefabs/Tower/Tower"));
-                    tower.name = "Tower";
-                }
+                    tower = GameManager.Resource.Instantiate("Tower/Tower");
+
                 _tower = tower.GetComponent<TowerController>();
 
             }

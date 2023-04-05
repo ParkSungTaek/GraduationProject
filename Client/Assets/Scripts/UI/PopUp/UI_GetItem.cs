@@ -17,7 +17,7 @@ namespace Client
             CloseBtn,
             BuyBtn,
         }
-        enum Items
+        enum ItemTexts
         {
             Item0,
             Item1,
@@ -27,7 +27,6 @@ namespace Client
             Item5,
             Item6,
             Item7,
-
         }
 
 
@@ -35,7 +34,7 @@ namespace Client
         {
             base.Init();
             Bind<Button>(typeof(Buttons));
-            Bind<GameObject>(typeof(Items));
+            Bind<TMP_Text>(typeof(ItemTexts));
 
 
             BindEvent(GetButton((int)Buttons.CloseBtn).gameObject, Btn_Close);
@@ -47,9 +46,13 @@ namespace Client
             }
             
         }
-        private void OnEnable()
+
+        /// <summary>
+        /// 비활성화 상태에서 다시 열 시 호출
+        /// </summary>
+        public override void ReOpen()
         {
-            ShopAction += Buy_ActiveControl;
+            Buy_ActiveControl();
         }
 
         #region Buttons
@@ -85,7 +88,7 @@ namespace Client
                 ///여기부터 아이템 어찌할지 확정하고 바꿔야해
 
                 GameManager.InGameData.MyInventoryRandomADD();
-                GetGameObject(GameManager.InGameData.MyInventory.Count-1).GetComponent<TextMeshProUGUI>().text = GameManager.InGameData.MyInventory[GameManager.InGameData.MyInventory.Count - 1].Name;
+                GetText(GameManager.InGameData.MyInventory.Count - 1).text = GameManager.InGameData.MyInventory[GameManager.InGameData.MyInventory.Count - 1].Name;
                 ///
 
             }

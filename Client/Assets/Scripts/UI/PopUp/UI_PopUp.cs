@@ -15,5 +15,10 @@ namespace Client
         {
             GameManager.UI.ClosePopUpUI(this);
         }
+
+        /// <summary>
+        /// 비활성화된 UI 다시 활성화 시 호출
+        /// </summary>
+        public abstract void ReOpen();
     }
 }

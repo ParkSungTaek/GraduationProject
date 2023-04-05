@@ -11,6 +11,11 @@ namespace Client
         {
             GameManager.InGameData.StateChange(Define.State.Play);
             GameManager.UI.ShowSceneUI<UI_GameScene>();
+            StartCoroutine(GameManager.InGameData.Cooldown.CooldownCoroutine());
+
+            TestjsonHandler handler = Util.ParseJson<TestjsonHandler>();
+            foreach(Testjson j in handler.testjsons)
+                Debug.Log($"{j.idx} : {j.name}");
         }
     }
 }

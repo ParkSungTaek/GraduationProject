@@ -22,7 +22,6 @@ namespace Client
         {
             Init();
         }
-
         /// <summary>
         /// 산하의 T type object들 _objects dictionary에 저장
         /// </summary>
