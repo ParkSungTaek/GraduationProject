@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1721032219089877995}
   - component: {fileID: 1721032219089877992}
   m_Layer: 5
-  m_Name: MonsterHPCanvas
+  m_Name: UI_MonsterHP
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

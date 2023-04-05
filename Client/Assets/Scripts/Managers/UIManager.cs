@@ -42,7 +42,7 @@ namespace Client
         /// </summary>
         /// <param name="go">canvas 속성이 있는 게임 오브젝트</param>
         /// <param name="sort">canvas 정렬 여부(popup->true, scene->false)</param>
-        public void SetCanvas(GameObject go, bool sort = true)
+        public void SetCanvas(GameObject go, bool sort = true, int order = 0)
         {
             Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
 
@@ -52,7 +52,7 @@ namespace Client
             if (sort)
                 canvas.sortingOrder = _order++;
             else
-                canvas.sortingOrder = 0;
+                canvas.sortingOrder = order;
         }
 
         /// <summary>

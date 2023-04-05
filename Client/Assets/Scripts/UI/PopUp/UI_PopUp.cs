@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Client
 {
-    public class UI_PopUp : UI_Base
+    public abstract class UI_PopUp : UI_Base
     {
         public override void Init()
         {

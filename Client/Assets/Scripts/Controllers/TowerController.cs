@@ -18,10 +18,8 @@ namespace Client
             AttackDMG = 0;
             MoveSpeed = 0;
 
-            _towerHpBar = Instantiate(Resources.Load<GameObject>("Prefabs/UI/TowerHP"));
-            Tower_UI_Scene = GameManager.UI.ShowSceneUI<UI_Scene>("TowerHPCanvas").transform;
-
-            _towerHpBar.transform.SetParent(Tower_UI_Scene);
+            Tower_UI_Scene = GameManager.UI.ShowSceneUI<UI_TowerHP>().transform;
+            _towerHpBar = GameManager.Resource.Instantiate("UI/TowerHP", Tower_UI_Scene);
 
             HpBarSlider = _towerHpBar.GetComponent<Slider>();
 

@@ -28,7 +28,7 @@ namespace Client
         {
             SpawnPoint = new GameObject[SpawnPointNum];
             Monster = Resources.Load<GameObject>("Prefabs/Monster/Monster");
-            _monsterHPCanvas = GameManager.UI.ShowSceneUI<UI_Scene>("MonsterHPCanvas").transform;
+            _monsterHPCanvas = GameManager.UI.ShowSceneUI<UI_MonsterHP>().transform;
 
             for (int i = 0; i < SpawnPointNum; i++)
             {

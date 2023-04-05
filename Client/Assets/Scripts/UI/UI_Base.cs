@@ -59,8 +59,7 @@ namespace Client
         }
         #region Get_Override
         protected GameObject GetGameObject(int idx) => Get<GameObject>(idx);
-        //protected Text GetText(int idx) => Get<Text>(idx);
-        protected TextMeshProUGUI GetText(int idx) => Get<TextMeshProUGUI>(idx);
+        protected TMP_Text GetText(int idx) => Get<TMP_Text>(idx);
 
         protected Image GetImage(int idx) => Get<Image>(idx);
         protected Button GetButton(int idx) => Get<Button>(idx);

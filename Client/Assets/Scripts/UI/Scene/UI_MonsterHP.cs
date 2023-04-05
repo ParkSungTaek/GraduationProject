@@ -4,11 +4,11 @@ using UnityEngine;
 
 namespace Client
 {
-    public abstract class UI_Scene : UI_Base
+    public class UI_MonsterHP : UI_Scene
     {
         public override void Init()
         {
-            GameManager.UI.SetCanvas(gameObject, false);
+            GameManager.UI.SetCanvas(gameObject, false, -2);
         }
     }
 }
