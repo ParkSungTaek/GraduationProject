@@ -47,10 +47,14 @@ namespace Client
 
         #endregion
 
+        #region Player
         /// <summary>
         /// 플레이어 쿨타임 컨트롤러
         /// </summary>
         public CooldownController Cooldown { get; } = new CooldownController();
+
+        public CharacterstatHandler CharacterStat { get; private set; }
+        #endregion Player
 
         #region Item
 
@@ -92,7 +96,7 @@ namespace Client
 
         #region state machine
 
-        bool[] _state;
+        bool[] _state = new bool[(int)Define.State.MaxCount];
 
 
 
@@ -132,48 +136,43 @@ namespace Client
 
         public void init()
         {
-            if (_state == null)
-            {
-                _state = new bool[(int)State.MaxCount];
-            }
-            if (_monsterSpawn == null)
-            {
-                GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
-                if (monsterSpawn == null)
-                    monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn");
-
-                _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
-            }
-
-            if (_tower == null)
-            {
-                GameObject tower = GameObject.Find("Tower");
-                if (tower == null)
-                    tower = GameManager.Resource.Instantiate("Tower/Tower");
-
-                _tower = tower.GetComponent<TowerController>();
-
-            }
-
-            _monsterHpBar = Resources.Load<GameObject>("Prefabs/UI/MonsterHP");
-            _gameOver = Resources.Load<GameObject>("Prefabs/UI/GameOver");
-            
             _itemDB = new Item[(int)Define.Item.MaxCount];
-
-            
             string[] _itemDBstr = Enum.GetNames(typeof(Define.Item));
             
             for (int i = 0; i < (int)Define.Item.MaxCount; i++)
             {
                 _itemDB[i] = new Item();
                 _itemDB[i].Name = _itemDBstr[i];
-                //Debug.Log(_itemDB[i].Name);
             }
-            _myInventory = new List<Item>();
-            
 
+            _myInventory = new List<Item>();
+            CharacterStat = Util.ParseJson<CharacterstatHandler>();
+            _monsterHpBar = Resources.Load<GameObject>("Prefabs/UI/MonsterHP");
         }
 
+        /// <summary>
+        /// 새로운 게임 시작 - 몬스터 스폰 위치와 중앙 타워 생성
+        /// </summary>
+        public void GameStart()
+        {
+            GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
+            if (monsterSpawn == null)
+                monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn");
+            _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
+
+            GameObject tower = GameObject.Find("Tower");
+            if (tower == null)
+                tower = GameManager.Resource.Instantiate("Tower/Tower");
+            _tower = tower.GetComponent<TowerController>();
+        }
+
+
+        public void Clear()
+        {
+            _money = _score = 0;
+            Cooldown.Clear();
+            _myInventory.Clear();
+        }
     }
 
 }

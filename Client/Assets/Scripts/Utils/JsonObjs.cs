@@ -4,15 +4,23 @@ using System.Collections.Generic;
 namespace Client
 {
     [Serializable]
-    public class TestjsonHandler
+    public class CharacterstatHandler
     {
-        public List<Testjson> testjsons = new List<Testjson>();
+        public List<Characterstat> characterstats = new List<Characterstat>();
+
+        public Characterstat this[Define.Charcter idx]
+        {
+            get => characterstats[(int)idx];
+        }
     }
 
     [Serializable]
-    public class Testjson
+    public class Characterstat
     {
-        public int idx;
-        public string name;
+        public int AttackRange;
+        public int SkillRange;
+        public int AttackCool;
+        public int SkillCool;
     }
+
 }

@@ -7,14 +7,14 @@ namespace Client
         static GameManager _instance;
         static GameManager Instance { get { init(); return _instance; } }
         #region Managers
-        InputManager _inputManager = new InputManager();
+        //InputManager _inputManager = new InputManager();
         NetworkManager _networkManager = new NetworkManager();
         PoolManager _poolManager = new PoolManager();
         ResourceManager _resourceManager = new ResourceManager();
         SoundManager _soundManager = new SoundManager();
         InGameDataManager _inGameDataManager = new InGameDataManager();
         UIManager _uiManager = new UIManager();
-        public static InputManager Input { get { return Instance._inputManager; } }
+        //public static InputManager Input { get { return Instance._inputManager; } }
         public static NetworkManager Network { get { return Instance._networkManager; } }
         public static PoolManager Pool { get { return Instance._poolManager; } }
         public static ResourceManager Resource { get { return Instance._resourceManager; } }
@@ -46,7 +46,7 @@ namespace Client
                 _instance = gm.GetComponent<GameManager>();
                 DontDestroyOnLoad(gm);
 
-                _instance._inputManager.init();
+                //_instance._inputManager.init();
                 _instance._networkManager.init();
                 _instance._poolManager.init();
                 _instance._soundManager.init();
@@ -58,20 +58,18 @@ namespace Client
         {
             Time.timeScale = 0;
             InGameData.StateChange(Define.State.End);
-            //Instantiate(GameManager.InGameData.GameOver).transform.parent;
-
-
+            _instance._uiManager.ShowPopUpUI<UI_GameOver>();
         }
         public static void GameStart()
         {
             Time.timeScale = 1;
             InGameData.StateChange(Define.State.Play);
-
-
+            _instance._inGameDataManager.GameStart();
         }
+
         public static void Clear()
         {
-            _instance._inputManager.Clear();
+            //_instance._inputManager.Clear();
             _instance._networkManager.Clear();
             _instance._poolManager.Clear();
             _instance._resourceManager.Clear();

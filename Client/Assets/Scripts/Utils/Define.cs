@@ -33,16 +33,6 @@ namespace Client
         {
             MaxCount
         }
-
-        public enum Button
-        {
-            MaxCount
-        }
-        public enum System
-        {
-
-            MaxCount
-        }
         public enum State
         {
             Play,
@@ -76,5 +66,12 @@ namespace Client
             Drag,
             DragEnd,
         }
+
+        public enum Scenes
+        { 
+            Title,
+            Game,
+        }
+
     }
 }

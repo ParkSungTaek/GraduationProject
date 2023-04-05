@@ -10,6 +10,7 @@ namespace Client
         /// 플레이어의 쿨타임 정보
         /// </summary>
         float[] _cooldowns = new float[2];
+        int[] _maxCooldowns = new int[2];
 
         public void Clear()
         {
@@ -20,10 +21,23 @@ namespace Client
         /// 공격 쿨다운 여부 반환
         /// </summary>
         public bool CanAttack() => _cooldowns[0] <= 0;
+        public void SetAttackCool(int cool) => _cooldowns[0] = _maxCooldowns[0] = cool;
+        public float GetAttackCoolRate()
+        {
+            if (_maxCooldowns[0] == 0) return 1;
+            return (_maxCooldowns[0] - _cooldowns[0]) / _maxCooldowns[0];
+        }
+
         /// <summary>
         /// 스킬 쿨다운 여부 반환
         /// </summary>
         public bool CanSkill() => _cooldowns[1] <= 0;
+        public void SetSkillCool(int cool) => _cooldowns[1] = _maxCooldowns[1] = cool;
+        public float GetSkillCoolRate()
+        {
+            if (_maxCooldowns[1] == 0) return 1;
+            return (_maxCooldowns[1] - _cooldowns[1]) / _maxCooldowns[1];
+        }
 
 
         public IEnumerator CooldownCoroutine()
@@ -33,12 +47,12 @@ namespace Client
                 for(int i = 0;i < 2;i++)
                     if (_cooldowns[i] > 0)
                     {
-                        _cooldowns[i] -= 0.25f;
+                        _cooldowns[i] -= 0.1f;
                         if (_cooldowns[i] <= 0)
                             _cooldowns[i] = 0;
                     }
                 
-                yield return new WaitForSeconds(0.25f);
+                yield return new WaitForSeconds(0.1f);
             }
         }
     }

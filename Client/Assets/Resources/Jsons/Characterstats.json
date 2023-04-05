@@ -1,0 +1,26 @@
+[
+  {
+    "AttackRange": 2,
+    "SkillRange": 3,
+    "AttackCool": 1,
+    "SkillCool": 8
+  },
+  {
+    "AttackRange": 6,
+    "SkillRange": 6,
+    "AttackCool": 3,
+    "SkillCool": 8
+  },
+  {
+    "AttackRange": 6,
+    "SkillRange": 6,
+    "AttackCool": 2,
+    "SkillCool": 8
+  },
+  {
+    "AttackRange": 2,
+    "SkillRange": 0,
+    "AttackCool": 2,
+    "SkillCool": 10
+  }
+]
