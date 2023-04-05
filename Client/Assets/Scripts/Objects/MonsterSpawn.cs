@@ -12,6 +12,9 @@ namespace Client
         float Xradius = 10;
         float yradius = 5;
 
+
+        IEnumerator _startCreateMonster; 
+
         float MonsterToMonster = 2.0f;
         float WaveToWave = 1.0f;
         Transform _monsterHPCanvas;
@@ -29,6 +32,7 @@ namespace Client
             SpawnPoint = new GameObject[SpawnPointNum];
             Monster = Resources.Load<GameObject>("Prefabs/Monster/Monster");
             _monsterHPCanvas = GameManager.UI.ShowSceneUI<UI_MonsterHP>().transform;
+            _startCreateMonster = StartCreateMonster();
 
             for (int i = 0; i < SpawnPointNum; i++)
             {
@@ -44,7 +48,7 @@ namespace Client
         void Start()
         {
             init();
-            StartCoroutine(StartCreateMonster());
+            StartCoroutine(_startCreateMonster);
         }
 
         IEnumerator StartCreateMonster()

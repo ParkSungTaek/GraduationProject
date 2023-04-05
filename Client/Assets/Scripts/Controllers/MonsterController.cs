@@ -12,7 +12,7 @@ namespace Client
 
         GameObject _monsterHpBar;
 
-
+        Coroutine _attack;
         // Start is called before the first frame update
         void Start()
         {
@@ -29,7 +29,7 @@ namespace Client
             AttackSpeed = 1.0f;
             _monsterHpBar = Instantiate(GameManager.InGameData.MonsterHpBar);
             _monsterHpBar.transform.SetParent(GameManager.InGameData.MonsterSpawn.MonsterHPCanvas);
-
+            
             HpBarSlider = _monsterHpBar.GetComponent<Slider>();
 
         }
@@ -59,7 +59,7 @@ namespace Client
         {
             if (collision.transform.tag == "Tower")
             {
-                StartCoroutine(Attack());
+                _attack = StartCoroutine(Attack());
             }
         }
 
@@ -68,7 +68,7 @@ namespace Client
             if (collision.transform.tag == "Tower")
             {
 
-                StopCoroutine(Attack());
+                StopCoroutine(_attack);
             }
         }
 

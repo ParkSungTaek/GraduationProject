@@ -35,7 +35,7 @@ namespace Client
             base.Init();
             Bind<GameObject>(typeof(GameObjects));
             Bind<Button>(typeof(Buttons));
-            Bind<TextMeshProUGUI>(typeof(Texts));
+            Bind<TMP_Text>(typeof(Texts));
             
 
             JoystickBind();
