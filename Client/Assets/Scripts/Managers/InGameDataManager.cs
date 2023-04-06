@@ -16,10 +16,7 @@ namespace Client
         public int Money { get { return _money; } set { 
                 _money = value; 
                 UI_GameScene.TextsAction.Invoke();
-                if (UI_GetItem.ShopAction != null)
-                {
-                    UI_GetItem.ShopAction.Invoke();
-                }
+                UI_GetItem.ShopAction?.Invoke();
             } 
         }
 
@@ -54,6 +51,7 @@ namespace Client
         public CooldownController Cooldown { get; } = new CooldownController();
 
         public CharacterstatHandler CharacterStat { get; private set; }
+
         #endregion Player
 
         #region Item
@@ -83,6 +81,10 @@ namespace Client
         }
         #endregion
 
+
+        #region Monster
+        public MonsterstatHandler MonsterStates { get; private set; }
+
         MonsterSpawn _monsterSpawn;
         TowerController _tower;
         GameObject _monsterHpBar;
@@ -92,7 +94,7 @@ namespace Client
         public MonsterSpawn MonsterSpawn { get { return _monsterSpawn; } }
         public TowerController Tower { get { return _tower; } }
         public GameObject MonsterHpBar { get { return _monsterHpBar; } }
-
+        #endregion
 
         #region state machine
 
@@ -146,7 +148,10 @@ namespace Client
             }
 
             _myInventory = new List<Item>();
+
             CharacterStat = Util.ParseJson<CharacterstatHandler>();
+            MonsterStates = Util.ParseJson<MonsterstatHandler>();
+
             _monsterHpBar = Resources.Load<GameObject>("Prefabs/UI/MonsterHP");
         }
 
@@ -157,7 +162,7 @@ namespace Client
         {
             GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
             if (monsterSpawn == null)
-                monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn");
+                monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn/MonsterSpawn");
             _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
 
             GameObject tower = GameObject.Find("Tower");

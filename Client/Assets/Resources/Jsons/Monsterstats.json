@@ -1,0 +1,173 @@
+[
+
+  {
+    "Name": "Bat",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,    
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "BlackBoar",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 2.0
+  },
+
+  {
+    "Name": "BlackBear",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+  
+  {
+    "Name": "BlackWolf",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "CaveRat",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "Cerberus",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "Crawler",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "CrystalLizard",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "DreadEye",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "MinerBoar",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "Nightmare",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "Porcupine",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "PurpleScarab",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "Scarab",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "ShardLizard",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "SlugQueen",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  },
+
+  {
+    "Name": "Warg",
+    "MaxHP": 100,
+    "AttackDMG": 2,
+    "MoveSpeed": 3.0,
+    "AttackSpeed": 1.0,
+    "_offsetCorrection": -1.0,
+    "_monsterHpBarOffset": 3.0
+  }
+
+]

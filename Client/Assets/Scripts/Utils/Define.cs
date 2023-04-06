@@ -73,5 +73,38 @@ namespace Client
             Game,
         }
 
+        public enum MonsterName
+        {
+            Bat,
+            BlackBoar,
+            BlackBear,
+            BlackWolf,
+            CaveRat,
+            Cerberus,
+            Crawler,
+            CrystalLizard,
+            DreadEye,
+            MinerBoar,
+            Nightmare,
+            Porcupine,
+            PurpleScarab,
+            Scarab,
+            ShardLizard,
+            SlugQueen,
+            Warg,
+            MaxCount
+        }
+
+        public enum MonsterState
+        {
+            Idle,
+            Attack,
+            Run,
+            Walk,
+            Death,
+            MaxCount
+        }
+
+        
     }
 }
