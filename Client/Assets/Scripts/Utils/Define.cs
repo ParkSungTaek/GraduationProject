@@ -10,9 +10,9 @@ namespace Client
         public enum Charcter
         {
             Warrior,
+            Rifleman,
             Wizard,
             Priest,
-            Rifleman,
             MaxCount
         }
 

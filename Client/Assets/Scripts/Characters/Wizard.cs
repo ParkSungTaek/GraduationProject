@@ -4,38 +4,22 @@ using UnityEngine;
 
 namespace Client
 {
+    /// <summary> 위저드 기본 공격 : 원거리 단일 </summary>
     public class Wizard : PlayerController
     {
-        /// <summary>
-        /// 워리어 기본 공격 : 근접
-        /// </summary>
-        public override void IsAttack()
-        {
-            if (GameManager.InGameData.Cooldown.CanAttack())
-            {
-                MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStat[_myClass];
-
-                if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
-                {
-                    mon.BeAttacked(AttackDMG);
-                    GameManager.InGameData.Cooldown.SetAttackCool(stat.AttackCool);
-                }
-            }
-            else
-                Debug.Log("attack cool");
-        }
-
+        /// <summary> 위저드 스킬 : 원거리 범위(타겟 중심) </summary>
         public override void IsSkill()
         {
+            //쿨타임 중이 아닐 떄
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStat[_myClass];
+                Characterstat stat = GameManager.InGameData.CharacterStat[MyClass];
 
+                //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
                 {
-                    mon.BeAttacked(5 * AttackDMG);
+                    GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_skillDMGRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
                 }
             }
@@ -45,13 +29,13 @@ namespace Client
 
         protected override void init()
         {
-            _myClass = Define.Charcter.Wizard;
-            MaxHP = 98754321;
-            MoveSpeed = 10.0f;
-            AttackDMG = 10;
+            MyClass = Define.Charcter.Wizard;
+            MoveSpeed = 5.0f;
+            AttackDMG = 20;
             Position = Vector2.zero;// 시작위치
 
-
+            _attackDMGRatio = 1;
+            _skillDMGRatio = 2;
         }
     }
 }

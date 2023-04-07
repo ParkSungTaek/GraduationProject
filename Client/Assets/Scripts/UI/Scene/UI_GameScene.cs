@@ -8,7 +8,7 @@ namespace Client
 {
     public class UI_GameScene : UI_Scene
     {
-        PlayerController _player;
+        PlayerController _player { get => GameManager.InGameData.MyPlayer; }
         public static Action TextsAction { get; private set; }
         enum GameObjects
         {
@@ -40,8 +40,6 @@ namespace Client
 
             JoystickBind();
             ButtonBind();
-
-            GeneratePlayer();
             TextsAction += TextUpdate;
         }
 
@@ -49,31 +47,6 @@ namespace Client
         {
             GetButton((int)Buttons.AttackBtn).GetComponent<Image>().fillAmount = GameManager.InGameData.Cooldown.GetAttackCoolRate();
             GetButton((int)Buttons.SkillBtn).GetComponent<Image>().fillAmount = GameManager.InGameData.Cooldown.GetSkillCoolRate();
-        }
-
-        void GeneratePlayer()
-        {
-            int player = PlayerPrefs.GetInt("Class", 0);
-            GameObject playerGO;
-            switch (player)
-            {
-                case 0:
-                    playerGO = GameManager.Resource.Instantiate("Player/Warrior");
-                    _player = Util.GetOrAddComponent<Warrior>(playerGO);
-                    break;
-                case 1:
-                    playerGO = GameManager.Resource.Instantiate("Player/Rifleman");
-                    _player = Util.GetOrAddComponent<Rifleman>(playerGO);
-                    break;
-                case 2:
-                    playerGO = GameManager.Resource.Instantiate("Player/Wizard");
-                    _player = Util.GetOrAddComponent<Wizard>(playerGO);
-                    break;
-                default:
-                    playerGO = GameManager.Resource.Instantiate("Player/Priest");
-                    _player = Util.GetOrAddComponent<Priest>(playerGO);
-                    break;
-            }
         }
 
         #region Joystick
@@ -120,7 +93,7 @@ namespace Client
 
             _joystickHandle.transform.position = _joystickPivotPos + _directionVector * Mathf.Min((evt.position - _joystickPivotPos).magnitude, 50);
 
-            _player.SetDirection(_directionVector);
+            _player?.SetDirection(_directionVector);
         }
 
         /// <summary>
@@ -132,7 +105,7 @@ namespace Client
             _directionVector = Vector2.zero;
             _joystickHandle.transform.position = _joystickPivotPos;
 
-            _player.StopMove();
+            _player?.StopMove();
         }
         #endregion Joystick
 
@@ -149,7 +122,7 @@ namespace Client
         /// </summary>
         void Btn_Attack(PointerEventData evt)
         {
-            _player.IsAttack();
+            _player?.IsAttack();
         }
 
         /// <summary>
@@ -157,7 +130,7 @@ namespace Client
         /// </summary>
         void Btn_Skill(PointerEventData evt)
         {
-            _player.IsSkill();
+            _player?.IsSkill();
         }
 
         /// <summary>

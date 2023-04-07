@@ -49,9 +49,31 @@ namespace Client
         /// 플레이어 쿨타임 컨트롤러
         /// </summary>
         public CooldownController Cooldown { get; } = new CooldownController();
-
+        /// <summary>
+        /// 모든 직업에 대한 스텟 정보
+        /// </summary>
         public CharacterstatHandler CharacterStat { get; private set; }
+        /// <summary>
+        /// 현재 게임에 참여한 플레이어 캐릭터 오브젝트들
+        /// </summary>
+        List<PlayerController> _playerControllers = new List<PlayerController>();
+        /// <summary>
+        /// 클라이언트의 캐릭터
+        /// <para></para>
+        /// </summary>
+        public PlayerController MyPlayer { 
+            get
+            {
+                if (_playerControllers.Count > 0)
+                    return _playerControllers[0];
 
+                return null;
+            }
+        }
+        /// <summary>
+        /// 사제 버프 받을 가장 가까운 플레이어
+        /// </summary>
+        public PlayerController NearPlayer => null;
         #endregion Player
 
         #region Item
@@ -136,6 +158,9 @@ namespace Client
         }
         #endregion
 
+        /// <summary>
+        /// 
+        /// </summary>
         public void init()
         {
             _itemDB = new Item[(int)Define.Item.MaxCount];
@@ -160,17 +185,60 @@ namespace Client
         /// </summary>
         public void GameStart()
         {
+            GenerateMonsterSpawnPoint();
+            GenerateTower();
+            GeneratePlayer();
+        }
+
+        #region GameStart_Generate
+        /// <summary> 몬스터 스폰 포인트 생성 </summary>
+        void GenerateMonsterSpawnPoint()
+        {
             GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
             if (monsterSpawn == null)
                 monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn/MonsterSpawn");
             _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
-
+        }
+        /// <summary> 중앙 타워 생성 </summary>
+        void GenerateTower()
+        {
             GameObject tower = GameObject.Find("Tower");
             if (tower == null)
                 tower = GameManager.Resource.Instantiate("Tower/Tower");
             _tower = tower.GetComponent<TowerController>();
         }
+        /// <summary> 플레이어 생성 
+        /// <para>현재는 하나만 생성하지만, 나중에 참여 인원수만큼 생성 </para>
+        /// </summary>
+        void GeneratePlayer()
+        {
+            int classIdx = PlayerPrefs.GetInt("Class", 0);
+            GameObject playerGO;
+            PlayerController playerController = null;
+            switch (classIdx)
+            {
+                case 0:
+                    playerGO = GameManager.Resource.Instantiate("Player/Warrior");
+                    playerController = Util.GetOrAddComponent<Warrior>(playerGO);
+                    break;
+                case 1:
+                    playerGO = GameManager.Resource.Instantiate("Player/Rifleman");
+                    playerController = Util.GetOrAddComponent<Rifleman>(playerGO);
+                    break;
+                case 2:
+                    playerGO = GameManager.Resource.Instantiate("Player/Wizard");
+                    playerController = Util.GetOrAddComponent<Wizard>(playerGO);
+                    break;
+                default:
+                    playerGO = GameManager.Resource.Instantiate("Player/Priest");
+                    playerController = Util.GetOrAddComponent<Priest>(playerGO);
+                    break;
+            }
 
+            playerGO.transform.position = Vector3.down;
+            _playerControllers.Add(playerController);
+        }
+        #endregion GameStart_Generate
 
         public void Clear()
         {

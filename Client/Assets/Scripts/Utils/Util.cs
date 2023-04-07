@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Reflection;
 
 namespace Client
 {
@@ -10,10 +9,7 @@ namespace Client
         /// </summary>
         public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
         {
-            T component = go.GetComponent<T>();
-            if (component == null)
-                component = go.AddComponent<T>();
-            return component;
+            return go.GetComponent<T>() ?? go.AddComponent<T>();
         }
 
         /// <summary>
