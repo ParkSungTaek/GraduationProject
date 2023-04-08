@@ -8,7 +8,7 @@
   {
     "AttackRange": 6,
     "SkillRange": 6,
-    "AttackCool": 3,
+    "AttackCool": 0.25,
     "SkillCool": 8
   },
   {

@@ -58,6 +58,11 @@ namespace Client
 
 
             GameManager.InGameData.MonsterSpawn.Monsters.Remove(this);
+            if(GameManager.InGameData.MonsterSpawn.Monsters.Count == 0 && GameManager.InGameData.MonsterSpawn.WaveEnd())
+            {
+                GameManager.GameOver(Define.State.Win);
+            } 
+
             Destroy(_monsterHpBar);
             Destroy(gameObject);
 

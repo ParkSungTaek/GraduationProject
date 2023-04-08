@@ -13,13 +13,20 @@ namespace Client
             TitleBtn,
             RetryBtn,
         }
-
+        enum Images
+        {
+            WinImg,
+            DefeatImg,
+        }
 
         public override void Init()
         {
             base.Init();
             Bind<Button>(typeof(Buttons));
+            Bind<Image>(typeof(Images));
+
             ButtonBind();
+            ImageBind();
         }
 
         #region Button
@@ -39,6 +46,29 @@ namespace Client
             SceneManager.LoadScene(Define.Scenes.Game);
         }
         #endregion Button
+
+        #region Image
+        /// <summary>
+        /// 나중에 Win Defeat 이미지 생기면 그때 이미지 갈아 끼우는 것으로 변경 예정
+        /// 지금은 그냥 Set True False로 간략하게 나타냄
+        /// </summary>
+        void ImageBind()
+        {
+            if(GameManager.InGameData.Stat() == Define.State.Win)
+            {
+                GetImage((int)Images.WinImg).gameObject.SetActive(true);
+                GetImage((int)Images.DefeatImg).gameObject.SetActive(false);
+
+            }
+            else
+            {
+
+                GetImage((int)Images.WinImg).gameObject.SetActive(false);
+                GetImage((int)Images.DefeatImg).gameObject.SetActive(true);
+            }
+        }
+
+        #endregion
 
         public override void ReOpen()
         {

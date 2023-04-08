@@ -54,11 +54,15 @@ namespace Client
             }
 
         }
-        public static void GameOver()
+        public static void GameOver(Define.State End)
         {
-            Time.timeScale = 0;
-            InGameData.StateChange(Define.State.End);
-            _instance._uiManager.ShowPopUpUI<UI_GameOver>();
+            if (End == Define.State.Win || End == Define.State.Defeat)
+            {
+                Time.timeScale = 0;
+                InGameData.StateChange(End);
+
+                _instance._uiManager.ShowPopUpUI<UI_GameOver>();
+            }
         }
         public static void GameStart()
         {

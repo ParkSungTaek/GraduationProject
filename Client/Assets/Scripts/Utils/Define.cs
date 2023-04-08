@@ -36,8 +36,10 @@ namespace Client
         public enum State
         {
             Play,
-            End,
+            End,        //제거 예정
             Pause,
+            Defeat,
+            Win,
             MaxCount
         }
 

@@ -26,7 +26,7 @@ namespace Client
         }
         protected override void Dead()
         {
-            GameManager.GameOver();
+            GameManager.GameOver(Define.State.Defeat);
         }
 
         // Update is called once per frame
