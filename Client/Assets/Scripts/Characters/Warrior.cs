@@ -19,6 +19,8 @@ namespace Client
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
                 {
+                    SeeTarget(mon.transform.position);
+                    _char4D.AnimationManager.Attack();
                     GenerateRangedArea(stat.AttackRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_attackDMGRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(stat.AttackCool);
                 }
@@ -38,6 +40,8 @@ namespace Client
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
                 {
+                    SeeTarget(mon.transform.position);
+                    _char4D.AnimationManager.Attack();
                     GenerateRangedArea(stat.SkillRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_skillDMGRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
                 }
@@ -48,6 +52,7 @@ namespace Client
 
         protected override void init()
         {
+            base.init();
             MyClass = Define.Charcter.Warrior;
             MoveSpeed = 5.0f;
             AttackDMG = 20;

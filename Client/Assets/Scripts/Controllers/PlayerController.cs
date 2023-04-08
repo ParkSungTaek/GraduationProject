@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.HeroEditor4D.Common.Scripts.CharacterScripts;
+using Assets.HeroEditor4D.Common.Scripts.Enums;
 
 namespace Client
 {
@@ -10,6 +12,8 @@ namespace Client
         protected float _attackDMGRatio;
         /// <summary> 스킬 데미지 계수 </summary>
         protected float _skillDMGRatio;
+
+        protected Character4D _char4D;
 
         enum PlayerState
         { 
@@ -24,6 +28,15 @@ namespace Client
         /// </summary>
         public Define.Charcter MyClass { get; protected set; }
 
+        /// <summary>
+        /// animation 연결
+        /// </summary>
+        protected override void init()
+        {
+            _char4D = GetComponent<Character4D>();
+            _char4D.AnimationManager.SetState(CharacterState.Idle);
+        }
+        
         /// <summary> 공격 시전, 단일 공격 기준 </summary>
         public virtual void IsAttack()
         {
@@ -36,6 +49,8 @@ namespace Client
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
                 {
+                    SeeTarget(mon.transform.position);
+                    _char4D.AnimationManager.Attack();
                     mon.BeAttacked(Mathf.RoundToInt(_attackDMGRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(stat.AttackCool);
                 }
@@ -58,6 +73,8 @@ namespace Client
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
                 {
+                    SeeTarget(mon.transform.position);
+                    _char4D.AnimationManager.Attack();
                     mon.BeAttacked(Mathf.RoundToInt(_skillDMGRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
                 }
@@ -95,18 +112,24 @@ namespace Client
         {
             _state = PlayerState.Move;
             _moveDirection = dir;
+            SeeDirection(dir);
+            _char4D.AnimationManager.SetState(CharacterState.Run);
         }
         /// <summary>
         /// 조이스틱 조작 종료
         /// </summary>
-        public void StopMove() => _state = PlayerState.Idle;
+        public void StopMove()
+        {
+            _state = PlayerState.Idle;
+            _char4D.AnimationManager.SetState(CharacterState.Idle);
+        }
         #endregion Move
 
-        #region TargetSelect
-        /// <summary>
-        /// 가장 가까운 몬스터 반환
-        /// </summary>
-        protected MonsterController NearMoster()
+            #region TargetSelect
+            /// <summary>
+            /// 가장 가까운 몬스터 반환
+            /// </summary>
+            protected MonsterController NearMoster()
         {
             List<MonsterController> monsters = GameManager.InGameData.MonsterSpawn.Monsters;
 
@@ -161,5 +184,26 @@ namespace Client
             return Util.GetOrAddComponent<RangedArea>(targetArea);
         }
         #endregion TargetSelect
+
+        /// <summary>
+        /// 대상 위치에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
+        /// </summary>
+        /// <param name="targetPos">대상 위치</param>
+        protected void SeeTarget(Vector3 targetPos) => SeeDirection((targetPos - transform.position).normalized);
+
+        /// <summary>
+        /// 조이스틱 방향에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
+        /// </summary>
+        /// <param name="dir">조이스틱 방향</param>
+        protected void SeeDirection(Vector2 dir)
+        {
+            Vector2 resultDir;
+            if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+                resultDir = (dir.x < 0 ? Vector2.left : Vector2.right);
+            else
+                resultDir = (dir.y < 0 ? Vector2.down : Vector2.up);
+
+            _char4D.SetDirection(resultDir);
+        }
     }
 }

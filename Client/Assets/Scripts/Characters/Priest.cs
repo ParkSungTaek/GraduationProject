@@ -21,6 +21,9 @@ namespace Client
                 buffTargets.Add(this);
                 if (GameManager.InGameData.NearPlayer != null) buffTargets.Add(GameManager.InGameData.NearPlayer);
 
+                SeeDirection(Vector2.down);
+                _char4D.AnimationManager.Jab();
+
                 //버프 시전
                 Debug.Log("buff");
                 GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
@@ -31,6 +34,7 @@ namespace Client
 
         protected override void init()
         {
+            base.init();
             MyClass = Define.Charcter.Priest;
             MoveSpeed = 5.0f;
             AttackDMG = 20;
