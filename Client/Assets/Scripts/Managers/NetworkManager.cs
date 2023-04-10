@@ -6,7 +6,7 @@ namespace Client
 {
     public class NetworkManager
     {
-        public void init()
+        public void Init()
         {
 
         }

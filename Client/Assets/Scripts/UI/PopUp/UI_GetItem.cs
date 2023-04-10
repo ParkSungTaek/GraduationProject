@@ -69,13 +69,13 @@ namespace Client
         /// <summary> 소지금에 따라 구매 버튼 활성화/비활성화 </summary>
         void Buy_ActiveControl()
         {
-            GetButton((int)Buttons.BuyBtn).gameObject.SetActive(GameManager.InGameData.Money >= GameManager.InGameData.ItemCost);
+            GetButton((int)Buttons.BuyBtn).gameObject.SetActive(GameManager.InGameData.CanBuyItem);
             //GetButton((int)Buttons.BuyBtn).interactable = GameManager.InGameData.Money >= GameManager.InGameData.ItemCost;
         }
         /// <summary> 아이템 구매 버튼 </summary>
         void Btn_Buy(PointerEventData evt)
         {
-            if(GameManager.InGameData.Money - GameManager.InGameData.ItemCost >= 0)
+            if(GameManager.InGameData.CanBuyItem)
             {
                 GameManager.InGameData.Money -= GameManager.InGameData.ItemCost;
 

@@ -5,7 +5,7 @@ namespace Client
     public class GameManager : MonoBehaviour
     {
         static GameManager _instance;
-        static GameManager Instance { get { init(); return _instance; } }
+        static GameManager Instance { get { Init(); return _instance; } }
         #region Managers
         //InputManager _inputManager = new InputManager();
         NetworkManager _networkManager = new NetworkManager();
@@ -23,17 +23,8 @@ namespace Client
         public static UIManager UI { get { return Instance._uiManager; } }
         #endregion
 
-        public static void 의논이필요함()
-        {
-            //
-        }
-        private void Start()
-        {
-            init();
-
-        }
-
-        static void init()
+        /// <summary> instance 생성, 산하 매니저들 초기화 </summary>
+        static void Init()
         {
             if (_instance == null)
             {
@@ -47,30 +38,33 @@ namespace Client
                 DontDestroyOnLoad(gm);
 
                 //_instance._inputManager.init();
-                _instance._networkManager.init();
-                _instance._poolManager.init();
-                _instance._soundManager.init();
-                _instance._inGameDataManager.init();
+                _instance._networkManager.Init();
+                _instance._poolManager.Init();
+                _instance._soundManager.Init();
+                _instance._inGameDataManager.Init();
             }
 
         }
-        public static void GameOver(Define.State End)
-        {
-            if (End == Define.State.Win || End == Define.State.Defeat)
-            {
-                Time.timeScale = 0;
-                InGameData.StateChange(End);
-
-                _instance._uiManager.ShowPopUpUI<UI_GameOver>();
-            }
-        }
+        /// <summary> 게임 시작, 상태 변경, 인게임 정보 초기화 </summary>
         public static void GameStart()
         {
             Time.timeScale = 1;
             InGameData.StateChange(Define.State.Play);
             _instance._inGameDataManager.GameStart();
         }
+        /// <summary> 승리 또는 패배 시 호출, 시간 정지, 상태 변경, UI 띄우기 </summary>
+        public static void GameOver(Define.State endState)
+        {
+            if (endState == Define.State.Win || endState == Define.State.Defeat)
+            {
+                Time.timeScale = 0;
+                InGameData.StateChange(endState);
 
+                _instance._uiManager.ShowPopUpUI<UI_GameOver>();
+            }
+        }
+
+        /// <summary> 모든 정보 초기화 </summary>
         public static void Clear()
         {
             //_instance._inputManager.Clear();

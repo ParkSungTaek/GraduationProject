@@ -1,5 +1,3 @@
-using UnityEngine.SceneManagement;
-
 namespace Client
 {
     public class SceneManager

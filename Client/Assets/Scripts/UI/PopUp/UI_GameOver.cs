@@ -54,7 +54,7 @@ namespace Client
         /// </summary>
         void ImageBind()
         {
-            if(GameManager.InGameData.CurrState() == Define.State.Win)
+            if(GameManager.InGameData.CurrState == Define.State.Win)
             {
                 GetImage((int)Images.WinImg).gameObject.SetActive(true);
                 GetImage((int)Images.DefeatImg).gameObject.SetActive(false);

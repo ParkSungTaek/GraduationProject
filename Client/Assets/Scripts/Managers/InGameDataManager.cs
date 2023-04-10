@@ -81,22 +81,13 @@ namespace Client
         #endregion
 
         #region Player
-        /// <summary>
-        /// 플레이어 쿨타임 컨트롤러
-        /// </summary>
+        /// <summary> 플레이어 쿨타임 컨트롤러 </summary>
         public CooldownController Cooldown { get; } = new CooldownController();
-        /// <summary>
-        /// 모든 직업에 대한 스텟 정보
-        /// </summary>
+        /// <summary> 모든 직업에 대한 스텟 정보 </summary>
         public CharacterstatHandler CharacterStats { get; private set; }
-        /// <summary>
-        /// 현재 게임에 참여한 플레이어 캐릭터 오브젝트들
-        /// </summary>
+        /// <summary> 현재 게임에 참여한 플레이어 캐릭터 오브젝트들 </summary>
         List<PlayerController> _playerControllers = new List<PlayerController>();
-        /// <summary>
-        /// 클라이언트의 캐릭터
-        /// <para></para>
-        /// </summary>
+        /// <summary> 클라이언트의 캐릭터 </summary>
         public PlayerController MyPlayer
         {
             get
@@ -108,7 +99,8 @@ namespace Client
             }
         }
         /// <summary>
-        /// 사제 버프 받을 가장 가까운 플레이어
+        /// 사제 버프 받을 가장 가까운 플레이어<br/>
+        /// 서버 연동 시 변경 예정
         /// </summary>
         public PlayerController NearPlayer => null;
         #endregion Player
@@ -133,34 +125,17 @@ namespace Client
         /// <summary> 중앙 타워 </summary>
         public TowerController Tower { get { return _tower; } }
 
-        #region state machine
+        #region State
         /// <summary> 상태 정보 저장 </summary>
-        bool[] _state = new bool[(int)Define.State.MaxCount];
-        /// <summary>
-        /// 굳이 이런식으로 적어두는 이유는 Play누르기 전에 배치 해보고 Play해보고도 싶기 때문 
-        /// 배치 하든 말든 하나만 잘 나오도록
-        /// </summary>
-        public void StateChange(State state)
-        {
-            for (State iterator = 0; iterator < State.MaxCount; iterator++)
-                _state[(int)iterator] = state == iterator;
-        }
+        Define.State _state = Define.State.Idle;
+        /// <summary> 게임 진행 상태 변경 </summary>
+        public void StateChange(State state) => _state = state;
         /// <summary> 현재 상태 반환 </summary>
-        public State CurrState()
-        {
-            for (State stat = 0; stat < State.MaxCount; stat++)
-            {
-                if (_state[(int)stat])
-                {
-                    return stat;
-                }
-            }
-            return State.End;
-        }
-        #endregion
+        public State CurrState { get => _state; }
+        #endregion State
 
         /// <summary> 아이템 db 초기화, 스텟 정보, 프리팹 불러오기 </summary>
-        public void init()
+        public void Init()
         {
             _itemDB = new Item[(int)Define.Item.MaxCount];
             string[] _itemDBstr = Enum.GetNames(typeof(Define.Item));

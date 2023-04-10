@@ -48,7 +48,7 @@ namespace Client
 
         public IEnumerator CooldownCoroutine()
         {
-            while(GameManager.InGameData.CurrState() == Define.State.Play)
+            while(GameManager.InGameData.CurrState == Define.State.Play)
             {
                 for(int i = 0;i < 2;i++)
                     if (_cooldowns[i] > 0)
