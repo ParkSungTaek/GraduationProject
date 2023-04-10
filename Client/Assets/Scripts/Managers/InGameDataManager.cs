@@ -212,6 +212,8 @@ namespace Client
         /// </summary>
         void GeneratePlayer()
         {
+            _playerControllers.Clear();
+
             int classIdx = PlayerPrefs.GetInt("Class", 0);
             GameObject playerGO;
             PlayerController playerController = null;
