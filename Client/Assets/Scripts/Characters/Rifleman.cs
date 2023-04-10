@@ -63,6 +63,7 @@ namespace Client
 
             _basicAttackRatio = 1.5f;
             _basicSkillRatio = 5;
+            StatUpdate();
         }
     }
 }
