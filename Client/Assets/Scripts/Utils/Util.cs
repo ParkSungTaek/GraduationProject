@@ -1,3 +1,11 @@
+/*
+공동 작성
+작성일 : 23.03.31
+
+최근 수정자 : 이우열
+최근 수정 일자 : 23.04.05
+최근 수정 사항 : json parsing 함수 구현
+*/
 using UnityEngine;
 
 namespace Client
@@ -72,6 +80,7 @@ namespace Client
         /// class MonsterStatHandler { public List&lt;MonsterStat&gt; monsterstats; }<br/>
         /// Assets/Resources/Jsons/MonsterStats.json
         /// </summary>
+        /// <typeparam name="Handler">{0}Handler</typeparam>
         public static Handler ParseJson<Handler>(string path = null, string handle = null)
         {
             if (string.IsNullOrEmpty(path))

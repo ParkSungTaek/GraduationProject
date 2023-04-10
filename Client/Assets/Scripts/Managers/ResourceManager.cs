@@ -1,3 +1,8 @@
+/*
+공동 작성
+작성일 : 23.03.29
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

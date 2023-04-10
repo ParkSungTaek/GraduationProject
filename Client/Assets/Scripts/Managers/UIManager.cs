@@ -1,3 +1,10 @@
+/*
+작성자 : 이우열
+작성일 : 23.03.29
+최근 수정 일자 : 23.04.05
+최근 수정 사항 : 팝업 UI 닫을 시 destroy가 아니라 SetActive(false)로 변경
+*/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

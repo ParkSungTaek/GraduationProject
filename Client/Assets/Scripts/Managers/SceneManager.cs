@@ -1,3 +1,10 @@
+/*
+작성자 : 이우열
+작성일 : 23.04.05
+최근 수정 일자 : 23.04.05
+최근 수정 사항 : 모든 씬 로드 기능은 이 매니저를 통해 수행
+*/
+
 namespace Client
 {
     public class SceneManager

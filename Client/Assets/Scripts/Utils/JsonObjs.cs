@@ -1,3 +1,10 @@
+/*
+공동 작성
+작성일 : 23.04.05
+
+최근 수정 일자 : 23.04.05
+최근 수정 사항 : json 파싱용 클래스들
+*/
 using System;
 using System.Collections.Generic;
 using UnityEngine;
