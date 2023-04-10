@@ -74,7 +74,7 @@ namespace Client
 
         IEnumerator StartCreateMonster()
         {
-            while (GameManager.InGameData.Stat() == Define.State.Play)
+            while (GameManager.InGameData.CurrState() == Define.State.Play)
             {
                 if (Count < Wavenum)
                 {

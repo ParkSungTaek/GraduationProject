@@ -14,7 +14,7 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanAttack())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStat[MyClass];
+                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
@@ -35,7 +35,7 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStat[MyClass];
+                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
@@ -58,8 +58,8 @@ namespace Client
             AttackDMG = 20;
             Position = Vector2.zero;// 시작위치
 
-            _attackDMGRatio = 1;
-            _skillDMGRatio = 3;
+            _basicAttackRatio = 1;
+            _basicSkillRatio = 3;
         }
 
     }

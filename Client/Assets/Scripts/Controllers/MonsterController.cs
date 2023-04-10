@@ -30,7 +30,7 @@ namespace Client
 
         protected override void init()
         {
-            Monsterstat mystat = GameManager.InGameData.MonsterStates[_monsterName];
+            Monsterstat mystat = GameManager.InGameData.MonsterStats[_monsterName];
             _animator = GetComponent<Animator>();
             _animator.SetInteger("State", 3);
 
@@ -45,7 +45,7 @@ namespace Client
 
 
             Nowhp = MaxHP;
-            _monsterHpBar = Instantiate(GameManager.InGameData.MonsterHpBar);
+            _monsterHpBar = Instantiate(GameManager.InGameData.HPBarPrefab);
             _monsterHpBar.transform.SetParent(GameManager.InGameData.MonsterSpawn.MonsterHPCanvas);
             HpBarSlider = _monsterHpBar.GetComponent<Slider>();
             _monsterState = Define.MonsterState.Idle;

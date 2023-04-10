@@ -8,29 +8,24 @@ namespace Client
 {
     public abstract class PlayerController : Entity
     {
-        /// <summary> 기본 공격 데미지 계수 </summary>
-        protected float _attackDMGRatio;
-        /// <summary> 스킬 데미지 계수 </summary>
-        protected float _skillDMGRatio;
-
-        protected Character4D _char4D;
-
-        enum PlayerState
-        { 
-            Idle,
-            Move,
-            Attack,
-            Skill,
-        }
-
-        /// <summary>
-        /// 내 직업
-        /// </summary>
+        /// <summary> 내 직업 </summary>
         public Define.Charcter MyClass { get; protected set; }
 
-        /// <summary>
-        /// animation 연결
-        /// </summary>
+        /// <summary> 기본 공격 </summary>
+        [Header("Stat Ratio")]
+        protected float _basicAttackRatio;
+        /// <summary> 스킬 데미지 계수 </summary>
+        protected float _basicSkillRatio;
+        /// <summary> 아이템과 스텟을 고려한 기본 공격 데미지 계수 </summary>
+        protected float _attackDMGRatio;
+        /// <summary> 아이템과 스텟을 고려한 스킬 데미지 계수 </summary>
+        protected float _skillDMGRatio;
+
+        
+        [Header("Animation")]
+        protected Character4D _char4D;
+
+        /// <summary> animation 연결 및 초기화 </summary>
         protected override void init()
         {
             _char4D = GetComponent<Character4D>();
@@ -44,7 +39,7 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanAttack())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStat[MyClass];
+                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
@@ -68,7 +63,7 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStat[MyClass];
+                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
@@ -88,6 +83,14 @@ namespace Client
         protected sealed override void Dead() { }
 
         #region Move
+        enum PlayerState
+        {
+            Idle,
+            Move,
+            Attack,
+            Skill,
+        }
+
         /// <summary>
         /// 현재 플레이어 상태
         /// </summary>
@@ -125,12 +128,11 @@ namespace Client
         }
         #endregion Move
 
-            #region TargetSelect
-            /// <summary>
-            /// 가장 가까운 몬스터 반환
-            /// </summary>
-            protected MonsterController NearMoster()
+        #region TargetSelect
+        /// <summary> 가장 가까운 몬스터 반환 </summary>
+        protected MonsterController NearMoster()
         {
+            //현재 맵에 존재하는 맵들 받아옴
             List<MonsterController> monsters = GameManager.InGameData.MonsterSpawn.Monsters;
 
             if (monsters.Count <= 0)
@@ -150,6 +152,7 @@ namespace Client
 
             return nearMon;
         }
+        
         /// <summary>
         /// 시전자에서 최대 사거리까지 이어지는 범위 공격 오브젝트 생성
         /// </summary>
@@ -185,6 +188,7 @@ namespace Client
         }
         #endregion TargetSelect
 
+        #region AnimationDirection
         /// <summary>
         /// 대상 위치에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
         /// </summary>
@@ -194,7 +198,7 @@ namespace Client
         /// <summary>
         /// 조이스틱 방향에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
         /// </summary>
-        /// <param name="dir">조이스틱 방향</param>
+        /// <param name="dir">조이스틱 방향(normalized)</param>
         protected void SeeDirection(Vector2 dir)
         {
             Vector2 resultDir;
@@ -205,5 +209,15 @@ namespace Client
 
             _char4D.SetDirection(resultDir);
         }
+        #endregion AnimationDirection
+
+        #region StatUpdate
+        /// <summary> 아이템 및 버프 상태에 따른 스텟 계산 </summary>
+        protected void StatUpdate()
+        {
+            _attackDMGRatio = _basicAttackRatio;
+            _skillDMGRatio = _basicSkillRatio;
+        }
+        #endregion StatUpdate
     }
 }

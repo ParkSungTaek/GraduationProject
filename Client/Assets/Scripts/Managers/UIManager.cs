@@ -10,6 +10,7 @@ namespace Client
         /// <summary>
         /// 팝업 UI 관리를 위한 stack
         /// </summary>
+        [Header("Pop Up")]
         Stack<UI_PopUp> _popupStack = new Stack<UI_PopUp>();
         /// <summary>
         /// popup ui 정렬 순서를 위한 변수
@@ -24,6 +25,7 @@ namespace Client
         /// <summary>
         /// UI의 부모 
         /// </summary>
+        [Header("Root")]
         GameObject _root = null;
         public GameObject Root
         {
@@ -86,6 +88,8 @@ namespace Client
 
             GameObject popup;
             T popupUI;
+
+            //이전에 띄운 기록 없음 -> 생성
             if (_popupInstances.TryGetValue(typeof(T), out popup) == false)
             {
                 popup = GameManager.Resource.Instantiate($"UI/PopUp/{name}");
@@ -93,6 +97,7 @@ namespace Client
 
                 popupUI = Util.GetOrAddComponent<T>(popup);
             }
+            //이전에 띄운 기록 있음 -> 재활성화
             else
             {
                 popupUI = Util.GetOrAddComponent<T>(popup);

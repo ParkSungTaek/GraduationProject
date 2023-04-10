@@ -6,17 +6,10 @@ namespace Client
 {
     public class ResourceManager
     {
-
-
-        //Dictionary<string,Object> 암튼암튼 캐싱은 여기서
-
-        Dictionary<Define.Item, Item> 인벤토리;
-
+        /// <summary> Resources.Load로 불러오기
+        /// <para> 캐싱을 할 것인가?? </para> </summary>
         public T Load<T>(string path) where T : Object
         {
-            //풀링 안한다고 했던가?
-            GameManager.의논이필요함();
-
             /*
             if (typeof(T) == typeof(GameObject))
             {
@@ -34,8 +27,9 @@ namespace Client
             return Resources.Load<T>(path);
         }
 
+        /// <summary> GameObject 생성 </summary>
         public GameObject Instantiate(string path, Transform parent = null) => Instantiate<GameObject>(path, parent);
-
+        /// <summary> T type object 생성 </summary>
         public T Instantiate<T>(string path, Transform parent = null) where T : UnityEngine.Object
         {
             T prefab = Load<T>($"Prefabs/{path}");

@@ -9,26 +9,23 @@ namespace Client
     public class UI_GameScene : UI_Scene
     {
         PlayerController _player { get => GameManager.InGameData.MyPlayer; }
-        public static Action TextsAction { get; private set; }
+        public static Action TextChangeAction { get; private set; }
         enum GameObjects
         {
             joystickBG,
             joystickHandle,
         }
-
         enum Buttons
         {
             AttackBtn,
             SkillBtn,
             ItemBtn,
         }
-
         enum Texts 
         { 
             MoneyTxt,
             ScoreTxt
         }
-
 
         public override void Init()
         {
@@ -36,18 +33,24 @@ namespace Client
             Bind<GameObject>(typeof(GameObjects));
             Bind<Button>(typeof(Buttons));
             Bind<TMP_Text>(typeof(Texts));
-            
+
+            attackBtnImage = GetButton((int)Buttons.AttackBtn).GetComponent<Image>();
+            skillBtnImage = GetButton((int)Buttons.SkillBtn).GetComponent<Image>();
 
             JoystickBind();
             ButtonBind();
-            TextsAction += TextUpdate;
+            TextChangeAction += TextUpdate;
         }
 
+        #region BtnImageUpdate
+        Image attackBtnImage;
+        Image skillBtnImage;
         private void Update()
         {
-            GetButton((int)Buttons.AttackBtn).GetComponent<Image>().fillAmount = GameManager.InGameData.Cooldown.GetAttackCoolRate();
-            GetButton((int)Buttons.SkillBtn).GetComponent<Image>().fillAmount = GameManager.InGameData.Cooldown.GetSkillCoolRate();
+            attackBtnImage.fillAmount = GameManager.InGameData.Cooldown.GetAttackCoolRate();
+            skillBtnImage.fillAmount = GameManager.InGameData.Cooldown.GetSkillCoolRate();
         }
+        #endregion BtnImageUpdate
 
         #region Joystick
         /// <summary>
@@ -143,13 +146,11 @@ namespace Client
         #endregion Buttons
 
         #region Texts
-
         void TextUpdate()
         {
             GetText((int)Texts.MoneyTxt).text = $"Money: {GameManager.InGameData.Money}";
             GetText((int)Texts.ScoreTxt).text = $"Score: {GameManager.InGameData.Score}";
         }
-
         #endregion
     }
 }

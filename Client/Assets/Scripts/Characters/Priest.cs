@@ -15,7 +15,7 @@ namespace Client
             //쿨타임 중이 아닐 때
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
-                Characterstat stat = GameManager.InGameData.CharacterStat[MyClass];
+                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 List<PlayerController> buffTargets = new List<PlayerController>();
                 buffTargets.Add(this);
@@ -40,8 +40,8 @@ namespace Client
             AttackDMG = 20;
             Position = Vector2.zero;// 시작위치
 
-            _attackDMGRatio = 1;
-            _skillDMGRatio = 1.5f;
+            _basicAttackRatio = 1;
+            _basicSkillRatio = 1.5f;
         }
 
     }

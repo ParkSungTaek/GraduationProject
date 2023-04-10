@@ -7,41 +7,77 @@ namespace Client
 {
     public class InGameDataManager
     {
-        GameObject _gameOver;
-        public GameObject GameOver { get { return _gameOver; } }
-
-
-        #region Score & Money       
+        #region Money   
+        /// <summary> 보유 중인 돈 </summary>
         int _money = 0;
-        public int Money { get { return _money; } set { 
-                _money = value; 
-                UI_GameScene.TextsAction.Invoke();
-                UI_GetItem.ShopAction?.Invoke();
-            } 
+        /// <summary> set 시, 아이템 구매 및 메인 UI 업데이트 </summary>
+        public int Money
+        {
+            get { return _money; }
+            set
+            {
+                _money = value;
+                UI_GameScene.TextChangeAction?.Invoke();
+                UI_GetItem.OnMoneyChangedAction?.Invoke();
+            }
         }
 
-        /* public readonly*/
-        int _itemCost = 10;
-        /// <summary>
-        /// 이게 가격 변동이 있을 일이 있나?
-        /// </summary>
-        public int ItemCost { get { return _itemCost; } set { _itemCost = value; } }
-
-        int _moneyRewards = 5;
-        int _scoreRewards = 1;
         /// <summary>
         /// Wave 마다 올려줘야하나?
         /// </summary>
+        int _moneyRewards = 5;
         public int MoneyRewards { get { return _moneyRewards; } }
+        #endregion Money
+
+        #region Score
+        int _scoreRewards = 1;
         public int ScoreRewards { get { return _scoreRewards; } }
 
         int _score = 0;
-        public int Score { get { return _score; } 
-            set { _score = value; 
-                UI_GameScene.TextsAction.Invoke();
-            } 
+        public int Score
+        {
+            get { return _score; }
+            set
+            {
+                _score = value;
+                UI_GameScene.TextChangeAction?.Invoke();
+            }
         }
+        #endregion Score
 
+        #region Item
+        /// <summary> 아이템 최대 보유 가능 수 </summary>
+        public readonly int MAXITEMCOUNT = 8;
+        /// <summary> 아이템 구매 가능 여부 반환 </summary>
+        public bool CanBuyItem { get => _money >= _itemCost; }
+        /// <summary>
+        /// 이게 가격 변동이 있을 일이 있나?
+        /// </summary>
+        int _itemCost = 10;
+        public int ItemCost { get { return _itemCost; } set { _itemCost = value; } }
+
+        /// <summary> 모든 아이템 정보 </summary>
+        Item[] _itemDB;
+        /// <summary> 현재 보유 중인 아이템 정보 </summary>
+        List<Item> _myInventory = new List<Item>();
+        /// <summary> 현재 보유 중인 아이템 정보 </summary>
+        public List<Item> MyInventory { get { return _myInventory; } }
+
+        /// <summary> 새로운 아이템 구매 </summary>
+        public void AddRandomItem() 
+        {
+            if (_myInventory.Count < MAXITEMCOUNT)
+                _myInventory.Add(_itemDB[UnityEngine.Random.Range(0, _itemDB.Length)]);
+            else
+            {
+                //TODO : 버릴 아이템 선택
+            }
+        }
+        /// <summary> 보유 중인 아이템 버리기 </summary>
+        public void MyInventoryDelete(int idx)
+        {
+
+        }
         #endregion
 
         #region Player
@@ -52,7 +88,7 @@ namespace Client
         /// <summary>
         /// 모든 직업에 대한 스텟 정보
         /// </summary>
-        public CharacterstatHandler CharacterStat { get; private set; }
+        public CharacterstatHandler CharacterStats { get; private set; }
         /// <summary>
         /// 현재 게임에 참여한 플레이어 캐릭터 오브젝트들
         /// </summary>
@@ -61,7 +97,8 @@ namespace Client
         /// 클라이언트의 캐릭터
         /// <para></para>
         /// </summary>
-        public PlayerController MyPlayer { 
+        public PlayerController MyPlayer
+        {
             get
             {
                 if (_playerControllers.Count > 0)
@@ -76,76 +113,40 @@ namespace Client
         public PlayerController NearPlayer => null;
         #endregion Player
 
-        #region Item
-
-        public readonly int MAXITEMNUM = 8;
-        Item[] _itemDB;
-        List<Item> _myInventory;
-        public List<Item> MyInventory { get { return _myInventory; } }
-        public Item[] ItemDB { get { return _itemDB;} }
-
-
-
-        public void MyInventoryRandomADD() {
-            if (_myInventory.Count < MAXITEMNUM)
-            {
-                _myInventory.Add(_itemDB[UnityEngine.Random.Range(0, _itemDB.Length)]);
-            }
-            else
-            {
-
-            }
-        }
-
-        public void MyInventoryDelete(Item item)
-        {
-
-        }
-        #endregion
-
-
         #region Monster
-        public MonsterstatHandler MonsterStates { get; private set; }
+        /// <summary> 모든 몬스터 스텟 정보 </summary>
+        public MonsterstatHandler MonsterStats { get; private set; }
 
+        /// <summary> 몬스터 소환 관리 클래스 </summary>
         MonsterSpawn _monsterSpawn;
-        TowerController _tower;
-        GameObject _monsterHpBar;
-
-
-
+        /// <summary> 몬스터 소환 관리 클래스 </summary>
         public MonsterSpawn MonsterSpawn { get { return _monsterSpawn; } }
-        public TowerController Tower { get { return _tower; } }
-        public GameObject MonsterHpBar { get { return _monsterHpBar; } }
+
+        /// <summary> 몬스터 체력바 프리팹 </summary>
+        GameObject _hpBarPrefab;
+        /// <summary> 몬스터 체력바 프리팹 </summary>
+        public GameObject HPBarPrefab { get { return _hpBarPrefab; } }
         #endregion
+
+        /// <summary> 중앙 타워 </summary>
+        TowerController _tower;
+        /// <summary> 중앙 타워 </summary>
+        public TowerController Tower { get { return _tower; } }
 
         #region state machine
-
+        /// <summary> 상태 정보 저장 </summary>
         bool[] _state = new bool[(int)Define.State.MaxCount];
-
-
-
         /// <summary>
         /// 굳이 이런식으로 적어두는 이유는 Play누르기 전에 배치 해보고 Play해보고도 싶기 때문 
         /// 배치 하든 말든 하나만 잘 나오도록
         /// </summary>
-
-
-        public void StateChange(State nowState)
+        public void StateChange(State state)
         {
-            for (State stat = 0; stat < State.MaxCount; stat++)
-            {
-                if (nowState == stat)
-                {
-                    _state[(int)stat] = true;
-                }
-                else
-                {
-                    _state[(int)stat] = false;
-                }
-            }
-
+            for (State iterator = 0; iterator < State.MaxCount; iterator++)
+                _state[(int)iterator] = state == iterator;
         }
-        public State Stat()
+        /// <summary> 현재 상태 반환 </summary>
+        public State CurrState()
         {
             for (State stat = 0; stat < State.MaxCount; stat++)
             {
@@ -158,9 +159,7 @@ namespace Client
         }
         #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <summary> 아이템 db 초기화, 스텟 정보, 프리팹 불러오기 </summary>
         public void init()
         {
             _itemDB = new Item[(int)Define.Item.MaxCount];
@@ -172,24 +171,19 @@ namespace Client
                 _itemDB[i].Name = _itemDBstr[i];
             }
 
-            _myInventory = new List<Item>();
+            CharacterStats = Util.ParseJson<CharacterstatHandler>();
+            MonsterStats = Util.ParseJson<MonsterstatHandler>();
 
-            CharacterStat = Util.ParseJson<CharacterstatHandler>();
-            MonsterStates = Util.ParseJson<MonsterstatHandler>();
-
-            _monsterHpBar = Resources.Load<GameObject>("Prefabs/UI/MonsterHP");
+            _hpBarPrefab = GameManager.Resource.Load<GameObject>("Prefabs/UI/MonsterHP");
         }
 
-        /// <summary>
-        /// 새로운 게임 시작 - 몬스터 스폰 위치와 중앙 타워 생성
-        /// </summary>
+        /// <summary> 새로운 게임 시작 - 몬스터 스폰 위치와 중앙 타워 생성 </summary>
         public void GameStart()
         {
             GenerateMonsterSpawnPoint();
             GenerateTower();
             GeneratePlayer();
         }
-
         #region GameStart_Generate
         /// <summary> 몬스터 스폰 포인트 생성 </summary>
         void GenerateMonsterSpawnPoint()
@@ -207,9 +201,8 @@ namespace Client
                 tower = GameManager.Resource.Instantiate("Tower/Tower");
             _tower = tower.GetComponent<TowerController>();
         }
-        /// <summary> 플레이어 생성 
-        /// <para>현재는 하나만 생성하지만, 나중에 참여 인원수만큼 생성 </para>
-        /// </summary>
+        /// <summary> 플레이어 생성 <br/>
+        /// 현재는 하나만 생성하지만, 나중에 참여 인원수만큼 생성 </summary>
         void GeneratePlayer()
         {
             _playerControllers.Clear();
@@ -242,6 +235,7 @@ namespace Client
         }
         #endregion GameStart_Generate
 
+        /// <summary> 게임 플레이 정보 초기화 </summary>
         public void Clear()
         {
             _money = _score = 0;
