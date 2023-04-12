@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -45,12 +45,18 @@ namespace Client
 
         public enum Item
         {
-            Á¦ÃâÀ»_±ôºıÇÑ_°úÁ¦,
-            Ä¥½ÊÄ¥Áß_¼øÈ¯ÂüÁ¶_Class,
-            ¸¶°¨_ÇÏ·çÀü³¯_³¯¾Æ°¡¹ö¸°_DB,
-            ¿ï¸®Áö_¾ÊÀº_ÀÚ¸íÁ¾,
+            ì œì¶œì„_ê¹œë¹¡í•œ_ê³¼ì œ,
+            ì¹ ì‹­ì¹ ì¤‘_ìˆœí™˜ì°¸ì¡°_Class,
+            ë§ˆê°_í•˜ë£¨ì „ë‚ _ë‚ ì•„ê°€ë²„ë¦°_DB,
+            ìš¸ë¦¬ì§€_ì•Šì€_ìëª…ì¢…,
             MaxCount
         }
+
+        public enum ItemKind
+        {
+            Damage,
+        }
+
         public enum Tag
         {
             Monster,
@@ -59,7 +65,7 @@ namespace Client
         }
 
         /// <summary>
-        /// UI Event Á¾·ù ÁöÁ¤
+        /// UI Event ì¢…ë¥˜ ì§€ì •
         /// </summary>
         public enum UIEvent
         {

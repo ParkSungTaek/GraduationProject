@@ -1,0 +1,26 @@
+[
+  {
+    "Name": "제출을_깜빡한_과제",
+    "Kind": "Damage",
+    "Stat": 0.2,
+    "Prob": 0.4
+  },
+  {
+    "Name": "칠십칠중_순환참조_Class",
+    "Kind": "Damage",
+    "Stat": 0.4,
+    "Prob": 0.3
+  },
+  {
+    "Name": "마감_하루전날_날아가버린_DB",
+    "Kind": "Damage",
+    "Stat": 0.8,
+    "Prob": 0.2
+  },
+  {
+    "Name": "울리지_않은_자명종",
+    "Kind": "Damage",
+    "Stat": 1.6,
+    "Prob": 0.1
+  }
+]

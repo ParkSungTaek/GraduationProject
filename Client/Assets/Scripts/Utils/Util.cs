@@ -1,10 +1,10 @@
-/*
-°øµ¿ ÀÛ¼º
-ÀÛ¼ºÀÏ : 23.03.31
+ï»¿/*
+ê³µë™ ì‘ì„±
+ì‘ì„±ì¼ : 23.03.31
 
-ÃÖ±Ù ¼öÁ¤ÀÚ : ÀÌ¿ì¿­
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ »çÇ× : json parsing ÇÔ¼ö ±¸Çö
+ìµœê·¼ ìˆ˜ì •ì : ì´ìš°ì—´
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.05
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : json parsing í•¨ìˆ˜ êµ¬í˜„
 */
 using UnityEngine;
 
@@ -13,7 +13,7 @@ namespace Client
     public class Util
     {
         /// <summary>
-        /// Game Object¿¡¼­ ÇØ´ç Component ¾ò°Å³ª ¾øÀ¸¸é Ãß°¡
+        /// Game Objectì—ì„œ í•´ë‹¹ Component ì–»ê±°ë‚˜ ì—†ìœ¼ë©´ ì¶”ê°€
         /// </summary>
         public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
         {
@@ -21,10 +21,10 @@ namespace Client
         }
 
         /// <summary>
-        /// ÇØ´ç Game ObjectÀÇ ÀÚ½Ä Áß T ÄÄÆ÷³ÍÆ®¸¦ °¡Áø ÀÚ½Ä ¾ò±â
+        /// í•´ë‹¹ Game Objectì˜ ìì‹ ì¤‘ T ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì§„ ìì‹ ì–»ê¸°
         /// </summary>
-        /// <param name="name">ÀÚ½ÄÀÇ ÀÌ¸§</param>
-        /// <param name="recursive">Àç±ÍÀû Å½»ö ¿©ºÎ</param>
+        /// <param name="name">ìì‹ì˜ ì´ë¦„</param>
+        /// <param name="recursive">ì¬ê·€ì  íƒìƒ‰ ì—¬ë¶€</param>
         public static T FindChild<T>(GameObject go, string name = null, bool recursive = false) where T : UnityEngine.Object
         {
             if (go == null) return null;
@@ -53,7 +53,7 @@ namespace Client
         }
 
         /// <summary>
-        /// Game Object Àü¿ë FindChild
+        /// Game Object ì „ìš© FindChild
         /// </summary>
         public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)
         {
@@ -64,19 +64,19 @@ namespace Client
 
 
         /// <summary>
-        /// json ÆÄÀÏ ÆÄ½ÌÇÏ¿© ¿ÀºêÁ§Æ®·Î ¹İÈ¯<br/>
+        /// json íŒŒì¼ íŒŒì‹±í•˜ì—¬ ì˜¤ë¸Œì íŠ¸ë¡œ ë°˜í™˜<br/>
         /// <br/>
-        /// * ÇÊ¿ä Å¬·¡½º<br/>
-        /// {0} - ½ÇÁ¦ µ¥ÀÌÅÍ °¡Áö°í ÀÖ´Â Å¬·¡½º<br/>
-        /// {0}Handler - member·Î ÀÌ¸§ÀÌ ({0}s).ToLower() ÀÎ List&lt;{0}&gt; ÇÊ¿ä<br/>
+        /// * í•„ìš” í´ë˜ìŠ¤<br/>
+        /// {0} - ì‹¤ì œ ë°ì´í„° ê°€ì§€ê³  ìˆëŠ” í´ë˜ìŠ¤<br/>
+        /// {0}Handler - memberë¡œ ì´ë¦„ì´ ({0}s).ToLower() ì¸ List&lt;{0}&gt; í•„ìš”<br/>
         ///<br/>
-        /// * json ÆÄÀÏ<br/>
+        /// * json íŒŒì¼<br/>
         /// Assets/Resources/Jsons/{0}s.json<br/>
         /// <br/>
         /// ex)<br/>
-        /// {0} = MonsterStatÀÎ °æ¿ì,<br/>
+        /// {0} = MonsterStatì¸ ê²½ìš°,<br/>
         /// <br/>
-        /// class MonsterStat - µ¥ÀÌÅÍ °¡Áö°í ÀÖ´Â Å¬·¡½º<br/>
+        /// class MonsterStat - ë°ì´í„° ê°€ì§€ê³  ìˆëŠ” í´ë˜ìŠ¤<br/>
         /// class MonsterStatHandler { public List&lt;MonsterStat&gt; monsterstats; }<br/>
         /// Assets/Resources/Jsons/MonsterStats.json
         /// </summary>

@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ¾ÆÀÌÅÛ ½ºÅİ°ú ±âº» ½ºÅİ ºĞ¸®
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.29
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ì•„ì´í…œ ìŠ¤í…Ÿê³¼ ê¸°ë³¸ ìŠ¤í…Ÿ ë¶„ë¦¬
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -10,19 +10,19 @@ using UnityEngine;
 
 namespace Client
 {
-    /// <summary> À§Àúµå ±âº» °ø°İ : ¿ø°Å¸® ´ÜÀÏ </summary>
+    /// <summary> ìœ„ì €ë“œ ê¸°ë³¸ ê³µê²© : ì›ê±°ë¦¬ ë‹¨ì¼ </summary>
     public class Wizard : PlayerController
     {
-        /// <summary> À§Àúµå ½ºÅ³ : ¿ø°Å¸® ¹üÀ§(Å¸°Ù Áß½É) </summary>
+        /// <summary> ìœ„ì €ë“œ ìŠ¤í‚¬ : ì›ê±°ë¦¬ ë²”ìœ„(íƒ€ê²Ÿ ì¤‘ì‹¬) </summary>
         public override void IsSkill()
         {
-            //ÄğÅ¸ÀÓ ÁßÀÌ ¾Æ´Ò ‹š
+            //ì¿¨íƒ€ì„ ì¤‘ì´ ì•„ë‹ ë–„
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
+                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
-                //»ç°Å¸® ³»¿¡ ¸ó½ºÅÍ°¡ Á¸ÀçÇÒ ¶§
+                //ì‚¬ê±°ë¦¬ ë‚´ì— ëª¬ìŠ¤í„°ê°€ ì¡´ì¬í•  ë•Œ
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
@@ -41,7 +41,7 @@ namespace Client
             MyClass = Define.Charcter.Wizard;
             MoveSpeed = 5.0f;
             AttackDMG = 20;
-            Position = Vector2.zero;// ½ÃÀÛÀ§Ä¡
+            Position = Vector2.zero;// ì‹œì‘ìœ„ì¹˜
 
             _basicAttackRatio = 1;
             _basicSkillRatio = 2;

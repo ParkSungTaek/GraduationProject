@@ -1,38 +1,41 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ¾ÆÀÌÅÛ ½ºÅİ°ú ±âº» ½ºÅİ ºĞ¸®
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.29
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ì•„ì´í…œ ìŠ¤í…Ÿê³¼ ê¸°ë³¸ ìŠ¤í…Ÿ ë¶„ë¦¬
 */
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Client
 {
-    /// <summary> »çÁ¦ ±âº» °ø°İ : ±ÙÁ¢, ´ÜÀÏ </summary>
+    /// <summary> ì‚¬ì œ ê¸°ë³¸ ê³µê²© : ê·¼ì ‘, ë‹¨ì¼ </summary>
     public class Priest : PlayerController
     {
         /// <summary>
-        /// »çÁ¦ ½ºÅ³ : ÀÚ½Å, °¡Àå °¡±î¿î ¾Æ±º °­È­
+        /// ì‚¬ì œ ìŠ¤í‚¬ : ìì‹ , ê°€ì¥ ê°€ê¹Œìš´ ì•„êµ° ê°•í™”
         /// </summary>
         public override void IsSkill()
         {
-            //ÄğÅ¸ÀÓ ÁßÀÌ ¾Æ´Ò ¶§
+            //ì¿¨íƒ€ì„ ì¤‘ì´ ì•„ë‹ ë•Œ
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
-                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
+                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
-                List<PlayerController> buffTargets = new List<PlayerController>();
-                buffTargets.Add(this);
-                if (GameManager.InGameData.NearPlayer != null) buffTargets.Add(GameManager.InGameData.NearPlayer);
-
+                //ì• ë‹ˆë©”ì´ì…˜ ì¬ìƒ
                 SeeDirection(Vector2.down);
                 _char4D.AnimationManager.Jab();
 
-                //¹öÇÁ ½ÃÀü
-                Debug.Log("buff");
+                //ë‚˜ì—ê²Œ ë²„í”„ ì‹œì „
+                Func<IEnumerator> buffCounting = GameManager.InGameData.Buff.AddBuff(new Buff(_skillDMGRatio));
+                StartCoroutine(buffCounting.Invoke());
+
+                //TODO : ê°€ì¥ ê°€ê¹Œìš´ ì•„êµ°ì—ê²Œ ë²„í”„ ì‹œì „
+
+
                 GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
             }
             else
@@ -45,7 +48,7 @@ namespace Client
             MyClass = Define.Charcter.Priest;
             MoveSpeed = 5.0f;
             AttackDMG = 20;
-            Position = Vector2.zero;// ½ÃÀÛÀ§Ä¡
+            Position = Vector2.zero;// ì‹œì‘ìœ„ì¹˜
 
             _basicAttackRatio = 1;
             _basicSkillRatio = 1.5f;

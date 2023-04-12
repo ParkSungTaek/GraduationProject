@@ -1,25 +1,22 @@
-/*
-°øµ¿ ÀÛ¼º
-ÀÛ¼ºÀÏ : 23.03.29
+ï»¿/******
+ê³µë™ ì‘ì„±
+ì‘ì„±ì¼ : 23.03.29
 
-ÃÖ±Ù ¼öÁ¤ÀÚ : ÀÌ¿ì¿­
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : regionÀ¸·Î º¯¼ö Á¤¸®
-*/
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.12
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ë²„í”„ ì»¨íŠ¸ë¡¤ëŸ¬ ì¶”ê°€
+******/
 
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static Client.Define;
 
 namespace Client
 {
     public class InGameDataManager
     {
         #region Money   
-        /// <summary> º¸À¯ ÁßÀÎ µ· </summary>
+        /// <summary> ë³´ìœ  ì¤‘ì¸ ëˆ </summary>
         int _money = 0;
-        /// <summary> set ½Ã, ¾ÆÀÌÅÛ ±¸¸Å ¹× ¸ŞÀÎ UI ¾÷µ¥ÀÌÆ® </summary>
+        /// <summary> set ì‹œ, ì•„ì´í…œ êµ¬ë§¤ ë° ë©”ì¸ UI ì—…ë°ì´íŠ¸ </summary>
         public int Money
         {
             get { return _money; }
@@ -32,7 +29,7 @@ namespace Client
         }
 
         /// <summary>
-        /// Wave ¸¶´Ù ¿Ã·ÁÁà¾ßÇÏ³ª?
+        /// Wave ë§ˆë‹¤ ì˜¬ë ¤ì¤˜ì•¼í•˜ë‚˜?
         /// </summary>
         int _moneyRewards = 5;
         public int MoneyRewards { get { return _moneyRewards; } }
@@ -55,48 +52,52 @@ namespace Client
         #endregion Score
 
         #region Item
-        /// <summary> ¾ÆÀÌÅÛ ÃÖ´ë º¸À¯ °¡´É ¼ö </summary>
+        /// <summary> ëª¨ë“  ì•„ì´í…œ ì •ë³´ </summary>
+        ItemDataHandler _itemData;
+
+        /// <summary> ì•„ì´í…œ ìµœëŒ€ ë³´ìœ  ê°€ëŠ¥ ìˆ˜ </summary>
         public readonly int MAXITEMCOUNT = 8;
-        /// <summary> ¾ÆÀÌÅÛ ±¸¸Å °¡´É ¿©ºÎ ¹İÈ¯ </summary>
+        /// <summary> ì•„ì´í…œ êµ¬ë§¤ ê°€ëŠ¥ ì—¬ë¶€ ë°˜í™˜ </summary>
         public bool CanBuyItem { get => _money >= _itemCost; }
         /// <summary>
-        /// ÀÌ°Ô °¡°İ º¯µ¿ÀÌ ÀÖÀ» ÀÏÀÌ ÀÖ³ª?
+        /// ì´ê²Œ ê°€ê²© ë³€ë™ì´ ìˆì„ ì¼ì´ ìˆë‚˜?
         /// </summary>
         int _itemCost = 10;
         public int ItemCost { get { return _itemCost; } set { _itemCost = value; } }
 
-        /// <summary> ¸ğµç ¾ÆÀÌÅÛ Á¤º¸ </summary>
-        Item[] _itemDB;
-        /// <summary> ÇöÀç º¸À¯ ÁßÀÎ ¾ÆÀÌÅÛ Á¤º¸ </summary>
-        List<Item> _myInventory = new List<Item>();
-        /// <summary> ÇöÀç º¸À¯ ÁßÀÎ ¾ÆÀÌÅÛ Á¤º¸ </summary>
-        public List<Item> MyInventory { get { return _myInventory; } }
+        /// <summary> í˜„ì¬ ë³´ìœ  ì¤‘ì¸ ì•„ì´í…œ ì •ë³´ </summary>
+        List<ItemData> _myInventory = new List<ItemData>();
+        /// <summary> í˜„ì¬ ë³´ìœ  ì¤‘ì¸ ì•„ì´í…œ ì •ë³´ </summary>
+        public List<ItemData> MyInventory { get { return _myInventory; } }
 
-        /// <summary> »õ·Î¿î ¾ÆÀÌÅÛ ±¸¸Å </summary>
+        /// <summary> ìƒˆë¡œìš´ ì•„ì´í…œ êµ¬ë§¤ </summary>
         public void AddRandomItem() 
         {
             if (_myInventory.Count < MAXITEMCOUNT)
-                _myInventory.Add(_itemDB[UnityEngine.Random.Range(0, _itemDB.Length)]);
+                _myInventory.Add(_itemData.GetRandomItem());
             else
             {
-                //TODO : ¹ö¸± ¾ÆÀÌÅÛ ¼±ÅÃ
+                //TODO : ë²„ë¦´ ì•„ì´í…œ ì„ íƒ
             }
+
+            GameManager.InGameData.MyPlayer.StatUpdate();
         }
-        /// <summary> º¸À¯ ÁßÀÎ ¾ÆÀÌÅÛ ¹ö¸®±â </summary>
+        /// <summary> ë³´ìœ  ì¤‘ì¸ ì•„ì´í…œ ë²„ë¦¬ê¸° </summary>
         public void MyInventoryDelete(int idx)
         {
-
+            _myInventory.RemoveAt(idx);
+            GameManager.InGameData.MyPlayer.StatUpdate();
         }
         #endregion
 
         #region Player
-        /// <summary> ÇÃ·¹ÀÌ¾î ÄğÅ¸ÀÓ ÄÁÆ®·Ñ·¯ </summary>
+        /// <summary> í”Œë ˆì´ì–´ ì¿¨íƒ€ì„ ì»¨íŠ¸ë¡¤ëŸ¬ </summary>
         public CooldownController Cooldown { get; } = new CooldownController();
-        /// <summary> ¸ğµç Á÷¾÷¿¡ ´ëÇÑ ½ºÅİ Á¤º¸ </summary>
-        public CharacterstatHandler CharacterStats { get; private set; }
-        /// <summary> ÇöÀç °ÔÀÓ¿¡ Âü¿©ÇÑ ÇÃ·¹ÀÌ¾î Ä³¸¯ÅÍ ¿ÀºêÁ§Æ®µé </summary>
+        /// <summary> ëª¨ë“  ì§ì—…ì— ëŒ€í•œ ìŠ¤í…Ÿ ì •ë³´ </summary>
+        public CharacterStatHandler CharacterStats { get; private set; }
+        /// <summary> í˜„ì¬ ê²Œì„ì— ì°¸ì—¬í•œ í”Œë ˆì´ì–´ ìºë¦­í„° ì˜¤ë¸Œì íŠ¸ë“¤ </summary>
         List<PlayerController> _playerControllers = new List<PlayerController>();
-        /// <summary> Å¬¶óÀÌ¾ğÆ®ÀÇ Ä³¸¯ÅÍ </summary>
+        /// <summary> í´ë¼ì´ì–¸íŠ¸ì˜ ìºë¦­í„° </summary>
         public PlayerController MyPlayer
         {
             get
@@ -108,60 +109,55 @@ namespace Client
             }
         }
         /// <summary>
-        /// »çÁ¦ ¹öÇÁ ¹ŞÀ» °¡Àå °¡±î¿î ÇÃ·¹ÀÌ¾î<br/>
-        /// ¼­¹ö ¿¬µ¿ ½Ã º¯°æ ¿¹Á¤
+        /// ì‚¬ì œ ë²„í”„ ë°›ì„ ê°€ì¥ ê°€ê¹Œìš´ í”Œë ˆì´ì–´<br/>
+        /// ì„œë²„ ì—°ë™ ì‹œ ë³€ê²½ ì˜ˆì •
         /// </summary>
         public PlayerController NearPlayer => null;
+
+        /// <summary> í´ë¼ì´ì–¸íŠ¸ ìºë¦­í„°ê°€ ë°›ì€ ë²„í”„ ê´€ë¦¬ì </summary>
+        public BuffController Buff { get; } = new BuffController();
         #endregion Player
 
         #region Monster
-        /// <summary> ¸ğµç ¸ó½ºÅÍ ½ºÅİ Á¤º¸ </summary>
-        public MonsterstatHandler MonsterStats { get; private set; }
+        /// <summary> ëª¨ë“  ëª¬ìŠ¤í„° ìŠ¤í…Ÿ ì •ë³´ </summary>
+        public MonsterStatHandler MonsterStats { get; private set; }
 
-        /// <summary> ¸ó½ºÅÍ ¼ÒÈ¯ °ü¸® Å¬·¡½º </summary>
+        /// <summary> ëª¬ìŠ¤í„° ì†Œí™˜ ê´€ë¦¬ í´ë˜ìŠ¤ </summary>
         MonsterSpawn _monsterSpawn;
-        /// <summary> ¸ó½ºÅÍ ¼ÒÈ¯ °ü¸® Å¬·¡½º </summary>
+        /// <summary> ëª¬ìŠ¤í„° ì†Œí™˜ ê´€ë¦¬ í´ë˜ìŠ¤ </summary>
         public MonsterSpawn MonsterSpawn { get { return _monsterSpawn; } }
 
-        /// <summary> ¸ó½ºÅÍ Ã¼·Â¹Ù ÇÁ¸®ÆÕ </summary>
+        /// <summary> ëª¬ìŠ¤í„° ì²´ë ¥ë°” í”„ë¦¬íŒ¹ </summary>
         GameObject _hpBarPrefab;
-        /// <summary> ¸ó½ºÅÍ Ã¼·Â¹Ù ÇÁ¸®ÆÕ </summary>
+        /// <summary> ëª¬ìŠ¤í„° ì²´ë ¥ë°” í”„ë¦¬íŒ¹ </summary>
         public GameObject HPBarPrefab { get { return _hpBarPrefab; } }
         #endregion
 
-        /// <summary> Áß¾Ó Å¸¿ö </summary>
+        /// <summary> ì¤‘ì•™ íƒ€ì›Œ </summary>
         TowerController _tower;
-        /// <summary> Áß¾Ó Å¸¿ö </summary>
+        /// <summary> ì¤‘ì•™ íƒ€ì›Œ </summary>
         public TowerController Tower { get { return _tower; } }
 
         #region State
-        /// <summary> »óÅÂ Á¤º¸ ÀúÀå </summary>
+        /// <summary> ìƒíƒœ ì •ë³´ ì €ì¥ </summary>
         Define.State _state = Define.State.Idle;
-        /// <summary> °ÔÀÓ ÁøÇà »óÅÂ º¯°æ </summary>
-        public void StateChange(State state) => _state = state;
-        /// <summary> ÇöÀç »óÅÂ ¹İÈ¯ </summary>
-        public State CurrState { get => _state; }
+        /// <summary> ê²Œì„ ì§„í–‰ ìƒíƒœ ë³€ê²½ </summary>
+        public void StateChange(Define.State state) => _state = state;
+        /// <summary> í˜„ì¬ ìƒíƒœ ë°˜í™˜ </summary>
+        public Define.State CurrState { get => _state; }
         #endregion State
 
-        /// <summary> ¾ÆÀÌÅÛ db ÃÊ±âÈ­, ½ºÅİ Á¤º¸, ÇÁ¸®ÆÕ ºÒ·¯¿À±â </summary>
+        /// <summary> ì•„ì´í…œ db ì´ˆê¸°í™”, ìŠ¤í…Ÿ ì •ë³´, í”„ë¦¬íŒ¹ ë¶ˆëŸ¬ì˜¤ê¸° </summary>
         public void Init()
         {
-            _itemDB = new Item[(int)Define.Item.MaxCount];
-            string[] _itemDBstr = Enum.GetNames(typeof(Define.Item));
-            
-            for (int i = 0; i < (int)Define.Item.MaxCount; i++)
-            {
-                _itemDB[i] = new Item();
-                _itemDB[i].Name = _itemDBstr[i];
-            }
-
-            CharacterStats = Util.ParseJson<CharacterstatHandler>();
-            MonsterStats = Util.ParseJson<MonsterstatHandler>();
+            _itemData = Util.ParseJson<ItemDataHandler>();
+            CharacterStats = Util.ParseJson<CharacterStatHandler>();
+            MonsterStats = Util.ParseJson<MonsterStatHandler>();
 
             _hpBarPrefab = GameManager.Resource.Load<GameObject>("Prefabs/UI/MonsterHP");
         }
 
-        /// <summary> »õ·Î¿î °ÔÀÓ ½ÃÀÛ - ¸ó½ºÅÍ ½ºÆù À§Ä¡¿Í Áß¾Ó Å¸¿ö »ı¼º </summary>
+        /// <summary> ìƒˆë¡œìš´ ê²Œì„ ì‹œì‘ - ëª¬ìŠ¤í„° ìŠ¤í° ìœ„ì¹˜ì™€ ì¤‘ì•™ íƒ€ì›Œ ìƒì„± </summary>
         public void GameStart()
         {
             GenerateMonsterSpawnPoint();
@@ -169,7 +165,7 @@ namespace Client
             GeneratePlayer();
         }
         #region GameStart_Generate
-        /// <summary> ¸ó½ºÅÍ ½ºÆù Æ÷ÀÎÆ® »ı¼º </summary>
+        /// <summary> ëª¬ìŠ¤í„° ìŠ¤í° í¬ì¸íŠ¸ ìƒì„± </summary>
         void GenerateMonsterSpawnPoint()
         {
             GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
@@ -177,7 +173,7 @@ namespace Client
                 monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn/MonsterSpawn");
             _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
         }
-        /// <summary> Áß¾Ó Å¸¿ö »ı¼º </summary>
+        /// <summary> ì¤‘ì•™ íƒ€ì›Œ ìƒì„± </summary>
         void GenerateTower()
         {
             GameObject tower = GameObject.Find("Tower");
@@ -185,8 +181,8 @@ namespace Client
                 tower = GameManager.Resource.Instantiate("Tower/Tower");
             _tower = tower.GetComponent<TowerController>();
         }
-        /// <summary> ÇÃ·¹ÀÌ¾î »ı¼º <br/>
-        /// ÇöÀç´Â ÇÏ³ª¸¸ »ı¼ºÇÏÁö¸¸, ³ªÁß¿¡ Âü¿© ÀÎ¿ø¼ö¸¸Å­ »ı¼º </summary>
+        /// <summary> í”Œë ˆì´ì–´ ìƒì„± <br/>
+        /// í˜„ì¬ëŠ” í•˜ë‚˜ë§Œ ìƒì„±í•˜ì§€ë§Œ, ë‚˜ì¤‘ì— ì°¸ì—¬ ì¸ì›ìˆ˜ë§Œí¼ ìƒì„± </summary>
         void GeneratePlayer()
         {
             _playerControllers.Clear();
@@ -219,7 +215,7 @@ namespace Client
         }
         #endregion GameStart_Generate
 
-        /// <summary> °ÔÀÓ ÇÃ·¹ÀÌ Á¤º¸ ÃÊ±âÈ­ </summary>
+        /// <summary> ê²Œì„ í”Œë ˆì´ ì •ë³´ ì´ˆê¸°í™” </summary>
         public void Clear()
         {
             _money = _score = 0;

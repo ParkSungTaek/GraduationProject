@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ¾ÆÀÌÅÛ ½ºÅİ°ú ±âº» ½ºÅİ ºĞ¸®
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.29
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ì•„ì´í…œ ìŠ¤í…Ÿê³¼ ê¸°ë³¸ ìŠ¤í…Ÿ ë¶„ë¦¬
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -13,16 +13,16 @@ namespace Client
 {
     public class Rifleman : PlayerController
     {
-        /// <summary> ¶óÀÌÇÃ¸Ç ±âº» °ø°İ : ¿ø°Å¸®, ´ÜÀÏ </summary>
+        /// <summary> ë¼ì´í”Œë§¨ ê¸°ë³¸ ê³µê²© : ì›ê±°ë¦¬, ë‹¨ì¼ </summary>
         public override void IsAttack()
         {
-            //ÄğÅ¸ÀÓ ÁßÀÌ ¾Æ´Ò ¶§
+            //ì¿¨íƒ€ì„ ì¤‘ì´ ì•„ë‹ ë•Œ
             if (GameManager.InGameData.Cooldown.CanAttack())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
+                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
-                //»ç°Å¸® ³»¿¡ ¸ó½ºÅÍ°¡ Á¸ÀçÇÒ ¶§
+                //ì‚¬ê±°ë¦¬ ë‚´ì— ëª¬ìŠ¤í„°ê°€ ì¡´ì¬í•  ë•Œ
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
                 {
                     SeeTarget(mon.transform.position);
@@ -36,16 +36,16 @@ namespace Client
             else
                 Debug.Log("attack cool");
         }
-        /// <summary> ¶óÀÌÇÃ¸Ç ½ºÅ³ : ¿ø°Å¸®, ´ÜÀÏ </summary>
+        /// <summary> ë¼ì´í”Œë§¨ ìŠ¤í‚¬ : ì›ê±°ë¦¬, ë‹¨ì¼ </summary>
         public override void IsSkill()
         {
-            //ÄğÅ¸ÀÓ ÁßÀÌ ¾Æ´Ò ¶§
+            //ì¿¨íƒ€ì„ ì¤‘ì´ ì•„ë‹ ë•Œ
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
+                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
-                //»ç°Å¸® ³»¿¡ ¸ó½ºÅÍ°¡ Á¸ÀçÇÒ ¶§
+                //ì‚¬ê±°ë¦¬ ë‚´ì— ëª¬ìŠ¤í„°ê°€ ì¡´ì¬í•  ë•Œ
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
@@ -65,7 +65,7 @@ namespace Client
             MyClass = Define.Charcter.Rifleman;
             MoveSpeed = 5.0f;
             AttackDMG = 20;
-            Position = Vector2.zero;// ½ÃÀÛÀ§Ä¡
+            Position = Vector2.zero;// ì‹œì‘ìœ„ì¹˜
 
             _basicAttackRatio = 1.5f;
             _basicSkillRatio = 5;

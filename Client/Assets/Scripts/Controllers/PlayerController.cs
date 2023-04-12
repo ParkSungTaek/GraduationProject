@@ -1,8 +1,9 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ¾ÆÀÌÅÛ ½ºÅİ°ú ±âº» ½ºÅİ ºĞ¸®
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.29
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.12
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ì•„ì´í…œ, ë²„í”„ ìŠ¤í…Ÿ ê³„ì‚° ì¶”ê°€
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -14,40 +15,40 @@ namespace Client
 {
     public abstract class PlayerController : Entity
     {
-        /// <summary> ³» Á÷¾÷ </summary>
+        /// <summary> ë‚´ ì§ì—… </summary>
         public Define.Charcter MyClass { get; protected set; }
 
-        /// <summary> ±âº» °ø°İ </summary>
+        /// <summary> ê¸°ë³¸ ê³µê²© </summary>
         [Header("Stat Ratio")]
         protected float _basicAttackRatio;
-        /// <summary> ½ºÅ³ µ¥¹ÌÁö °è¼ö </summary>
+        /// <summary> ìŠ¤í‚¬ ë°ë¯¸ì§€ ê³„ìˆ˜ </summary>
         protected float _basicSkillRatio;
-        /// <summary> ¾ÆÀÌÅÛ°ú ½ºÅİÀ» °í·ÁÇÑ ±âº» °ø°İ µ¥¹ÌÁö °è¼ö </summary>
+        /// <summary> ì•„ì´í…œê³¼ ìŠ¤í…Ÿì„ ê³ ë ¤í•œ ê¸°ë³¸ ê³µê²© ë°ë¯¸ì§€ ê³„ìˆ˜ </summary>
         protected float _attackDMGRatio;
-        /// <summary> ¾ÆÀÌÅÛ°ú ½ºÅİÀ» °í·ÁÇÑ ½ºÅ³ µ¥¹ÌÁö °è¼ö </summary>
+        /// <summary> ì•„ì´í…œê³¼ ìŠ¤í…Ÿì„ ê³ ë ¤í•œ ìŠ¤í‚¬ ë°ë¯¸ì§€ ê³„ìˆ˜ </summary>
         protected float _skillDMGRatio;
-
+        protected List<Buff> _buffList = new List<Buff>();
         
         [Header("Animation")]
         protected Character4D _char4D;
 
-        /// <summary> animation ¿¬°á ¹× ÃÊ±âÈ­ </summary>
+        /// <summary> animation ì—°ê²° ë° ì´ˆê¸°í™” </summary>
         protected override void init()
         {
             _char4D = GetComponent<Character4D>();
             _char4D.AnimationManager.SetState(CharacterState.Idle);
         }
         
-        /// <summary> °ø°İ ½ÃÀü, ´ÜÀÏ °ø°İ ±âÁØ </summary>
+        /// <summary> ê³µê²© ì‹œì „, ë‹¨ì¼ ê³µê²© ê¸°ì¤€ </summary>
         public virtual void IsAttack()
         {
-            //ÄğÅ¸ÀÓ ÁßÀÌ ¾Æ´Ò ¶§
+            //ì¿¨íƒ€ì„ ì¤‘ì´ ì•„ë‹ ë•Œ
             if (GameManager.InGameData.Cooldown.CanAttack())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
+                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
-                //»ç°Å¸® ³»¿¡ ¸ó½ºÅÍ°¡ Á¸ÀçÇÒ ¶§
+                //ì‚¬ê±°ë¦¬ ë‚´ì— ëª¬ìŠ¤í„°ê°€ ì¡´ì¬í•  ë•Œ
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
                 {
                     SeeTarget(mon.transform.position);
@@ -62,16 +63,16 @@ namespace Client
                 Debug.Log("attack cool");
 
         }
-        /// <summary> ½ºÅ³ ½ÃÀü, ´ÜÀÏ °ø°İ ±âÁØ </summary>
+        /// <summary> ìŠ¤í‚¬ ì‹œì „, ë‹¨ì¼ ê³µê²© ê¸°ì¤€ </summary>
         public virtual void IsSkill()
         {
-            //ÄğÅ¸ÀÓ ÁßÀÌ ¾Æ´Ò ¶§
+            //ì¿¨íƒ€ì„ ì¤‘ì´ ì•„ë‹ ë•Œ
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                Characterstat stat = GameManager.InGameData.CharacterStats[MyClass];
+                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
-                //»ç°Å¸® ³»¿¡ ¸ó½ºÅÍ°¡ Á¸ÀçÇÒ ¶§
+                //ì‚¬ê±°ë¦¬ ë‚´ì— ëª¬ìŠ¤í„°ê°€ ì¡´ì¬í•  ë•Œ
                 if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
@@ -85,7 +86,7 @@ namespace Client
             else
                 Debug.Log("skill cool");
         }
-        /// <summary> ÇÃ·¹ÀÌ¾î´Â Á×À» ÀÏ ¾øÀ½, ºó ÇÔ¼ö </summary>
+        /// <summary> í”Œë ˆì´ì–´ëŠ” ì£½ì„ ì¼ ì—†ìŒ, ë¹ˆ í•¨ìˆ˜ </summary>
         protected sealed override void Dead() { }
 
         #region Move
@@ -98,11 +99,11 @@ namespace Client
         }
 
         /// <summary>
-        /// ÇöÀç ÇÃ·¹ÀÌ¾î »óÅÂ
+        /// í˜„ì¬ í”Œë ˆì´ì–´ ìƒíƒœ
         /// </summary>
         PlayerState _state = PlayerState.Idle;
         /// <summary>
-        /// ÀÌµ¿ ¹æÇâ º¤ÅÍ
+        /// ì´ë™ ë°©í–¥ ë²¡í„°
         /// </summary>
         Vector2 _moveDirection = Vector2.zero;
         private void FixedUpdate()
@@ -114,7 +115,7 @@ namespace Client
         public void IsMove() => transform.Translate(_moveDirection * Time.deltaTime * MoveSpeed);
         
         /// <summary>
-        /// Á¶ÀÌ½ºÆ½¿¡ µû¶ó ¹æÇâ °áÁ¤
+        /// ì¡°ì´ìŠ¤í‹±ì— ë”°ë¼ ë°©í–¥ ê²°ì •
         /// </summary>
         /// <param name="dir"></param>
         public void SetDirection(Vector2 dir)
@@ -125,7 +126,7 @@ namespace Client
             _char4D.AnimationManager.SetState(CharacterState.Run);
         }
         /// <summary>
-        /// Á¶ÀÌ½ºÆ½ Á¶ÀÛ Á¾·á
+        /// ì¡°ì´ìŠ¤í‹± ì¡°ì‘ ì¢…ë£Œ
         /// </summary>
         public void StopMove()
         {
@@ -135,10 +136,10 @@ namespace Client
         #endregion Move
 
         #region TargetSelect
-        /// <summary> °¡Àå °¡±î¿î ¸ó½ºÅÍ ¹İÈ¯ </summary>
+        /// <summary> ê°€ì¥ ê°€ê¹Œìš´ ëª¬ìŠ¤í„° ë°˜í™˜ </summary>
         protected MonsterController NearMoster()
         {
-            //ÇöÀç ¸Ê¿¡ Á¸ÀçÇÏ´Â ¸Êµé ¹Ş¾Æ¿È
+            //í˜„ì¬ ë§µì— ì¡´ì¬í•˜ëŠ” ë§µë“¤ ë°›ì•„ì˜´
             List<MonsterController> monsters = GameManager.InGameData.MonsterSpawn.Monsters;
 
             if (monsters.Count <= 0)
@@ -160,10 +161,10 @@ namespace Client
         }
         
         /// <summary>
-        /// ½ÃÀüÀÚ¿¡¼­ ÃÖ´ë »ç°Å¸®±îÁö ÀÌ¾îÁö´Â ¹üÀ§ °ø°İ ¿ÀºêÁ§Æ® »ı¼º
+        /// ì‹œì „ìì—ì„œ ìµœëŒ€ ì‚¬ê±°ë¦¬ê¹Œì§€ ì´ì–´ì§€ëŠ” ë²”ìœ„ ê³µê²© ì˜¤ë¸Œì íŠ¸ ìƒì„±
         /// </summary>
-        /// <param name="range">°ø°İÀÇ »ç°Å¸®</param>
-        /// <param name="enemyPos">Å¸°Ù À§Ä¡</param>
+        /// <param name="range">ê³µê²©ì˜ ì‚¬ê±°ë¦¬</param>
+        /// <param name="enemyPos">íƒ€ê²Ÿ ìœ„ì¹˜</param>
         protected RangedArea GenerateRangedArea(int range, Vector3 enemyPos)
         {
             GameObject rangedArea = GameManager.Resource.Instantiate("Player/RangedArea");
@@ -180,10 +181,10 @@ namespace Client
         }
 
         /// <summary>
-        /// Å¸°Ù ÁöÁ¡¿¡ ¹üÀ§ °ø°İ ¿ÀºêÁ§Æ® »ı¼º
+        /// íƒ€ê²Ÿ ì§€ì ì— ë²”ìœ„ ê³µê²© ì˜¤ë¸Œì íŠ¸ ìƒì„±
         /// </summary>
-        /// <param name="range"> ¹üÀ§ ¿ÀºêÁ§Æ®ÀÇ ¹İ°æ </param>
-        /// <param name="enemyPos"> Å¸°Ù À§Ä¡ </param>
+        /// <param name="range"> ë²”ìœ„ ì˜¤ë¸Œì íŠ¸ì˜ ë°˜ê²½ </param>
+        /// <param name="enemyPos"> íƒ€ê²Ÿ ìœ„ì¹˜ </param>
         protected RangedArea GenerateTargetArea(int range, Vector3 enemyPos)
         {
             GameObject targetArea = GameManager.Resource.Instantiate("Player/TargetArea");
@@ -196,15 +197,15 @@ namespace Client
 
         #region AnimationDirection
         /// <summary>
-        /// ´ë»ó À§Ä¡¿¡ µû¶ó »óÇÏÁÂ¿ì Áß °¡Àå ±ÙÁ¢ÇÑ ¹æÇâÀ¸·Î ¾Ö´Ï¸ŞÀÌ¼Ç µ¹¸®±â
+        /// ëŒ€ìƒ ìœ„ì¹˜ì— ë”°ë¼ ìƒí•˜ì¢Œìš° ì¤‘ ê°€ì¥ ê·¼ì ‘í•œ ë°©í–¥ìœ¼ë¡œ ì• ë‹ˆë©”ì´ì…˜ ëŒë¦¬ê¸°
         /// </summary>
-        /// <param name="targetPos">´ë»ó À§Ä¡</param>
+        /// <param name="targetPos">ëŒ€ìƒ ìœ„ì¹˜</param>
         protected void SeeTarget(Vector3 targetPos) => SeeDirection((targetPos - transform.position).normalized);
 
         /// <summary>
-        /// Á¶ÀÌ½ºÆ½ ¹æÇâ¿¡ µû¶ó »óÇÏÁÂ¿ì Áß °¡Àå ±ÙÁ¢ÇÑ ¹æÇâÀ¸·Î ¾Ö´Ï¸ŞÀÌ¼Ç µ¹¸®±â
+        /// ì¡°ì´ìŠ¤í‹± ë°©í–¥ì— ë”°ë¼ ìƒí•˜ì¢Œìš° ì¤‘ ê°€ì¥ ê·¼ì ‘í•œ ë°©í–¥ìœ¼ë¡œ ì• ë‹ˆë©”ì´ì…˜ ëŒë¦¬ê¸°
         /// </summary>
-        /// <param name="dir">Á¶ÀÌ½ºÆ½ ¹æÇâ(normalized)</param>
+        /// <param name="dir">ì¡°ì´ìŠ¤í‹± ë°©í–¥(normalized)</param>
         protected void SeeDirection(Vector2 dir)
         {
             Vector2 resultDir;
@@ -218,11 +219,26 @@ namespace Client
         #endregion AnimationDirection
 
         #region StatUpdate
-        /// <summary> ¾ÆÀÌÅÛ ¹× ¹öÇÁ »óÅÂ¿¡ µû¸¥ ½ºÅİ °è»ê </summary>
-        protected void StatUpdate()
+        /// <summary> ì•„ì´í…œ ë° ë²„í”„ ìƒíƒœì— ë”°ë¥¸ ìŠ¤í…Ÿ ê³„ì‚° </summary>
+        public void StatUpdate()
         {
-            _attackDMGRatio = _basicAttackRatio;
-            _skillDMGRatio = _basicSkillRatio;
+            float dmgRatio = 1;
+
+            //ì•„ì´í…œ íš¨ê³¼ ì¶”ê°€
+            List<ItemData> items = GameManager.InGameData.MyInventory;
+            foreach(ItemData item in items)
+            {
+                if (item.Kind == Define.ItemKind.Damage)
+                    dmgRatio += item.Stat;
+            }
+
+            //ë²„í”„ íš¨ê³¼ ì¶”ê°€
+            dmgRatio *= GameManager.InGameData.Buff.GetBuffRate();
+
+            _attackDMGRatio = dmgRatio * _basicAttackRatio;
+            _skillDMGRatio = dmgRatio * _basicSkillRatio;
+
+            Debug.Log($"stat update : {_attackDMGRatio}, {_skillDMGRatio}");
         }
         #endregion StatUpdate
     }

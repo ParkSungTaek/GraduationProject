@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,7 +30,7 @@ namespace Client
 
         protected override void init()
         {
-            Monsterstat mystat = GameManager.InGameData.MonsterStats[_monsterName];
+            MonsterStat mystat = GameManager.InGameData.MonsterStats[_monsterName];
             _animator = GetComponent<Animator>();
             _animator.SetInteger("State", 3);
 
