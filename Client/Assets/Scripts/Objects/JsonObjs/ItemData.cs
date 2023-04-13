@@ -2,12 +2,13 @@
 공동 작성
 작성 일자 : 23.04.05
 
-최근 수정 일자 : 23.04.12
-최근 수정 내용 : json 파싱 클래스로 변경
+최근 수정 일자 : 23.04.13
+최근 수정 내용 : 확률 계산 함수 버그 수정
  ******/
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Client
 {
@@ -21,14 +22,17 @@ namespace Client
         {
             //확률 계산
             float randValue = UnityEngine.Random.Range(0, 1f);
+            UnityEngine.Debug.Log("rand : " + randValue.ToString());
 
             //확률 누적합
-            float accumulateProb = itemdatas[0].Prob;
+            float accumulateProb = 0;
 
             int idx;
-            for (idx = 1; accumulateProb < randValue && idx < itemdatas.Count - 1; idx++)
+            for (idx = 0; idx < itemdatas.Count - 1;idx++)
             {
                 accumulateProb += itemdatas[idx].Prob;
+                if (randValue < accumulateProb)
+                    break;
             }
 
             return itemdatas[idx];

@@ -23,7 +23,7 @@ namespace Client
                 CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.AttackRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.ShotBow();
@@ -46,7 +46,7 @@ namespace Client
                 CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.ShotBow();

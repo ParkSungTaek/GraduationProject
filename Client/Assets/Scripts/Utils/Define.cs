@@ -1,4 +1,12 @@
-﻿using System.Collections;
+﻿/******
+공동 작성
+작성일 : 23.03.31
+
+최근 수정 일자 : 23.04.13
+최근 수정 내용 : 아이템 종류 enum 추가
+ ******/
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -42,19 +50,15 @@ namespace Client
             MaxCount
         }
 
-
-        public enum Item
-        {
-            제출을_깜빡한_과제,
-            칠십칠중_순환참조_Class,
-            마감_하루전날_날아가버린_DB,
-            울리지_않은_자명종,
-            MaxCount
-        }
-
+        /// <summary> 아이템 종류 </summary>
         public enum ItemKind
         {
             Damage,
+            Weight,
+            Speed,
+            Range,
+            Cooldown,
+            Slow
         }
 
         public enum Tag

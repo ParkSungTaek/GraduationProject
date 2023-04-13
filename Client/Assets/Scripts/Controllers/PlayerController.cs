@@ -31,6 +31,8 @@ namespace Client
         
         [Header("Animation")]
         protected Character4D _char4D;
+        /// <summary> 모델 위치를 감안한 보정 위치 </summary>
+        protected Vector3 _currPosition { get => transform.position + Vector3.up; }
 
         /// <summary> animation 연결 및 초기화 </summary>
         protected override void init()
@@ -49,7 +51,7 @@ namespace Client
                 CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.AttackRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.Attack();
@@ -73,7 +75,7 @@ namespace Client
                 CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(transform.position, mon.transform.position) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.Attack();
@@ -146,10 +148,10 @@ namespace Client
                 return null;
 
             MonsterController nearMon = monsters[0];
-            float pivotDis = Vector3.Distance(transform.position, nearMon.transform.position);
+            float pivotDis = Vector3.Distance(_currPosition, nearMon.transform.position);
             for(int i = 1; i < monsters.Count;i++)
             {
-                float currDis = Vector3.Distance(transform.position, monsters[i].transform.position);
+                float currDis = Vector3.Distance(_currPosition, monsters[i].transform.position);
                 if (currDis < pivotDis)
                 {
                     pivotDis = currDis;
@@ -170,12 +172,12 @@ namespace Client
             GameObject rangedArea = GameManager.Resource.Instantiate("Player/RangedArea");
             rangedArea.transform.localScale = new Vector3(1, range, 1);
 
-            float angle = Mathf.Atan2(enemyPos.y - transform.position.y, enemyPos.x - transform.position.x) * Mathf.Rad2Deg;
+            float angle = Mathf.Atan2(enemyPos.y - _currPosition.y, enemyPos.x - _currPosition.x) * Mathf.Rad2Deg;
             rangedArea.transform.rotation = Quaternion.AngleAxis(angle - 90, Vector3.forward);
 
 
-            Vector3 dir = (enemyPos - transform.position).normalized;
-            rangedArea.transform.position = gameObject.transform.position + dir * range / 2f;
+            Vector3 dir = (enemyPos - _currPosition).normalized;
+            rangedArea.transform.position =  _currPosition + dir * range / 2f;
 
             return Util.GetOrAddComponent<RangedArea>(rangedArea);
         }
@@ -200,7 +202,7 @@ namespace Client
         /// 대상 위치에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
         /// </summary>
         /// <param name="targetPos">대상 위치</param>
-        protected void SeeTarget(Vector3 targetPos) => SeeDirection((targetPos - transform.position).normalized);
+        protected void SeeTarget(Vector3 targetPos) => SeeDirection((targetPos - _currPosition).normalized);
 
         /// <summary>
         /// 조이스틱 방향에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
