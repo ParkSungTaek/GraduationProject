@@ -1,6 +1,6 @@
 ﻿namespace Server
 {
-    internal class Program
+    internal class MainProgram
     {
         static void Main(string[] args)
         {

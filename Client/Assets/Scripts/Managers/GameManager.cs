@@ -1,10 +1,10 @@
-/*
-°øµ¿ ÀÛ¼º
-ÀÛ¼ºÀÏ : 23.03.29
+ï»¿/*
+ê³µë™ ì‘ì„±
+ì‘ì„±ì¼ : 23.03.29
 
-ÃÖ±Ù ¼öÁ¤ÀÚ : ÀÌ¿ì¿­
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ÁÖ¼® Á¤¸®
+ìµœê·¼ ìˆ˜ì •ì : ì´ìš°ì—´
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ì£¼ì„ ì •ë¦¬
 */
 using UnityEngine;
 
@@ -15,14 +15,12 @@ namespace Client
         static GameManager _instance;
         static GameManager Instance { get { Init(); return _instance; } }
         #region Managers
-        //InputManager _inputManager = new InputManager();
         NetworkManager _networkManager = new NetworkManager();
         PoolManager _poolManager = new PoolManager();
         ResourceManager _resourceManager = new ResourceManager();
         SoundManager _soundManager = new SoundManager();
         InGameDataManager _inGameDataManager = new InGameDataManager();
         UIManager _uiManager = new UIManager();
-        //public static InputManager Input { get { return Instance._inputManager; } }
         public static NetworkManager Network { get { return Instance._networkManager; } }
         public static PoolManager Pool { get { return Instance._poolManager; } }
         public static ResourceManager Resource { get { return Instance._resourceManager; } }
@@ -31,7 +29,7 @@ namespace Client
         public static UIManager UI { get { return Instance._uiManager; } }
         #endregion
 
-        /// <summary> instance »ı¼º, »êÇÏ ¸Å´ÏÀúµé ÃÊ±âÈ­ </summary>
+        /// <summary> instance ìƒì„±, ì‚°í•˜ ë§¤ë‹ˆì €ë“¤ ì´ˆê¸°í™” </summary>
         static void Init()
         {
             if (_instance == null)
@@ -45,7 +43,6 @@ namespace Client
                 _instance = gm.GetComponent<GameManager>();
                 DontDestroyOnLoad(gm);
 
-                //_instance._inputManager.init();
                 _instance._networkManager.Init();
                 _instance._poolManager.Init();
                 _instance._soundManager.Init();
@@ -53,14 +50,14 @@ namespace Client
             }
 
         }
-        /// <summary> °ÔÀÓ ½ÃÀÛ, »óÅÂ º¯°æ, ÀÎ°ÔÀÓ Á¤º¸ ÃÊ±âÈ­ </summary>
+        /// <summary> ê²Œì„ ì‹œì‘, ìƒíƒœ ë³€ê²½, ì¸ê²Œì„ ì •ë³´ ì´ˆê¸°í™” </summary>
         public static void GameStart()
         {
             Time.timeScale = 1;
             InGameData.StateChange(Define.State.Play);
             _instance._inGameDataManager.GameStart();
         }
-        /// <summary> ½Â¸® ¶Ç´Â ÆĞ¹è ½Ã È£Ãâ, ½Ã°£ Á¤Áö, »óÅÂ º¯°æ, UI ¶ç¿ì±â </summary>
+        /// <summary> ìŠ¹ë¦¬ ë˜ëŠ” íŒ¨ë°° ì‹œ í˜¸ì¶œ, ì‹œê°„ ì •ì§€, ìƒíƒœ ë³€ê²½, UI ë„ìš°ê¸° </summary>
         public static void GameOver(Define.State endState)
         {
             if (endState == Define.State.Win || endState == Define.State.Defeat)
@@ -72,7 +69,7 @@ namespace Client
             }
         }
 
-        /// <summary> ¸ğµç Á¤º¸ ÃÊ±âÈ­ </summary>
+        /// <summary> ëª¨ë“  ì •ë³´ ì´ˆê¸°í™” </summary>
         public static void Clear()
         {
             //_instance._inputManager.Clear();

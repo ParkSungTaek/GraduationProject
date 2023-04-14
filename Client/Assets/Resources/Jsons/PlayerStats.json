@@ -1,0 +1,46 @@
+[
+  {
+    "AttackRatio": 1,
+    "SkillRatio": 3,
+    "AttackRange": 2,
+    "SkillRange": 3,
+    "AttackCool": 1,
+    "SkillCool": 8,
+    "Speed": 5,
+    "Weight": 1,
+    "Slow": 0
+  },
+  {
+    "AttackRatio": 1.5,
+    "SkillRatio": 5,
+    "AttackRange": 6,
+    "SkillRange": 6,
+    "AttackCool": 3,
+    "SkillCool": 8,
+    "Speed": 5,
+    "Weight": 1,
+    "Slow": 0
+  },
+  {
+    "AttackRatio": 1,
+    "SkillRatio": 2,
+    "AttackRange": 6,
+    "SkillRange": 6,
+    "AttackCool": 2,
+    "SkillCool": 8,
+    "Speed": 5,
+    "Weight": 1,
+    "Slow": 0
+  },
+  {
+    "AttackRatio": 1,
+    "SkillRatio": 1.5,
+    "AttackRange": 2,
+    "SkillRange": 0,
+    "AttackCool": 2,
+    "SkillCool": 10,
+    "Speed": 5,
+    "Weight": 1,
+    "Slow": 0.05
+  }
+]

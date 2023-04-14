@@ -1,8 +1,8 @@
 ﻿/*
 작성자 : 이우열
 작성일 : 23.03.29
-최근 수정 일자 : 23.04.10
-최근 수정 사항 : 아이템 스텟과 기본 스텟 분리
+최근 수정 일자 : 23.04.14
+최근 수정 사항 : 아이템 스텟 확장
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -20,15 +20,15 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanAttack())
             {
                 MonsterController mon = NearMoster();
-                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.AttackRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.ShotBow();
-                    mon.BeAttacked(Mathf.RoundToInt(_attackDMGRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetAttackCool(stat.AttackCool);
+
+                    mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
+                    GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
                 }
                 else
                     Debug.Log("no near mon");
@@ -43,15 +43,15 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.ShotBow();
-                    mon.BeAttacked(Mathf.RoundToInt(_skillDMGRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
+
+                    mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
+                    GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
                 }
                 else
                     Debug.Log("no near mon");
@@ -63,12 +63,9 @@ namespace Client
         {
             base.init();
             MyClass = Define.Charcter.Rifleman;
-            MoveSpeed = 5.0f;
             AttackDMG = 20;
             Position = Vector2.zero;// 시작위치
 
-            _basicAttackRatio = 1.5f;
-            _basicSkillRatio = 5;
             StatUpdate();
         }
     }

@@ -30,121 +30,121 @@
     "Prob": 0.09
   },
   {
-    "Name": "전설 무게",
-    "Kind": 1,
-    "Stat": 10,
-    "Prob": 0.0009
-  },
-  {
-    "Name": "에픽 무게",
-    "Kind": 1,
-    "Stat": 5,
-    "Prob": 0.0027
-  },
-  {
-    "Name": "유니크 무게",
-    "Kind": 1,
-    "Stat": 0.4,
-    "Prob": 0.0144
-  },
-  {
-    "Name": "레어 무게",
-    "Kind": 1,
-    "Stat": 0.2,
-    "Prob": 0.072
-  },
-  {
-    "Name": "일반 무게",
-    "Kind": 1,
-    "Stat": 0.1,
-    "Prob": 0.09
-  },
-  {
-    "Name": "전설 속도",
-    "Kind": 2,
-    "Stat": 10,
-    "Prob": 0.0009
-  },
-  {
-    "Name": "에픽 속도",
-    "Kind": 2,
-    "Stat": 5,
-    "Prob": 0.0027
-  },
-  {
-    "Name": "유니크 속도",
-    "Kind": 2,
-    "Stat": 0.4,
-    "Prob": 0.0144
-  },
-  {
-    "Name": "레어 속도",
-    "Kind": 2,
-    "Stat": 0.2,
-    "Prob": 0.072
-  },
-  {
-    "Name": "일반 속도",
-    "Kind": 2,
-    "Stat": 0.1,
-    "Prob": 0.09
-  },
-  {
     "Name": "전설 범위",
-    "Kind": 3,
+    "Kind": 1,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
     "Name": "에픽 범위",
-    "Kind": 3,
+    "Kind": 1,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
     "Name": "유니크 범위",
-    "Kind": 3,
+    "Kind": 1,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
     "Name": "레어 범위",
-    "Kind": 3,
+    "Kind": 1,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
     "Name": "일반 범위",
-    "Kind": 3,
+    "Kind": 1,
     "Stat": 0.1,
     "Prob": 0.09
   },
   {
     "Name": "전설 쿨타임",
-    "Kind": 4,
+    "Kind": 2,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
     "Name": "에픽 쿨타임",
-    "Kind": 4,
+    "Kind": 2,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
     "Name": "유니크 쿨타임",
-    "Kind": 4,
+    "Kind": 2,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
     "Name": "레어 쿨타임",
-    "Kind": 4,
+    "Kind": 2,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
     "Name": "일반 쿨타임",
+    "Kind": 2,
+    "Stat": 0.1,
+    "Prob": 0.09
+  },
+  {
+    "Name": "전설 무게",
+    "Kind": 3,
+    "Stat": 10,
+    "Prob": 0.0009
+  },
+  {
+    "Name": "에픽 무게",
+    "Kind": 3,
+    "Stat": 5,
+    "Prob": 0.0027
+  },
+  {
+    "Name": "유니크 무게",
+    "Kind": 3,
+    "Stat": 0.4,
+    "Prob": 0.0144
+  },
+  {
+    "Name": "레어 무게",
+    "Kind": 3,
+    "Stat": 0.2,
+    "Prob": 0.072
+  },
+  {
+    "Name": "일반 무게",
+    "Kind": 3,
+    "Stat": 0.1,
+    "Prob": 0.09
+  },
+  {
+    "Name": "전설 속도",
+    "Kind": 4,
+    "Stat": 10,
+    "Prob": 0.0009
+  },
+  {
+    "Name": "에픽 속도",
+    "Kind": 4,
+    "Stat": 5,
+    "Prob": 0.0027
+  },
+  {
+    "Name": "유니크 속도",
+    "Kind": 4,
+    "Stat": 0.4,
+    "Prob": 0.0144
+  },
+  {
+    "Name": "레어 속도",
+    "Kind": 4,
+    "Stat": 0.2,
+    "Prob": 0.072
+  },
+  {
+    "Name": "일반 속도",
     "Kind": 4,
     "Stat": 0.1,
     "Prob": 0.09

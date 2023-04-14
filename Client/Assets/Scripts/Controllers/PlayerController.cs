@@ -2,14 +2,15 @@
 작성자 : 이우열
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.12
-최근 수정 사항 : 아이템, 버프 스텟 계산 추가
+최근 수정 일자 : 23.04.14
+최근 수정 사항 : 아이템 스텟 확장
 */
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.HeroEditor4D.Common.Scripts.CharacterScripts;
 using Assets.HeroEditor4D.Common.Scripts.Enums;
+using Unity.VisualScripting;
 
 namespace Client
 {
@@ -18,17 +19,10 @@ namespace Client
         /// <summary> 내 직업 </summary>
         public Define.Charcter MyClass { get; protected set; }
 
-        /// <summary> 기본 공격 </summary>
-        [Header("Stat Ratio")]
-        protected float _basicAttackRatio;
-        /// <summary> 스킬 데미지 계수 </summary>
-        protected float _basicSkillRatio;
-        /// <summary> 아이템과 스텟을 고려한 기본 공격 데미지 계수 </summary>
-        protected float _attackDMGRatio;
-        /// <summary> 아이템과 스텟을 고려한 스킬 데미지 계수 </summary>
-        protected float _skillDMGRatio;
-        protected List<Buff> _buffList = new List<Buff>();
-        
+        /// <summary> 아이템 고려 스텟 </summary>
+        [Header("Stat")]
+        protected PlayerStat _itemStat = new PlayerStat();
+
         [Header("Animation")]
         protected Character4D _char4D;
         /// <summary> 모델 위치를 감안한 보정 위치 </summary>
@@ -48,15 +42,15 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanAttack())
             {
                 MonsterController mon = NearMoster();
-                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.AttackRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.Attack();
-                    mon.BeAttacked(Mathf.RoundToInt(_attackDMGRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetAttackCool(stat.AttackCool);
+
+                    mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
+                    GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
                 }
                 else
                     Debug.Log("no near mon");
@@ -72,15 +66,15 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.Attack();
-                    mon.BeAttacked(Mathf.RoundToInt(_skillDMGRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
+
+                    mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
+                    GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
                 }
                 else
                     Debug.Log("no near mon");
@@ -114,7 +108,7 @@ namespace Client
                 IsMove();
         }
 
-        public void IsMove() => transform.Translate(_moveDirection * Time.deltaTime * MoveSpeed);
+        public void IsMove() => transform.Translate(_moveDirection * Time.deltaTime * _itemStat.Speed);
         
         /// <summary>
         /// 조이스틱에 따라 방향 결정
@@ -167,7 +161,7 @@ namespace Client
         /// </summary>
         /// <param name="range">공격의 사거리</param>
         /// <param name="enemyPos">타겟 위치</param>
-        protected RangedArea GenerateRangedArea(int range, Vector3 enemyPos)
+        protected RangedArea GenerateRangedArea(float range, Vector3 enemyPos)
         {
             GameObject rangedArea = GameManager.Resource.Instantiate("Player/RangedArea");
             rangedArea.transform.localScale = new Vector3(1, range, 1);
@@ -187,7 +181,7 @@ namespace Client
         /// </summary>
         /// <param name="range"> 범위 오브젝트의 반경 </param>
         /// <param name="enemyPos"> 타겟 위치 </param>
-        protected RangedArea GenerateTargetArea(int range, Vector3 enemyPos)
+        protected RangedArea GenerateTargetArea(float range, Vector3 enemyPos)
         {
             GameObject targetArea = GameManager.Resource.Instantiate("Player/TargetArea");
             targetArea.transform.localScale = new Vector3(range, range, 1);
@@ -224,23 +218,45 @@ namespace Client
         /// <summary> 아이템 및 버프 상태에 따른 스텟 계산 </summary>
         public void StatUpdate()
         {
-            float dmgRatio = 1;
+            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0, 0 };
 
             //아이템 효과 추가
             List<ItemData> items = GameManager.InGameData.MyInventory;
             foreach(ItemData item in items)
             {
-                if (item.Kind == Define.ItemKind.Damage)
-                    dmgRatio += item.Stat;
+                switch(item.Kind)
+                {
+                    case Define.ItemKind.Cooldown:
+                        pivots[(int)item.Kind] = Mathf.Max(0, pivots[(int)item.Kind] - item.Stat);
+                        break;
+                    case Define.ItemKind.Slow:
+                        pivots[(int)item.Kind] = Mathf.Max(pivots[(int)item.Kind], item.Stat);
+                        break;
+                    default:
+                        pivots[(int)item.Kind] += item.Stat;
+                        break;
+                }
             }
 
             //버프 효과 추가
-            dmgRatio *= GameManager.InGameData.Buff.GetBuffRate();
+            pivots[(int)Define.ItemKind.Damage] *= GameManager.InGameData.Buff.GetBuffRate();
 
-            _attackDMGRatio = dmgRatio * _basicAttackRatio;
-            _skillDMGRatio = dmgRatio * _basicSkillRatio;
+            PlayerStat basicStat = GameManager.InGameData.PlayerStats[MyClass];
 
-            Debug.Log($"stat update : {_attackDMGRatio}, {_skillDMGRatio}");
+            _itemStat.AttackRatio = basicStat.AttackRatio * pivots[(int)Define.ItemKind.Damage];
+            _itemStat.SkillRatio = basicStat.SkillRatio * pivots[(int)Define.ItemKind.Damage];
+
+            _itemStat.AttackRange = basicStat.AttackRange * pivots[(int)Define.ItemKind.Range];
+            _itemStat.SkillRange = basicStat.SkillRange * pivots[(int)Define.ItemKind.Range];
+
+            _itemStat.AttackCool = basicStat.AttackCool * pivots[(int)Define.ItemKind.Cooldown];
+            _itemStat.SkillCool = basicStat.SkillCool * pivots[(int)Define.ItemKind.Cooldown];
+
+            gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
+            _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
+            _itemStat.Slow = basicStat.Slow + pivots[(int)Define.ItemKind.Slow];
+
+            Debug.Log($"stat update : {_itemStat}");
         }
         #endregion StatUpdate
     }

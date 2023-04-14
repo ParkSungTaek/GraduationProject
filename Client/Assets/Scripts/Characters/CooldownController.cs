@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.10
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ÁÖ¼® ¹× region Ãß°¡
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.04.05
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ì£¼ì„ ë° region ì¶”ê°€
 */
 
 using System.Collections;
@@ -12,27 +12,27 @@ using UnityEngine;
 namespace Client
 {
     /// <summary>
-    /// ÇÃ·¹ÀÌ¾î ÄğÅ¸ÀÓ °ü¸® Å¬·¡½º, InGameDataManager¿¡¼­ ÀÎ½ºÅÏ½º »ı¼º
+    /// í”Œë ˆì´ì–´ ì¿¨íƒ€ì„ ê´€ë¦¬ í´ë˜ìŠ¤, InGameDataManagerì—ì„œ ì¸ìŠ¤í„´ìŠ¤ ìƒì„±
     /// </summary>
     public class CooldownController
     {
-        /// <summary> ÇÃ·¹ÀÌ¾îÀÇ ÇöÀç ³²Àº ÄğÅ¸ÀÓ Á¤º¸ </summary>
+        /// <summary> í”Œë ˆì´ì–´ì˜ í˜„ì¬ ë‚¨ì€ ì¿¨íƒ€ì„ ì •ë³´ </summary>
         float[] _cooldowns = new float[2];
-        /// <summary> ÇÃ·¹ÀÌ¾î ±â¼úÀÇ ÄğÅ¸ÀÓ, ¹öÆ° ºñÀ² °è»ê¿ë </summary>
-        int[] _maxCooldowns = new int[2];
+        /// <summary> í”Œë ˆì´ì–´ ê¸°ìˆ ì˜ ì¿¨íƒ€ì„, ë²„íŠ¼ ë¹„ìœ¨ ê³„ì‚°ìš© </summary>
+        float[] _maxCooldowns = new float[2];
 
-        /// <summary> ÄğÅ¸ÀÓ Á¤º¸ ÃÊ±âÈ­ </summary>
+        /// <summary> ì¿¨íƒ€ì„ ì •ë³´ ì´ˆê¸°í™” </summary>
         public void Clear()
         {
             for(int i = 0; i< _cooldowns.Length; i++) _cooldowns[i] = 0;
         }
 
         #region BasicAttack
-        /// <summary> °ø°İ °¡´É ¿©ºÎ(ÄğÅ¸ÀÓ ¾Æ´Ô) ¹İÈ¯ </summary>
+        /// <summary> ê³µê²© ê°€ëŠ¥ ì—¬ë¶€(ì¿¨íƒ€ì„ ì•„ë‹˜) ë°˜í™˜ </summary>
         public bool CanAttack() => _cooldowns[0] <= 0;
-        /// <summary> °ø°İ ÈÄ ÄğÅ¸ÀÓ ¼³Á¤ </summary>
-        public void SetAttackCool(int cool) => _cooldowns[0] = _maxCooldowns[0] = cool;
-        /// <summary> ³²Àº °ø°İ ÄğÅ¸ÀÓ ºñÀ² ¹İÈ¯ </summary>
+        /// <summary> ê³µê²© í›„ ì¿¨íƒ€ì„ ì„¤ì • </summary>
+        public void SetAttackCool(float cool) => _cooldowns[0] = _maxCooldowns[0] = cool;
+        /// <summary> ë‚¨ì€ ê³µê²© ì¿¨íƒ€ì„ ë¹„ìœ¨ ë°˜í™˜ </summary>
         public float GetAttackCoolRate()
         {
             if (_maxCooldowns[0] == 0) return 1;
@@ -41,11 +41,11 @@ namespace Client
         #endregion BasicAttack
 
         #region Skill
-        /// <summary> ½ºÅ³ °¡´É ¿©ºÎ(ÄğÅ¸ÀÓ ¾Æ´Ô) ¹İÈ¯ </summary>
+        /// <summary> ìŠ¤í‚¬ ê°€ëŠ¥ ì—¬ë¶€(ì¿¨íƒ€ì„ ì•„ë‹˜) ë°˜í™˜ </summary>
         public bool CanSkill() => _cooldowns[1] <= 0;
-        /// <summary> ½ºÅ³ ÈÄ ÄğÅ¸ÀÓ ¼³Á¤ </summary>
-        public void SetSkillCool(int cool) => _cooldowns[1] = _maxCooldowns[1] = cool;
-        /// <summary> ³²Àº ½ºÅ³ ÄğÅ¸ÀÓ ºñÀ² ¹İÈ¯ </summary>
+        /// <summary> ìŠ¤í‚¬ í›„ ì¿¨íƒ€ì„ ì„¤ì • </summary>
+        public void SetSkillCool(float cool) => _cooldowns[1] = _maxCooldowns[1] = cool;
+        /// <summary> ë‚¨ì€ ìŠ¤í‚¬ ì¿¨íƒ€ì„ ë¹„ìœ¨ ë°˜í™˜ </summary>
         public float GetSkillCoolRate()
         {
             if (_maxCooldowns[1] == 0) return 1;

@@ -94,7 +94,7 @@ namespace Client
         /// <summary> 플레이어 쿨타임 컨트롤러 </summary>
         public CooldownController Cooldown { get; } = new CooldownController();
         /// <summary> 모든 직업에 대한 스텟 정보 </summary>
-        public CharacterStatHandler CharacterStats { get; private set; }
+        public PlayerStatHandler PlayerStats { get; private set; }
         /// <summary> 현재 게임에 참여한 플레이어 캐릭터 오브젝트들 </summary>
         List<PlayerController> _playerControllers = new List<PlayerController>();
         /// <summary> 클라이언트의 캐릭터 </summary>
@@ -151,7 +151,7 @@ namespace Client
         public void Init()
         {
             _itemData = Util.ParseJson<ItemDataHandler>();
-            CharacterStats = Util.ParseJson<CharacterStatHandler>();
+            PlayerStats = Util.ParseJson<PlayerStatHandler>();
             MonsterStats = Util.ParseJson<MonsterStatHandler>();
 
             _hpBarPrefab = GameManager.Resource.Load<GameObject>("Prefabs/UI/MonsterHP");

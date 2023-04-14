@@ -1,8 +1,8 @@
 ﻿/*
 작성자 : 이우열
 작성일 : 23.03.29
-최근 수정 일자 : 23.04.10
-최근 수정 사항 : 아이템 스텟과 기본 스텟 분리
+최근 수정 일자 : 23.04.14
+최근 수정 사항 : 아이템 스텟 확장
 */
 using System.Collections;
 using System.Collections.Generic;
@@ -20,15 +20,14 @@ namespace Client
             if (GameManager.InGameData.Cooldown.CanSkill())
             {
                 MonsterController mon = NearMoster();
-                CharacterStat stat = GameManager.InGameData.CharacterStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.SkillRange)
                 {
                     SeeTarget(mon.transform.position);
                     _char4D.AnimationManager.Jab();
-                    GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_skillDMGRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
+                    GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
+                    GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
                 }
             }
             else
@@ -39,12 +38,9 @@ namespace Client
         {
             base.init();
             MyClass = Define.Charcter.Wizard;
-            MoveSpeed = 5.0f;
             AttackDMG = 20;
             Position = Vector2.zero;// 시작위치
 
-            _basicAttackRatio = 1;
-            _basicSkillRatio = 2;
             StatUpdate();
         }
     }

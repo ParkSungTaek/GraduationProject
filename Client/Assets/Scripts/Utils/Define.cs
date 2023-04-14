@@ -54,11 +54,12 @@ namespace Client
         public enum ItemKind
         {
             Damage,
-            Weight,
-            Speed,
             Range,
             Cooldown,
-            Slow
+            Weight,
+            Speed,
+            Slow,
+            MaxCount
         }
 
         public enum Tag
