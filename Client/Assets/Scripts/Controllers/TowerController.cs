@@ -13,7 +13,7 @@ namespace Client
 
         protected override void init()
         {
-            MaxHP = 1000;
+            MaxHP = 1000000;
             Nowhp = MaxHP;
             AttackDMG = 0;
             MoveSpeed = 0;

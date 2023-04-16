@@ -2,38 +2,49 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Client
 {
+    /// <summary>
+    /// 4/15 이전 박성택 구현부
+    /// 4/16 박성택 업데이트 4/12일 협의 결과에 따른 몬스터 나오는 수치와 벨런스 반영 
+    /// 
+    /// </summary>
     public class MonsterSpawn : MonoBehaviour
     {
-
-        /// <summary>
-        /// 본인이 까먹어서 해두는 메모
-        /// FantasyMonsters 폴더 내부 구조 바꾸면 타 프로그래머와 연동 안돌아감 
-        /// </summary>
-        /// 
-
+        #region 크게 바뀔 일 없는 데이터
         GameObject[] SpawnPoint;
         GameObject Monster;
         int SpawnPointNum = 12;
         float Xradius = 10;
         float yradius = 5;
-
-                                                    
-        IEnumerator _startCreateMonster;            // 몬스터 생성 Coroutine
-        Define.MonsterName _nowMonster;             // 현재 생성 Monster 종류
-        float MonsterToMonster = 0.25f;              // Monster 나오고 다음 Monster나올때까지 시간 텀 
-        float WaveToWave = 1.0f;                    // Wave끝나고(==이번 Wave의 마지막 몬스터 나온 시점) 다음 Wave 시작 전까지 시간 텀
-        int Wavenum = 3;                            // tmp 변수 한 Wave에서 나올 몬스터 숫자 (차후 Wave수에 종속적으로 변경할 것)
-        int Count;                                  // 이번 Wave 몬스터 나온 숫자
-        Transform _monsterHPCanvas;                 // Monster HP 붙여줄 Canvas의 Transform
+        /// <summary> 몬스터 생성 Coroutine </summary>
+        IEnumerator _startCreateMonster;
+        /// <summary> 현재 생성 Monster 종류 </summary>
+        Define.MonsterName _nowMonster;
+        /// <summary> 이번 Wave 몬스터 나온 숫자 </summary>
+        int _count;                                  
+        /// <summary> Monster HP 붙여줄 Canvas의 Transform </summary>
+        Transform _monsterHPCanvas;
+        /// <summary> Monster 의 HP를 그릴 Canvas</summary>
         public Transform MonsterHPCanvas { get { return _monsterHPCanvas; } }
+        /// <summary> 0 ~ _cycle - 2 Wave 에는 일반 몬스터 _cycle - 1 Wave 에서는 보스 몬스터 </summary>
+        const int _cycle = 10;
+        #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
+        #region 벨런싱 데이터 
+        /// <summary>  tmp 변수 한 Wave에서 나올 몬스터 숫자 </summary>
+        int _wavenum { get { return GameManager.InGameData.Wave % _cycle != _cycle - 1 ? (4 * (GameManager.InGameData.Wave / _cycle) + 2 * (GameManager.InGameData.Wave % _cycle) + 8) : 1 ; } }
+        /// <summary> Monster 나오고 다음 Monster나올때까지 시간 텀  </summary>
+        float _monsterToMonster { get { return (26.0f / (16.0f + GameManager.InGameData.Wave)); } }
+        /// <summary>   Wave끝나고(==이번 Wave의 마지막 몬스터 나온 시점) 다음 Wave 시작 전까지 시간 텀 </summary>
+        float _waveToWave = 8.0f;
+        #endregion
+
+        /// <summary> 소환된 몬스터 관리 </summary>
         List<MonsterController> _monsters = new List<MonsterController>();
+        /// <summary> 소환된 몬스터 관리 </summary>
         public List<MonsterController> Monsters { get { return _monsters; } }
         //InstantiateMonster을 내부적으로 더 쉽게 재정의 효과 (Enum을 활용하여 Monster의 이름을 외울 필요를 제거, 다음Wave를 ++식으로 편하게)
         GameObject InstantiateMonster(Define.MonsterName monster,Transform SpawnPoint)
@@ -46,10 +57,10 @@ namespace Client
         void init()
         {
             SpawnPoint = new GameObject[SpawnPointNum];
-            _nowMonster = Define.MonsterName.BlackBoar;
+            _nowMonster = Define.MonsterName._0BlackBoar;
             _monsterHPCanvas = GameManager.UI.ShowSceneUI<UI_MonsterHP>().transform;
             _startCreateMonster = StartCreateMonster();
-            Count = 0;
+            _count = 0;
             for (int i = 0; i < SpawnPointNum; i++)
             {
                 SpawnPoint[i] = new GameObject { name = $"SpawnPoint{i}" };
@@ -75,23 +86,27 @@ namespace Client
         IEnumerator StartCreateMonster()
         {
             while (GameManager.InGameData.CurrState == Define.State.Play)
-            {
-                if (Count < Wavenum)
+            {   
+                //몬스터 생성
+                if (_count < _wavenum)
                 {
-                    MonsterController mon = InstantiateMonster(_nowMonster, SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
+                    MonsterController mon = InstantiateMonster((Define.MonsterName)(GameManager.InGameData.Wave), SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
                     _monsters.Add(mon);
-                    yield return new WaitForSecondsRealtime(MonsterToMonster);
-                    Count += 1;
+                    yield return new WaitForSecondsRealtime(_monsterToMonster * 0.1f);
+                    _count += 1;
+
                 }
+                //다음 Wave
                 else
                 {
-                    Count = 0;
-                    _nowMonster += 1;
-                    if(_nowMonster == Define.MonsterName.MaxCount)
+                    _count = 0;
+                    GameManager.InGameData.Wave += 1;
+
+                    if (_nowMonster == Define.MonsterName.MaxCount)
                     {
                         break;
                     }
-                    yield return new WaitForSecondsRealtime(WaveToWave);
+                    yield return new WaitForSecondsRealtime(_waveToWave);
 
                 }
             }

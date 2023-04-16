@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Client
 {
@@ -38,6 +39,9 @@ namespace Client
         #region Score
         int _scoreRewards = 1;
         public int ScoreRewards { get { return _scoreRewards; } }
+
+        int _wave = 0;
+        public int Wave { get { return _wave; } set { _wave = value; } }
 
         int _score = 0;
         public int Score
@@ -118,25 +122,26 @@ namespace Client
         public BuffController Buff { get; } = new BuffController();
         #endregion Player
 
-        #region Monster
+        #region Monster 박성택 작업부
         /// <summary> 모든 몬스터 스텟 정보 </summary>
         public MonsterStatHandler MonsterStats { get; private set; }
-
         /// <summary> 몬스터 소환 관리 클래스 </summary>
         MonsterSpawn _monsterSpawn;
         /// <summary> 몬스터 소환 관리 클래스 </summary>
         public MonsterSpawn MonsterSpawn { get { return _monsterSpawn; } }
-
         /// <summary> 몬스터 체력바 프리팹 </summary>
         GameObject _hpBarPrefab;
         /// <summary> 몬스터 체력바 프리팹 </summary>
         public GameObject HPBarPrefab { get { return _hpBarPrefab; } }
+        
         #endregion
 
+        #region Tower 박성택 작업부
         /// <summary> 중앙 타워 </summary>
         TowerController _tower;
         /// <summary> 중앙 타워 </summary>
         public TowerController Tower { get { return _tower; } }
+        #endregion
 
         #region State
         /// <summary> 상태 정보 저장 </summary>
@@ -150,10 +155,10 @@ namespace Client
         /// <summary> 아이템 db 초기화, 스텟 정보, 프리팹 불러오기 </summary>
         public void Init()
         {
+            _wave = 0;
             _itemData = Util.ParseJson<ItemDataHandler>();
             PlayerStats = Util.ParseJson<PlayerStatHandler>();
             MonsterStats = Util.ParseJson<MonsterStatHandler>();
-
             _hpBarPrefab = GameManager.Resource.Load<GameObject>("Prefabs/UI/MonsterHP");
         }
 
@@ -218,7 +223,7 @@ namespace Client
         /// <summary> 게임 플레이 정보 초기화 </summary>
         public void Clear()
         {
-            _money = _score = 0;
+            _money = _score = _wave = 0;
             Cooldown.Clear();
             _myInventory.Clear();
         }

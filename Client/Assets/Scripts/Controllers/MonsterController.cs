@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -30,9 +31,11 @@ namespace Client
 
         protected override void init()
         {
+            _monsterName = (Define.MonsterName)Enum.Parse(typeof(Define.MonsterName), name);
             MonsterStat mystat = GameManager.InGameData.MonsterStats[_monsterName];
             _animator = GetComponent<Animator>();
             _animator.SetInteger("State", 3);
+            _monsterState = Define.MonsterState.Idle;
 
             //Debug.Log(mystat.Name);
             MaxHP = mystat.MaxHP;
@@ -44,6 +47,16 @@ namespace Client
 
 
 
+            Debug.Log(
+@$"name = {mystat.Name};
+MaxHP = {mystat.MaxHP};
+AttackDMG = {mystat.AttackDMG};
+MoveSpeed = {mystat.MoveSpeed};
+AttackSpeed = {mystat.AttackSpeed};
+_offsetCorrection = new Vector3 (0, {mystat._offsetCorrection} , 0);
+_monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
+            ");
+
             Nowhp = MaxHP;
             _monsterHpBar = Instantiate(GameManager.InGameData.HPBarPrefab);
             _monsterHpBar.transform.SetParent(GameManager.InGameData.MonsterSpawn.MonsterHPCanvas);
@@ -53,33 +66,39 @@ namespace Client
 
         protected override void Dead()
         {
+            _animator.SetInteger("State", 9);
+            _monsterState = Define.MonsterState.Death;
             GameManager.InGameData.Money += GameManager.InGameData.MoneyRewards;
             GameManager.InGameData.Score += GameManager.InGameData.ScoreRewards;
-
-
+            if (_attack != null)
+            {
+                StopCoroutine(_attack);
+            }
             GameManager.InGameData.MonsterSpawn.Monsters.Remove(this);
             if(GameManager.InGameData.MonsterSpawn.Monsters.Count == 0 && GameManager.InGameData.MonsterSpawn.WaveEnd())
             {
                 GameManager.GameOver(Define.State.Win);
-            } 
-
+            }
+            
             Destroy(_monsterHpBar);
-            Destroy(gameObject);
 
+            Destroy(gameObject,1.0f);
 
         }
         // Update is called once per frame
         void FixedUpdate()
         {
-            Move(GameManager.InGameData.Tower.transform.position + _offsetCorrection);
-            _monsterHpBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + _monsterHpBarOffset);
-
+            if (_monsterState != Define.MonsterState.Death)
+            {
+                Move(GameManager.InGameData.Tower.transform.position + _offsetCorrection);
+                _monsterHpBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + _monsterHpBarOffset);
+            }
         }
 
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.transform.tag == "Tower")
+            if (collision.transform.tag == "Tower" && _monsterState != Define.MonsterState.Death)
             {
                 _attack = StartCoroutine(Attack());
 
@@ -89,7 +108,7 @@ namespace Client
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (collision.transform.tag == "Tower")
+            if (collision.transform.tag == "Tower" && _monsterState != Define.MonsterState.Death)
             {
                 _animator.SetInteger("State", 3);
 
@@ -105,7 +124,11 @@ namespace Client
             while (true)
             {
                 GameManager.InGameData.Tower.BeAttacked(AttackDMG);
+
+                _monsterState = Define.MonsterState.Attack;
                 _animator.SetBool("Attack", true);
+                _monsterState = Define.MonsterState.Idle;
+
                 yield return new WaitForSeconds(AttackSpeed);
             }
         }
