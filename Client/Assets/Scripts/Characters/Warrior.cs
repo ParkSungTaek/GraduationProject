@@ -22,9 +22,9 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Attack();
                     GenerateRangedArea(_itemStat.AttackRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
@@ -43,9 +43,9 @@ namespace Client
                 PlayerStat stat = GameManager.InGameData.PlayerStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= stat.SkillRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Attack();
                     GenerateRangedArea(_itemStat.SkillRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);

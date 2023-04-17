@@ -215,7 +215,7 @@ namespace Client
                     break;
             }
 
-            playerGO.transform.position = Vector3.down;
+            playerGO.transform.position = 2 * Vector3.up;
             _playerControllers.Add(playerController);
         }
         #endregion GameStart_Generate

@@ -22,9 +22,9 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Jab();
                     GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);

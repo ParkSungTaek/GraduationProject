@@ -22,9 +22,9 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.ShotBow();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
@@ -45,9 +45,9 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.ShotBow();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));

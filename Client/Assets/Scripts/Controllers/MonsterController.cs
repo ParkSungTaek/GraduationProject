@@ -21,6 +21,8 @@ namespace Client
         Vector3 _offsetCorrection;
         Vector3 _monsterHpBarOffset;
 
+        public Vector3 CorrectPosition { get => transform.position - _offsetCorrection / 2; }
+
 
         // Start is called before the first frame update
         void Start()
@@ -82,6 +84,7 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
             
             Destroy(_monsterHpBar);
 
+            gameObject.GetComponent<Collider2D>().enabled = false;
             Destroy(gameObject,1.0f);
 
         }

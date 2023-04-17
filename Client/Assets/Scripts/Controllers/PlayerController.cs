@@ -44,9 +44,9 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Attack();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
@@ -68,9 +68,9 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.transform.position) <= _itemStat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
                 {
-                    SeeTarget(mon.transform.position);
+                    SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Attack();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
@@ -142,10 +142,10 @@ namespace Client
                 return null;
 
             MonsterController nearMon = monsters[0];
-            float pivotDis = Vector3.Distance(_currPosition, nearMon.transform.position);
+            float pivotDis = Vector3.Distance(_currPosition, nearMon.CorrectPosition);
             for(int i = 1; i < monsters.Count;i++)
             {
-                float currDis = Vector3.Distance(_currPosition, monsters[i].transform.position);
+                float currDis = Vector3.Distance(_currPosition, monsters[i].CorrectPosition);
                 if (currDis < pivotDis)
                 {
                     pivotDis = currDis;
