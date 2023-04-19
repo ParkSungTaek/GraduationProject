@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "vYwo1w5KFnJ9kVMjGco1lJfR0MMnZV5lQYNYEuZuBunb0bgrEff8fvDWn6eDf1RqRTGXur8OnbdO8j4Qt5Ildw==",
+  "dgSpecHash": "t9e3xnv4EDQkDwr/PE8zDiZp847gmWHJnR12jT+WTluHs7pIZcmRklZJcivKyhsdDVY7mlA9PfjEEBg/zNhq1A==",
   "success": true,
-  "projectFilePath": "E:\\Unity Projects\\GraduationProject\\Server\\Server\\Server.csproj",
+  "projectFilePath": "E:\\Unity\\GraduationProject\\Server\\Server\\Server.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }
