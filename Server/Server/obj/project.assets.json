@@ -27,19 +27,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\cowye\\.nuget\\packages\\": {}
+    "C:\\Users\\dnduf\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Unity\\GraduationProject\\Server\\Server\\Server.csproj",
+      "projectUniqueName": "E:\\Unity Projects\\GraduationProject\\Server\\Server\\Server.csproj",
       "projectName": "Server",
-      "projectPath": "E:\\Unity\\GraduationProject\\Server\\Server\\Server.csproj",
-      "packagesPath": "C:\\Users\\cowye\\.nuget\\packages\\",
-      "outputPath": "E:\\Unity\\GraduationProject\\Server\\Server\\obj\\",
+      "projectPath": "E:\\Unity Projects\\GraduationProject\\Server\\Server\\Server.csproj",
+      "packagesPath": "C:\\Users\\dnduf\\.nuget\\packages\\",
+      "outputPath": "E:\\Unity Projects\\GraduationProject\\Server\\Server\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\cowye\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\dnduf\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -53,8 +53,8 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "projectReferences": {
-            "E:\\Unity\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj": {
-              "projectPath": "E:\\Unity\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj"
+            "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj": {
+              "projectPath": "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj"
             }
           }
         }
@@ -84,7 +84,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }

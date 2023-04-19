@@ -14,6 +14,8 @@ namespace Server
 {
     public class Room
     {
+        public string RoomName;
+
         /// <summary> 현재 방에 존재하는 클라이언트들 </summary>
         List<ClientSession> _sessions = new List<ClientSession>();
         /// <summary> 작업 관리 queue </summary>
@@ -23,6 +25,9 @@ namespace Server
     
         /// <summary> 새로운 작업 수행 예약 </summary>
         public void Push(Action job) => _jobQueue.Push(job);
+
+        /// <summary> 방 인원 수 </summary>
+        public int Count => _sessions.Count;
 
         //job queue에서 수행하기 때문에 싱글 쓰레드 가정
         #region Jobs
@@ -50,11 +55,38 @@ namespace Server
             //TODO : Enter Packet BroadCast
         }
 
+        /// <summary> 클라이언트 퇴장 </summary>
         public void Leave(ClientSession session)
         {
+            //모든 유저가 나간 방 제거
+            if (_sessions.Count <= 1)
+            {
+                RoomManager.Instance.Push(() => RoomManager.Instance.Remove(this));
+                return;
+            }
+
+            //방장이 나갈 경우, 방장 변경
+            if(_sessions.IndexOf(session) <= 0)
+            {
+                STC_SetSuper superPacket = new STC_SetSuper();
+                _sessions[1].Send(superPacket.Write());
+            }
+
             _sessions.Remove(session);
 
             //TODO : Leave Packet BroadCast
+        }
+
+        /// <summary> 플레이어 이동 동기화 </summary>
+        /// <param name="session"> 이동 패킷 보낸 세션 </param>
+        public void Move(ClientSession session, CTS_PlayerMove movePacket)
+        {
+            STC_PlayerMove packet = new STC_PlayerMove();
+            packet.playerId = session.SessionId;
+            packet.posX = movePacket.posX;
+            packet.posY = movePacket.posY;
+
+            Broadcast(packet.Write());
         }
         #endregion Jobs
     }
