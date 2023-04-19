@@ -15,6 +15,7 @@ namespace Server
     public class Room
     {
         public string RoomName;
+        IngameData _ingameData;
 
         /// <summary> 현재 방에 존재하는 클라이언트들 </summary>
         List<ClientSession> _sessions = new List<ClientSession>();

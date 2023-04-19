@@ -13,6 +13,49 @@ namespace Server
 {
     /// <summary>
     /// 작성자 : 이우열 <br/>
+    /// 클라이언트 최초 연결 시, playerId 설정
+    /// </summary>
+    public class STC_OnConnect : IPacket
+    {
+        public int playerId;
+        public ushort Protocol => (ushort)PacketID.STC_OnConnect;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            //protocol
+            count += sizeof(ushort);
+
+            playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 방 입장 불가 : 방 없음
     /// </summary>
     public class STC_RejectEnter_Exist : IPacket

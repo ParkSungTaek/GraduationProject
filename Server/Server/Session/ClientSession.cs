@@ -20,11 +20,14 @@ namespace Server
         public override void OnConnected(EndPoint endPoint)
         {
             Console.WriteLine($"OnConnected : {endPoint}");
+            STC_OnConnect onConnectPacket = new STC_OnConnect();
+            onConnectPacket.playerId = SessionId;
+            Send(onConnectPacket.Write());
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
-
+            PacketManager.Instance.OnRecvPacket(this, buffer);
         }
 
         public override void OnSend(int byteTransfered)

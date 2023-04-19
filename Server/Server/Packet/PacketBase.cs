@@ -17,6 +17,7 @@ namespace Server
         CTS_CreateRoom,
         CTS_EnterRoom,
         
+        STC_OnConnect,
         STC_RejectRoom,
         STC_RejectEnter_Exist,
         STC_RejectEnter_Full,

@@ -22,6 +22,10 @@ namespace Server
         {
             Console.WriteLine("Hello, World!");
 
+            //TODO : Listener listen
+
+            JobTimer.Instance.Push(FlushRoom, 0);
+
             //계속 예약된 작업 수행 시도
             while(true)
             {
