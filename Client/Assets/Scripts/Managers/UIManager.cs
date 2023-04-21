@@ -1,8 +1,9 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ÆË¾÷ UI ´İÀ» ½Ã destroy°¡ ¾Æ´Ï¶ó SetActive(false)·Î º¯°æ
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„± ì¼ì : 23.03.29
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.05
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : íŒì—… UI ë‹«ì„ ì‹œ destroyê°€ ì•„ë‹ˆë¼ SetActive(false)ë¡œ ë³€ê²½
 */
 
 using System.Collections;
@@ -14,22 +15,22 @@ namespace Client
     public class UIManager
     {
         /// <summary>
-        /// ÆË¾÷ UI °ü¸®¸¦ À§ÇÑ stack
+        /// íŒì—… UI ê´€ë¦¬ë¥¼ ìœ„í•œ stack
         /// </summary>
         [Header("Pop Up")]
         Stack<UI_PopUp> _popupStack = new Stack<UI_PopUp>();
         /// <summary>
-        /// popup ui Á¤·Ä ¼ø¼­¸¦ À§ÇÑ º¯¼ö
+        /// popup ui ì •ë ¬ ìˆœì„œë¥¼ ìœ„í•œ ë³€ìˆ˜
         /// </summary>
         int _order = 1;
 
         /// <summary>
-        /// popup Àç»ç¿ëÀ» À§ÇÑ Ä³½Ì
+        /// popup ì¬ì‚¬ìš©ì„ ìœ„í•œ ìºì‹±
         /// </summary>
         Dictionary<System.Type, GameObject> _popupInstances = new Dictionary<System.Type, GameObject>();
 
         /// <summary>
-        /// UIÀÇ ºÎ¸ğ 
+        /// UIì˜ ë¶€ëª¨ 
         /// </summary>
         [Header("Root")]
         GameObject _root = null;
@@ -47,10 +48,10 @@ namespace Client
         }
 
         /// <summary>
-        /// game object¿¡ canvas ¼Ó¼º ºÎ¿©, Á¤·Ä ¼³Á¤
+        /// game objectì— canvas ì†ì„± ë¶€ì—¬, ì •ë ¬ ì„¤ì •
         /// </summary>
-        /// <param name="go">canvas ¼Ó¼ºÀÌ ÀÖ´Â °ÔÀÓ ¿ÀºêÁ§Æ®</param>
-        /// <param name="sort">canvas Á¤·Ä ¿©ºÎ(popup->true, scene->false)</param>
+        /// <param name="go">canvas ì†ì„±ì´ ìˆëŠ” ê²Œì„ ì˜¤ë¸Œì íŠ¸</param>
+        /// <param name="sort">canvas ì •ë ¬ ì—¬ë¶€(popup->true, scene->false)</param>
         public void SetCanvas(GameObject go, bool sort = true, int order = 0)
         {
             Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
@@ -65,10 +66,10 @@ namespace Client
         }
 
         /// <summary>
-        /// Scene ±âº» UI ¶ç¿ì±â
+        /// Scene ê¸°ë³¸ UI ë„ìš°ê¸°
         /// </summary>
-        /// <typeparam name="T">UI_SceneÀ» »ó¼Ó¹ŞÀº °¢ SceneÀÇ UI</typeparam>
-        /// <param name="name">Scene UI ÀÌ¸§, nullÀÌ¸é T ÀÌ¸§</param>
+        /// <typeparam name="T">UI_Sceneì„ ìƒì†ë°›ì€ ê° Sceneì˜ UI</typeparam>
+        /// <param name="name">Scene UI ì´ë¦„, nullì´ë©´ T ì´ë¦„</param>
         public T ShowSceneUI<T>(string name = null) where T : UI_Scene
         {
             if(string.IsNullOrEmpty(name))
@@ -83,10 +84,10 @@ namespace Client
         }
 
         /// <summary>
-        /// Pop Up UI ¶ç¿ì±â
+        /// Pop Up UI ë„ìš°ê¸°
         /// </summary>
-        /// <typeparam name="T">UI_PopUpÀ» »ó¼Ó¹ŞÀº Pop up UI</typeparam>
-        /// <param name="name">Pop Up UI ÀÌ¸§, nullÀÌ¸é T ÀÌ¸§</param>
+        /// <typeparam name="T">UI_PopUpì„ ìƒì†ë°›ì€ Pop up UI</typeparam>
+        /// <param name="name">Pop Up UI ì´ë¦„, nullì´ë©´ T ì´ë¦„</param>
         public T ShowPopUpUI<T>(string name = null) where T : UI_PopUp
         {
             if(string.IsNullOrEmpty(name))
@@ -95,7 +96,7 @@ namespace Client
             GameObject popup;
             T popupUI;
 
-            //ÀÌÀü¿¡ ¶ç¿î ±â·Ï ¾øÀ½ -> »ı¼º
+            //ì´ì „ì— ë„ìš´ ê¸°ë¡ ì—†ìŒ -> ìƒì„±
             if (_popupInstances.TryGetValue(typeof(T), out popup) == false)
             {
                 popup = GameManager.Resource.Instantiate($"UI/PopUp/{name}");
@@ -103,7 +104,7 @@ namespace Client
 
                 popupUI = Util.GetOrAddComponent<T>(popup);
             }
-            //ÀÌÀü¿¡ ¶ç¿î ±â·Ï ÀÖÀ½ -> ÀçÈ°¼ºÈ­
+            //ì´ì „ì— ë„ìš´ ê¸°ë¡ ìˆìŒ -> ì¬í™œì„±í™”
             else
             {
                 popupUI = Util.GetOrAddComponent<T>(popup);
@@ -120,9 +121,9 @@ namespace Client
         }
 
         /// <summary>
-        /// Æ¯Á¤ pop up UI ´İ±â, stackÀÇ Á¦ÀÏ À§°¡ ¾Æ´Ï¸é ¼öÇà X
+        /// íŠ¹ì • pop up UI ë‹«ê¸°, stackì˜ ì œì¼ ìœ„ê°€ ì•„ë‹ˆë©´ ìˆ˜í–‰ X
         /// </summary>
-        /// <param name="popup">´İ°íÀÚ ÇÏ´Â popup</param>
+        /// <param name="popup">ë‹«ê³ ì í•˜ëŠ” popup</param>
         public void ClosePopUpUI(UI_PopUp popup)
         {
             if(_popupStack.Count <= 0) return;
@@ -136,7 +137,7 @@ namespace Client
             ClosePopUpUI();
         }
         /// <summary>
-        /// °¡Àå À§ÀÇ pop up UI ´İ±â
+        /// ê°€ì¥ ìœ„ì˜ pop up UI ë‹«ê¸°
         /// </summary>
         public void ClosePopUpUI()
         {
@@ -149,7 +150,7 @@ namespace Client
         }
 
         /// <summary>
-        /// ¸ğµç pop up UI ´İ±â
+        /// ëª¨ë“  pop up UI ë‹«ê¸°
         /// </summary>
         public void CloseAllPopUpUI()
         {
@@ -158,7 +159,7 @@ namespace Client
         }
 
         /// <summary>
-        /// UI ÃÊ±âÈ­
+        /// UI ì´ˆê¸°í™”
         /// </summary>
         public void Clear()
         {

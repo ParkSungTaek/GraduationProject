@@ -1,8 +1,7 @@
-﻿/*
+/*
 공동 작성
 작성일 : 23.03.31
 
-최근 수정자 : 이우열
 최근 수정 일자 : 23.04.05
 최근 수정 사항 : json parsing 함수 구현
 */
@@ -13,6 +12,7 @@ namespace Client
     public class Util
     {
         /// <summary>
+        /// 작성자 : 이우열 <br/>
         /// Game Object에서 해당 Component 얻거나 없으면 추가
         /// </summary>
         public static T GetOrAddComponent<T>(GameObject go) where T : UnityEngine.Component
@@ -21,6 +21,7 @@ namespace Client
         }
 
         /// <summary>
+        /// 작성자 : 박성택 <br/>
         /// 해당 Game Object의 자식 중 T 컴포넌트를 가진 자식 얻기
         /// </summary>
         /// <param name="name">자식의 이름</param>
@@ -53,6 +54,7 @@ namespace Client
         }
 
         /// <summary>
+        /// 작성자 : 박성택 <br/>
         /// Game Object 전용 FindChild
         /// </summary>
         public static GameObject FindChild(GameObject go, string name = null, bool recursive = false)
@@ -64,6 +66,7 @@ namespace Client
 
 
         /// <summary>
+        /// 작성자 : 이우열 <br/>
         /// json 파일 파싱하여 오브젝트로 반환<br/>
         /// <br/>
         /// * 필요 클래스<br/>

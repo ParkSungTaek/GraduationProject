@@ -1,3 +1,11 @@
+ï»¿/******
+ì‘ì„±ì : ë°•ì„±íƒ
+ì‘ì„± ì¼ì : 23.03.29
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.03.29
+ìµœê·¼ ìˆ˜ì • ë‚´ìš© : ì‚¬ìš´ë“œ ë§¤ë‹ˆì € í´ë˜ìŠ¤ ìƒì„±
+ ******/
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,9 +52,9 @@ namespace Client
         }
 
         /// <summary>
-        /// SFX¿ë PlayOneShotÀ¸·Î ±¸Çö 
+        /// SFXìš© PlayOneShotìœ¼ë¡œ êµ¬í˜„ 
         /// </summary>
-        /// <param name="SFXSound"> Define.SFX Enum ¿¡¼­ °¡Á®¿À±â¸¦ ¹Ù¶÷ </param>
+        /// <param name="SFXSound"> Define.SFX Enum ì—ì„œ ê°€ì ¸ì˜¤ê¸°ë¥¼ ë°”ëŒ </param>
         /// <param name="pitch"></param>
 
         public void Play(Define.SFX SFXSound, float pitch = 1.0f)
@@ -56,9 +64,9 @@ namespace Client
             Play(audioClip, Define.Sound.SFX, pitch);
         }
         /// <summary>
-        /// BGM¿ë Play·Î ±¸Çö
+        /// BGMìš© Playë¡œ êµ¬í˜„
         /// </summary>
-        /// <param name="BGMSound">Define.BGM Enum ¿¡¼­ °¡Á®¿À±â¸¦ ¹Ù¶÷ </param>
+        /// <param name="BGMSound">Define.BGM Enum ì—ì„œ ê°€ì ¸ì˜¤ê¸°ë¥¼ ë°”ëŒ </param>
         /// <param name="pitch"></param>
         public void Play(Define.BGM BGMSound, float pitch = 1.0f)
         {

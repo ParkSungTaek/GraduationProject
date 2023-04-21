@@ -1,4 +1,12 @@
-﻿using System;
+﻿/******
+작성자 : 박성택
+작성 일자 : 23.03.31
+
+최근 수정 일자 : 23.04.21
+최근 수정 내용 : 좌표 보정식 수정
+ ******/
+
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,7 +29,7 @@ namespace Client
         Vector3 _offsetCorrection;
         Vector3 _monsterHpBarOffset;
 
-        public Vector3 CorrectPosition { get => transform.position - _offsetCorrection / 2; }
+        public Vector3 CorrectPosition { get => transform.position - _offsetCorrection * transform.localScale.y; }
 
 
         // Start is called before the first frame update

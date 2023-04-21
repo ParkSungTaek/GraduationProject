@@ -1,3 +1,11 @@
+ï»¿/******
+ì‘ì„±ì : ë°•ì„±íƒ
+ì‘ì„± ì¼ì : 23.04.08
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ë‚´ìš© : image ë¶ˆëŸ¬ì˜¤ê¸° ë³€ê²½
+ ******/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -49,8 +57,8 @@ namespace Client
 
         #region Image
         /// <summary>
-        /// ³ªÁß¿¡ Win Defeat ÀÌ¹ÌÁö »ı±â¸é ±×¶§ ÀÌ¹ÌÁö °¥¾Æ ³¢¿ì´Â °ÍÀ¸·Î º¯°æ ¿¹Á¤
-        /// Áö±İÀº ±×³É Set True False·Î °£·«ÇÏ°Ô ³ªÅ¸³¿
+        /// ë‚˜ì¤‘ì— Win Defeat ì´ë¯¸ì§€ ìƒê¸°ë©´ ê·¸ë•Œ ì´ë¯¸ì§€ ê°ˆì•„ ë¼ìš°ëŠ” ê²ƒìœ¼ë¡œ ë³€ê²½ ì˜ˆì •
+        /// ì§€ê¸ˆì€ ê·¸ëƒ¥ Set True Falseë¡œ ê°„ëµí•˜ê²Œ ë‚˜íƒ€ëƒ„
         /// </summary>
         void ImageBind()
         {

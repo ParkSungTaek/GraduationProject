@@ -14,8 +14,7 @@ namespace Server
 {
     public class PacketManager
     {
-        static PacketManager _instance = new PacketManager();
-        public static PacketManager Instance { get => _instance; }
+        public static PacketManager Instance { get; } = new PacketManager();
 
         PacketManager()
         {

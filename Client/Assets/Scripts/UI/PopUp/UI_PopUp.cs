@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ »çÇ× : popup ui ÀçÈ°¼ºÈ­(ReOpen) ÇÔ¼ö Ãß°¡
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.29
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.05
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : popup ui ì¬í™œì„±í™”(ReOpen) í•¨ìˆ˜ ì¶”ê°€
 */
 
 using System.Collections;
@@ -13,20 +13,20 @@ namespace Client
 {
     public abstract class UI_PopUp : UI_Base
     {
-        /// <summary> Á¤·Ä ¼³Á¤ </summary>
+        /// <summary> ì •ë ¬ ì„¤ì • </summary>
         public override void Init()
         {
             GameManager.UI.SetCanvas(gameObject, true);
         }
 
-        /// <summary> pop up ´İ±â </summary>
+        /// <summary> pop up ë‹«ê¸° </summary>
         public virtual void ClosePopUpUI()
         {
             GameManager.UI.ClosePopUpUI(this);
         }
 
         /// <summary>
-        /// ºñÈ°¼ºÈ­µÈ UI ´Ù½Ã È°¼ºÈ­ ½Ã È£Ãâ
+        /// ë¹„í™œì„±í™”ëœ UI ë‹¤ì‹œ í™œì„±í™” ì‹œ í˜¸ì¶œ
         /// </summary>
         public abstract void ReOpen();
     }

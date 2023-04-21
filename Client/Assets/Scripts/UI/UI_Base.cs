@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.31
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.03.31
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ±âº» UI ½Ã½ºÅÛ ±¸Çö
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.31
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.03.31
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ê¸°ë³¸ UI ì‹œìŠ¤í…œ êµ¬í˜„
 */
 using System;
 using System.Collections.Generic;
@@ -16,12 +16,12 @@ namespace Client
     public abstract class UI_Base : MonoBehaviour
     {
         /// <summary>
-        /// °ü¸®ÇÒ »êÇÏ ¿ÀºêÁ§Æ®µé
+        /// ê´€ë¦¬í•  ì‚°í•˜ ì˜¤ë¸Œì íŠ¸ë“¤
         /// </summary>
         protected Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
 
         /// <summary>
-        /// UI ÃÖÃÊ ÃÊ±âÈ­
+        /// UI ìµœì´ˆ ì´ˆê¸°í™”
         /// </summary>
         public abstract void Init();
         private void Start()
@@ -29,10 +29,10 @@ namespace Client
             Init();
         }
         /// <summary>
-        /// »êÇÏÀÇ T type objectµé _objects dictionary¿¡ ÀúÀå
+        /// ì‚°í•˜ì˜ T type objectë“¤ _objects dictionaryì— ì €ì¥
         /// </summary>
-        /// <typeparam name="T">ÇØ´ç Å¸ÀÔ</typeparam>
-        /// <param name="type">ÇØ´ç Å¸ÀÔ Á¤º¸ °¡Áø enum(°¢ UI¿¡¼­ Á¤ÀÇ)</param>
+        /// <typeparam name="T">í•´ë‹¹ íƒ€ì…</typeparam>
+        /// <param name="type">í•´ë‹¹ íƒ€ì… ì •ë³´ ê°€ì§„ enum(ê° UIì—ì„œ ì •ì˜)</param>
         protected void Bind<T>(Type type) where T : UnityEngine.Object
         {
             string[] names = Enum.GetNames(type);
@@ -52,7 +52,7 @@ namespace Client
         }
 
         /// <summary>
-        /// bindµÈ object¿¡¼­ ¿øÇÏ´Â object ¾ò±â
+        /// bindëœ objectì—ì„œ ì›í•˜ëŠ” object ì–»ê¸°
         /// </summary>
         protected T Get<T>(int idx) where T : UnityEngine.Object
         {
@@ -71,10 +71,10 @@ namespace Client
         #endregion Get_Override
     
         /// <summary>
-        /// ÇØ´ç game object¿¡ ÀÌº¥Æ® ÇÒ´ç
+        /// í•´ë‹¹ game objectì— ì´ë²¤íŠ¸ í• ë‹¹
         /// </summary>
-        /// <param name="action">ÇÒ´çÇÒ ÀÌº¥Æ®</param>
-        /// <param name="type">ÀÌº¥Æ® ¹ß»ı Á¶°Ç</param>
+        /// <param name="action">í• ë‹¹í•  ì´ë²¤íŠ¸</param>
+        /// <param name="type">ì´ë²¤íŠ¸ ë°œìƒ ì¡°ê±´</param>
         public static void BindEvent(GameObject go, Action<PointerEventData> action, Define.UIEvent type = Define.UIEvent.Click)
         {
             UI_EventHandler evt = Util.GetOrAddComponent<UI_EventHandler>(go);

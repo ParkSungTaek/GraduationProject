@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.04.07
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.07
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ¹üÀ§ °ø°Ý ±¸Çö
+ï»¿/*
+ìž‘ì„±ìž : ì´ìš°ì—´
+ìž‘ì„±ì¼ : 23.04.07
+ìµœê·¼ ìˆ˜ì • ì¼ìž : 23.04.07
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ë²”ìœ„ ê³µê²© êµ¬í˜„
 */
 using System.Collections;
 using System.Collections.Generic;

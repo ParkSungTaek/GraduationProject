@@ -1,8 +1,8 @@
 /*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.04.01
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.07
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ÇÃ·¹ÀÌ¾î »ı¼º ±â´É InGameManager·Î ÀÌÀü
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.04.01
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.07
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : í”Œë ˆì´ì–´ ìƒì„± ê¸°ëŠ¥ InGameManagerë¡œ ì´ì „
 */
 
 using UnityEngine;
@@ -61,12 +61,12 @@ namespace Client
 
         #region Joystick
         /// <summary>
-        /// joystick handle ±âº» À§Ä¡
+        /// joystick handle ê¸°ë³¸ ìœ„ì¹˜
         /// </summary>
         Vector2 _joystickPivotPos;
 
         /// <summary>
-        /// joystick ÃÖ´ë ÀÌµ¿ °Å¸®
+        /// joystick ìµœëŒ€ ì´ë™ ê±°ë¦¬
         /// </summary>
         float _joystickLimit;
         /// <summary>
@@ -75,7 +75,7 @@ namespace Client
         GameObject _joystickHandle;
 
         /// <summary>
-        /// joystick ¹æÇâ º¤ÅÍ
+        /// joystick ë°©í–¥ ë²¡í„°
         /// </summary>
         Vector2 _directionVector = Vector2.zero;
 
@@ -84,17 +84,17 @@ namespace Client
             GameObject joystickBG = Get<GameObject>((int)GameObjects.joystickBG);
             _joystickHandle = Get<GameObject>((int)GameObjects.joystickHandle);
 
-            //±âº» À§Ä¡¿Í ÃÖ´ë ÀÌµ¿ °Å¸® °è»ê
+            //ê¸°ë³¸ ìœ„ì¹˜ì™€ ìµœëŒ€ ì´ë™ ê±°ë¦¬ ê³„ì‚°
             _joystickPivotPos = _joystickHandle.transform.position;
             _joystickLimit = ((joystickBG.transform as RectTransform).rect.width - (_joystickHandle.transform as RectTransform).rect.width) / 2f;
 
-            //ÀÌº¥Æ® bind
+            //ì´ë²¤íŠ¸ bind
             BindEvent(_joystickHandle, JoystickDrag, Define.UIEvent.Drag);
             BindEvent(_joystickHandle, JoystickDragEnd, Define.UIEvent.DragEnd);
         }
 
         /// <summary>
-        /// Á¶ÀÌ½ºÆ½ µå·¡±×
+        /// ì¡°ì´ìŠ¤í‹± ë“œë˜ê·¸
         /// </summary>
         /// <param name="evt"></param>
         void JoystickDrag(PointerEventData evt)
@@ -107,7 +107,7 @@ namespace Client
         }
 
         /// <summary>
-        /// Á¶ÀÌ½ºÆ½ µå·¡±× Á¾·á
+        /// ì¡°ì´ìŠ¤í‹± ë“œë˜ê·¸ ì¢…ë£Œ
         /// </summary>
         /// <param name="evt"></param>
         void JoystickDragEnd(PointerEventData evt)
@@ -128,7 +128,7 @@ namespace Client
         }
 
         /// <summary>
-        /// ±âº» °ø°İ ¹öÆ°
+        /// ê¸°ë³¸ ê³µê²© ë²„íŠ¼
         /// </summary>
         void Btn_Attack(PointerEventData evt)
         {
@@ -136,7 +136,7 @@ namespace Client
         }
 
         /// <summary>
-        /// ½ºÅ³ ½ÃÀü ¹öÆ°
+        /// ìŠ¤í‚¬ ì‹œì „ ë²„íŠ¼
         /// </summary>
         void Btn_Skill(PointerEventData evt)
         {
@@ -144,7 +144,7 @@ namespace Client
         }
 
         /// <summary>
-        /// ¾ÆÀÌÅÛ »Ì±â ¹öÆ°
+        /// ì•„ì´í…œ ë½‘ê¸° ë²„íŠ¼
         /// </summary>
         void Btn_GetItem(PointerEventData evt)
         {

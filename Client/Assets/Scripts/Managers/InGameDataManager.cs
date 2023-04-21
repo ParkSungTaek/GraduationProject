@@ -15,6 +15,8 @@ namespace Client
     public class InGameDataManager
     {
         #region Money   
+        //Money 관련 작성자 : 박성택
+
         /// <summary> 보유 중인 돈 </summary>
         int _money = 0;
         /// <summary> set 시, 아이템 구매 및 메인 UI 업데이트 </summary>
@@ -37,6 +39,8 @@ namespace Client
         #endregion Money
 
         #region Score
+        //Score 관련 작성자 : 박성택
+
         int _scoreRewards = 1;
         public int ScoreRewards { get { return _scoreRewards; } }
 
@@ -56,6 +60,9 @@ namespace Client
         #endregion Score
 
         #region Item
+        //Item 구매 관련 작성자 : 박성택
+        //Item 보유 정보, 장착 및 스텟 관련 작성자 : 이우열
+
         /// <summary> 모든 아이템 정보 </summary>
         ItemDataHandler _itemData;
 
@@ -95,6 +102,8 @@ namespace Client
         #endregion
 
         #region Player
+        //플레이어 관련 작성자 : 이우열
+
         /// <summary> 플레이어 쿨타임 컨트롤러 </summary>
         public CooldownController Cooldown { get; } = new CooldownController();
         /// <summary> 모든 직업에 대한 스텟 정보 </summary>
@@ -144,6 +153,8 @@ namespace Client
         #endregion
 
         #region State
+        //State 관련 작성자 : 박성택
+
         /// <summary> 상태 정보 저장 </summary>
         Define.State _state = Define.State.Idle;
         /// <summary> 게임 진행 상태 변경 </summary>
@@ -170,7 +181,9 @@ namespace Client
             GeneratePlayer();
         }
         #region GameStart_Generate
-        /// <summary> 몬스터 스폰 포인트 생성 </summary>
+        /// <summary> 작성자 : 박성택 <br/>
+        /// 몬스터 스폰 포인트 생성 
+        /// </summary>
         void GenerateMonsterSpawnPoint()
         {
             GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
@@ -178,7 +191,9 @@ namespace Client
                 monsterSpawn = GameManager.Resource.Instantiate("Monster/MonsterSpawn/MonsterSpawn");
             _monsterSpawn = monsterSpawn.GetComponent<MonsterSpawn>();
         }
-        /// <summary> 중앙 타워 생성 </summary>
+        /// <summary> 작성자 : 박성택 <br/>
+        /// 중앙 타워 생성 
+        /// </summary>
         void GenerateTower()
         {
             GameObject tower = GameObject.Find("Tower");
@@ -186,7 +201,8 @@ namespace Client
                 tower = GameManager.Resource.Instantiate("Tower/Tower");
             _tower = tower.GetComponent<TowerController>();
         }
-        /// <summary> 플레이어 생성 <br/>
+        /// <summary> 작성자 : 이우열 <br/>
+        /// 플레이어 생성 <br/>
         /// 현재는 하나만 생성하지만, 나중에 참여 인원수만큼 생성 </summary>
         void GeneratePlayer()
         {

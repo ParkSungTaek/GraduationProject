@@ -1,3 +1,11 @@
+﻿/******
+작성자 : 박성택
+작성 일자 : 23.03.31
+
+최근 수정 일자 : 23.04.16
+최근 수정 내용 : wave 구현
+ ******/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

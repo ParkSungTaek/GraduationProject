@@ -1,3 +1,11 @@
+ï»¿/******
+ì‘ì„±ì : ë°•ì„±íƒ
+ì‘ì„± ì¼ì : 23.03.29
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.16
+ìµœê·¼ ìˆ˜ì • ë‚´ìš© : ì›¨ì´ë¸Œ ìƒì„± ë° ëª¬ìŠ¤í„° ì¢…ë¥˜ í™•ëŒ€
+ ******/
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -7,46 +15,46 @@ using UnityEngine.UI;
 namespace Client
 {
     /// <summary>
-    /// 4/15 ÀÌÀü ¹Ú¼ºÅÃ ±¸ÇöºÎ
-    /// 4/16 ¹Ú¼ºÅÃ ¾÷µ¥ÀÌÆ® 4/12ÀÏ ÇùÀÇ °á°ú¿¡ µû¸¥ ¸ó½ºÅÍ ³ª¿À´Â ¼öÄ¡¿Í º§·±½º ¹İ¿µ 
+    /// 4/15 ì´ì „ ë°•ì„±íƒ êµ¬í˜„ë¶€
+    /// 4/16 ë°•ì„±íƒ ì—…ë°ì´íŠ¸ 4/12ì¼ í˜‘ì˜ ê²°ê³¼ì— ë”°ë¥¸ ëª¬ìŠ¤í„° ë‚˜ì˜¤ëŠ” ìˆ˜ì¹˜ì™€ ë²¨ëŸ°ìŠ¤ ë°˜ì˜ 
     /// 
     /// </summary>
     public class MonsterSpawn : MonoBehaviour
     {
-        #region Å©°Ô ¹Ù²ğ ÀÏ ¾ø´Â µ¥ÀÌÅÍ
+        #region í¬ê²Œ ë°”ë€” ì¼ ì—†ëŠ” ë°ì´í„°
         GameObject[] SpawnPoint;
         GameObject Monster;
         int SpawnPointNum = 12;
         float Xradius = 10;
         float yradius = 5;
-        /// <summary> ¸ó½ºÅÍ »ı¼º Coroutine </summary>
+        /// <summary> ëª¬ìŠ¤í„° ìƒì„± Coroutine </summary>
         IEnumerator _startCreateMonster;
-        /// <summary> ÇöÀç »ı¼º Monster Á¾·ù </summary>
+        /// <summary> í˜„ì¬ ìƒì„± Monster ì¢…ë¥˜ </summary>
         Define.MonsterName _nowMonster;
-        /// <summary> ÀÌ¹ø Wave ¸ó½ºÅÍ ³ª¿Â ¼ıÀÚ </summary>
+        /// <summary> ì´ë²ˆ Wave ëª¬ìŠ¤í„° ë‚˜ì˜¨ ìˆ«ì </summary>
         int _count;                                  
-        /// <summary> Monster HP ºÙ¿©ÁÙ CanvasÀÇ Transform </summary>
+        /// <summary> Monster HP ë¶™ì—¬ì¤„ Canvasì˜ Transform </summary>
         Transform _monsterHPCanvas;
-        /// <summary> Monster ÀÇ HP¸¦ ±×¸± Canvas</summary>
+        /// <summary> Monster ì˜ HPë¥¼ ê·¸ë¦´ Canvas</summary>
         public Transform MonsterHPCanvas { get { return _monsterHPCanvas; } }
-        /// <summary> 0 ~ _cycle - 2 Wave ¿¡´Â ÀÏ¹İ ¸ó½ºÅÍ _cycle - 1 Wave ¿¡¼­´Â º¸½º ¸ó½ºÅÍ </summary>
+        /// <summary> 0 ~ _cycle - 2 Wave ì—ëŠ” ì¼ë°˜ ëª¬ìŠ¤í„° _cycle - 1 Wave ì—ì„œëŠ” ë³´ìŠ¤ ëª¬ìŠ¤í„° </summary>
         const int _cycle = 10;
         #endregion
 
-        #region º§·±½Ì µ¥ÀÌÅÍ 
-        /// <summary>  tmp º¯¼ö ÇÑ Wave¿¡¼­ ³ª¿Ã ¸ó½ºÅÍ ¼ıÀÚ </summary>
+        #region ë²¨ëŸ°ì‹± ë°ì´í„° 
+        /// <summary>  tmp ë³€ìˆ˜ í•œ Waveì—ì„œ ë‚˜ì˜¬ ëª¬ìŠ¤í„° ìˆ«ì </summary>
         int _wavenum { get { return GameManager.InGameData.Wave % _cycle != _cycle - 1 ? (4 * (GameManager.InGameData.Wave / _cycle) + 2 * (GameManager.InGameData.Wave % _cycle) + 8) : 1 ; } }
-        /// <summary> Monster ³ª¿À°í ´ÙÀ½ Monster³ª¿Ã¶§±îÁö ½Ã°£ ÅÒ  </summary>
+        /// <summary> Monster ë‚˜ì˜¤ê³  ë‹¤ìŒ Monsterë‚˜ì˜¬ë•Œê¹Œì§€ ì‹œê°„ í…€  </summary>
         float _monsterToMonster { get { return (26.0f / (16.0f + GameManager.InGameData.Wave)); } }
-        /// <summary>   Wave³¡³ª°í(==ÀÌ¹ø WaveÀÇ ¸¶Áö¸· ¸ó½ºÅÍ ³ª¿Â ½ÃÁ¡) ´ÙÀ½ Wave ½ÃÀÛ Àü±îÁö ½Ã°£ ÅÒ </summary>
+        /// <summary>   Waveëë‚˜ê³ (==ì´ë²ˆ Waveì˜ ë§ˆì§€ë§‰ ëª¬ìŠ¤í„° ë‚˜ì˜¨ ì‹œì ) ë‹¤ìŒ Wave ì‹œì‘ ì „ê¹Œì§€ ì‹œê°„ í…€ </summary>
         float _waveToWave = 8.0f;
         #endregion
 
-        /// <summary> ¼ÒÈ¯µÈ ¸ó½ºÅÍ °ü¸® </summary>
+        /// <summary> ì†Œí™˜ëœ ëª¬ìŠ¤í„° ê´€ë¦¬ </summary>
         List<MonsterController> _monsters = new List<MonsterController>();
-        /// <summary> ¼ÒÈ¯µÈ ¸ó½ºÅÍ °ü¸® </summary>
+        /// <summary> ì†Œí™˜ëœ ëª¬ìŠ¤í„° ê´€ë¦¬ </summary>
         public List<MonsterController> Monsters { get { return _monsters; } }
-        //InstantiateMonsterÀ» ³»ºÎÀûÀ¸·Î ´õ ½±°Ô ÀçÁ¤ÀÇ È¿°ú (EnumÀ» È°¿ëÇÏ¿© MonsterÀÇ ÀÌ¸§À» ¿Ü¿ï ÇÊ¿ä¸¦ Á¦°Å, ´ÙÀ½Wave¸¦ ++½ÄÀ¸·Î ÆíÇÏ°Ô)
+        //InstantiateMonsterì„ ë‚´ë¶€ì ìœ¼ë¡œ ë” ì‰½ê²Œ ì¬ì •ì˜ íš¨ê³¼ (Enumì„ í™œìš©í•˜ì—¬ Monsterì˜ ì´ë¦„ì„ ì™¸ìš¸ í•„ìš”ë¥¼ ì œê±°, ë‹¤ìŒWaveë¥¼ ++ì‹ìœ¼ë¡œ í¸í•˜ê²Œ)
         GameObject InstantiateMonster(Define.MonsterName monster,Transform SpawnPoint)
         {
             string monsterStr = Enum.GetName(typeof(Define.MonsterName), monster);
@@ -87,7 +95,7 @@ namespace Client
         {
             while (GameManager.InGameData.CurrState == Define.State.Play)
             {   
-                //¸ó½ºÅÍ »ı¼º
+                //ëª¬ìŠ¤í„° ìƒì„±
                 if (_count < _wavenum)
                 {
                     MonsterController mon = InstantiateMonster((Define.MonsterName)(GameManager.InGameData.Wave), SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
@@ -96,7 +104,7 @@ namespace Client
                     _count += 1;
 
                 }
-                //´ÙÀ½ Wave
+                //ë‹¤ìŒ Wave
                 else
                 {
                     _count = 0;

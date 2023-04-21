@@ -1,20 +1,21 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ »çÇ× : ¸ğµç ¾À ·Îµå ±â´ÉÀº ÀÌ ¸Å´ÏÀú¸¦ ÅëÇØ ¼öÇà
-*/
+ï»¿/******
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„± ì¼ì : 23.04.05
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.05
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : ëª¨ë“  ì”¬ ë¡œë“œ ê¸°ëŠ¥ì€ ì´ ë§¤ë‹ˆì €ë¥¼ í†µí•´ ìˆ˜í–‰
+******/
 
 namespace Client
 {
     public class SceneManager
     {
-        /// <summary> EnumÀ¸·Î Á¤ÀÇÇÑ ¾À ÀüÈ¯ </summary>
+        /// <summary> Enumìœ¼ë¡œ ì •ì˜í•œ ì”¬ ì „í™˜ </summary>
         public static void LoadScene(Define.Scenes scene)
         {
-            //ui popup ÃÊ±âÈ­
+            //ui popup ì´ˆê¸°í™”
             GameManager.UI.Clear();
-            //°ÔÀÓ ÁøÇà»çÇ× ÃÊ±âÈ­
+            //ê²Œì„ ì§„í–‰ì‚¬í•­ ì´ˆê¸°í™”
             GameManager.InGameData.Clear();
             UnityEngine.SceneManagement.SceneManager.LoadScene((int)scene);
         }

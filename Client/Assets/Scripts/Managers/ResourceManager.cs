@@ -1,7 +1,10 @@
-/*
-°øµ¿ ÀÛ¼º
-ÀÛ¼ºÀÏ : 23.03.29
-*/
+ï»¿/******
+ì‘ì„±ì : ê³µë™ ì‘ì„±
+ì‘ì„± ì¼ì : 23.03.29
+
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.10
+ìµœê·¼ ìˆ˜ì • ë‚´ìš© : ì£¼ì„ ì •ë¦¬
+******/
 
 using System.Collections;
 using System.Collections.Generic;
@@ -11,8 +14,8 @@ namespace Client
 {
     public class ResourceManager
     {
-        /// <summary> Resources.Load·Î ºÒ·¯¿À±â
-        /// <para> Ä³½ÌÀ» ÇÒ °ÍÀÎ°¡?? </para> </summary>
+        /// <summary> Resources.Loadë¡œ ë¶ˆëŸ¬ì˜¤ê¸°
+        /// <para> ìºì‹±ì„ í•  ê²ƒì¸ê°€?? </para> </summary>
         public T Load<T>(string path) where T : Object
         {
             /*
@@ -32,9 +35,9 @@ namespace Client
             return Resources.Load<T>(path);
         }
 
-        /// <summary> GameObject »ı¼º </summary>
+        /// <summary> GameObject ìƒì„± </summary>
         public GameObject Instantiate(string path, Transform parent = null) => Instantiate<GameObject>(path, parent);
-        /// <summary> T type object »ı¼º </summary>
+        /// <summary> T type object ìƒì„± </summary>
         public T Instantiate<T>(string path, Transform parent = null) where T : UnityEngine.Object
         {
             T prefab = Load<T>($"Prefabs/{path}");

@@ -1,3 +1,11 @@
+﻿/******
+작성자 : 공동 작성
+작성 일자 : 23.03.29
+
+최근 수정 일자 : 23.03.29
+최근 수정 내용 : 클래스 생성
+ ******/
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;

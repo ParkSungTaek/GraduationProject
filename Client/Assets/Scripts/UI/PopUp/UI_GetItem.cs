@@ -1,8 +1,8 @@
-/*
-ÀÛ¼ºÀÚ : ÀÌ¿ì¿­
-ÀÛ¼ºÀÏ : 23.03.29
-ÃÖ±Ù ¼öÁ¤ ÀÏÀÚ : 23.04.05
-ÃÖ±Ù ¼öÁ¤ »çÇ× : popup ui ÀçÈ°¼ºÈ­(ReOpen) ÇÔ¼ö Ãß°¡
+ï»¿/*
+ì‘ì„±ì : ì´ìš°ì—´
+ì‘ì„±ì¼ : 23.03.29
+ìµœê·¼ ìˆ˜ì • ì¼ì : 23.04.05
+ìµœê·¼ ìˆ˜ì • ì‚¬í•­ : popup ui ì¬í™œì„±í™”(ReOpen) í•¨ìˆ˜ ì¶”ê°€
 */
 
 using System;
@@ -14,7 +14,7 @@ namespace Client
 {
     public class UI_GetItem : UI_PopUp
     {
-        /// <summary> ÀçÈ­ ¼öÄ¡ º¯°æ ½Ã Äİ¹é </summary>
+        /// <summary> ì¬í™” ìˆ˜ì¹˜ ë³€ê²½ ì‹œ ì½œë°± </summary>
         public static Action OnMoneyChangedAction { get; private set; }
         
         enum Buttons
@@ -34,28 +34,28 @@ namespace Client
             Item7,
         }
 
-        /// <summary> UI ÃÖÃÊ »ı¼º - bind, ÅØ½ºÆ® ÃÊ±âÈ­ ÁøÇà </summary>
+        /// <summary> UI ìµœì´ˆ ìƒì„± - bind, í…ìŠ¤íŠ¸ ì´ˆê¸°í™” ì§„í–‰ </summary>
         public override void Init()
         {
             base.Init();
 
-            //¿ÀºêÁ§Æ® ¹ÙÀÎµå
+            //ì˜¤ë¸Œì íŠ¸ ë°”ì¸ë“œ
             Bind<Button>(typeof(Buttons));
             Bind<TMP_Text>(typeof(ItemTexts));
 
-            //¹öÆ°¿¡ ÀÌº¥Æ® ¿¬°á
+            //ë²„íŠ¼ì— ì´ë²¤íŠ¸ ì—°ê²°
             BindEvent(GetButton((int)Buttons.CloseBtn).gameObject, Btn_Close);
             BindEvent(GetButton((int)Buttons.BuyBtn).gameObject, Btn_Buy);
 
             OnMoneyChangedAction = Buy_ActiveControl;
             Buy_ActiveControl();
 
-            //¾ÆÀÌÅÛ ÅØ½ºÆ® ÃÊ±âÈ­
+            //ì•„ì´í…œ í…ìŠ¤íŠ¸ ì´ˆê¸°í™”
             for (int i = 0 ; i < GameManager.InGameData.MyInventory.Count; i++)
                 GetText(i).text = GameManager.InGameData.MyInventory[i].Name;
         }
 
-        /// <summary> ºñÈ°¼ºÈ­ »óÅÂ¿¡¼­ ´Ù½Ã ¿­ ½Ã È£Ãâ </summary>
+        /// <summary> ë¹„í™œì„±í™” ìƒíƒœì—ì„œ ë‹¤ì‹œ ì—´ ì‹œ í˜¸ì¶œ </summary>
         public override void ReOpen()
         {
             OnMoneyChangedAction = Buy_ActiveControl;
@@ -63,27 +63,27 @@ namespace Client
         }
 
         #region Buttons
-        /// <summary> ´İ±â ¹öÆ° - ÅØ½ºÆ® ¾÷µ¥ÀÌÆ® ºñÈ°¼ºÈ­ </summary>
+        /// <summary> ë‹«ê¸° ë²„íŠ¼ - í…ìŠ¤íŠ¸ ì—…ë°ì´íŠ¸ ë¹„í™œì„±í™” </summary>
         void Btn_Close(PointerEventData evt)
         {
             OnMoneyChangedAction = null;
             GameManager.UI.ClosePopUpUI(this);
         }
         
-        /// <summary> ¼ÒÁö±İ¿¡ µû¶ó ±¸¸Å ¹öÆ° È°¼ºÈ­/ºñÈ°¼ºÈ­ </summary>
+        /// <summary> ì†Œì§€ê¸ˆì— ë”°ë¼ êµ¬ë§¤ ë²„íŠ¼ í™œì„±í™”/ë¹„í™œì„±í™” </summary>
         void Buy_ActiveControl()
         {
             GetButton((int)Buttons.BuyBtn).gameObject.SetActive(GameManager.InGameData.CanBuyItem);
             //GetButton((int)Buttons.BuyBtn).interactable = GameManager.InGameData.Money >= GameManager.InGameData.ItemCost;
         }
-        /// <summary> ¾ÆÀÌÅÛ ±¸¸Å ¹öÆ° </summary>
+        /// <summary> ì•„ì´í…œ êµ¬ë§¤ ë²„íŠ¼ </summary>
         void Btn_Buy(PointerEventData evt)
         {
             if(GameManager.InGameData.CanBuyItem)
             {
                 GameManager.InGameData.Money -= GameManager.InGameData.ItemCost;
 
-                ///¿©±âºÎÅÍ ¾ÆÀÌÅÛ ¾îÂîÇÒÁö È®Á¤ÇÏ°í ¹Ù²ã¾ßÇØ
+                ///ì—¬ê¸°ë¶€í„° ì•„ì´í…œ ì–´ì°Œí• ì§€ í™•ì •í•˜ê³  ë°”ê¿”ì•¼í•´
 
                 GameManager.InGameData.AddRandomItem();
                 GetText(GameManager.InGameData.MyInventory.Count - 1).text = GameManager.InGameData.MyInventory[GameManager.InGameData.MyInventory.Count - 1].Name;
