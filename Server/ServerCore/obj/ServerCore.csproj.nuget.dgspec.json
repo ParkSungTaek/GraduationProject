@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj": {}
+    "C:\\Users\\sean6\\Desktop\\Data\\Game\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj": {}
   },
   "projects": {
-    "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj": {
+    "C:\\Users\\sean6\\Desktop\\Data\\Game\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj",
+        "projectUniqueName": "C:\\Users\\sean6\\Desktop\\Data\\Game\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj",
         "projectName": "ServerCore",
-        "projectPath": "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj",
-        "packagesPath": "C:\\Users\\dnduf\\.nuget\\packages\\",
-        "outputPath": "E:\\Unity Projects\\GraduationProject\\Server\\ServerCore\\obj\\",
+        "projectPath": "C:\\Users\\sean6\\Desktop\\Data\\Game\\GraduationProject\\Server\\ServerCore\\ServerCore.csproj",
+        "packagesPath": "C:\\Users\\sean6\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sean6\\Desktop\\Data\\Game\\GraduationProject\\Server\\ServerCore\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\dnduf\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sean6\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -55,7 +55,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
         }
       }
     }
