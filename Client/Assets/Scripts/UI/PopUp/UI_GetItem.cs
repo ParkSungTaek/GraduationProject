@@ -1,9 +1,10 @@
-﻿/*
+/******
 작성자 : 이우열
 작성일 : 23.03.29
-최근 수정 일자 : 23.04.05
-최근 수정 사항 : popup ui 재활성화(ReOpen) 함수 추가
-*/
+
+최근 수정 일자 : 23.04.27
+최근 수정 사항 : 아이템 가득 찬 경우 추가
+******/
 
 using System;
 using UnityEngine.EventSystems;
@@ -80,16 +81,13 @@ namespace Client
         void Btn_Buy(PointerEventData evt)
         {
             if(GameManager.InGameData.CanBuyItem)
-            {
-                GameManager.InGameData.Money -= GameManager.InGameData.ItemCost;
+                GameManager.InGameData.AddRandomItem(ItemTxtUpdate);
+        }
 
-                ///여기부터 아이템 어찌할지 확정하고 바꿔야해
-
-                GameManager.InGameData.AddRandomItem();
-                GetText(GameManager.InGameData.MyInventory.Count - 1).text = GameManager.InGameData.MyInventory[GameManager.InGameData.MyInventory.Count - 1].Name;
-                ///
-
-            }
+        /// <summary> 아이템 변경 시 텍스트 변경 </summary>
+        void ItemTxtUpdate(int idx)
+        {
+            GetText(idx).text = GameManager.InGameData.MyInventory[idx].Name;
         }
         #endregion Buttons
     }

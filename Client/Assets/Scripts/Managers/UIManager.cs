@@ -1,9 +1,9 @@
-﻿/*
+/*
 작성자 : 이우열
 작성 일자 : 23.03.29
 
-최근 수정 일자 : 23.04.05
-최근 수정 사항 : 팝업 UI 닫을 시 destroy가 아니라 SetActive(false)로 변경
+최근 수정 일자 : 23.04.27
+최근 수정 사항 : UI 인스턴스 Init 호출 Show 함수에서 하도록 변경
 */
 
 using System.Collections;
@@ -79,6 +79,7 @@ namespace Client
             T sceneUI = Util.GetOrAddComponent<T>(go);
 
             go.transform.SetParent(Root.transform);
+            sceneUI.Init();
 
             return sceneUI;
         }
@@ -103,6 +104,7 @@ namespace Client
                 _popupInstances.Add(typeof(T), popup);
 
                 popupUI = Util.GetOrAddComponent<T>(popup);
+                popupUI.Init();
             }
             //이전에 띄운 기록 있음 -> 재활성화
             else

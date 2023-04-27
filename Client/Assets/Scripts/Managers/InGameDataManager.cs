@@ -1,11 +1,12 @@
-﻿/******
+/******
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.12
-최근 수정 사항 : 버프 컨트롤러 추가
+최근 수정 일자 : 23.04.27
+최근 수정 사항 : 아이템 가득 찬 경우 추가
 ******/
 
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -81,22 +82,27 @@ namespace Client
         /// <summary> 현재 보유 중인 아이템 정보 </summary>
         public List<ItemData> MyInventory { get { return _myInventory; } }
 
-        /// <summary> 새로운 아이템 구매 </summary>
-        public void AddRandomItem() 
+        /// <summary> 새로운 아이템 구매, 구매 성공 여부 반환 </summary>
+        public void AddRandomItem(Action<int> textUpdate) 
         {
+            Money -= ItemCost;
+
             if (_myInventory.Count < MAXITEMCOUNT)
+            {
                 _myInventory.Add(_itemData.GetRandomItem());
+                GameManager.InGameData.MyPlayer.StatUpdate();
+                textUpdate.Invoke(_myInventory.Count - 1);
+            }
             else
             {
-                //TODO : 버릴 아이템 선택
+                UI_DropItem ui_DropItem = GameManager.UI.ShowPopUpUI<UI_DropItem>();
+                ui_DropItem.ItemUpdate(_itemData.GetRandomItem(), textUpdate);
             }
-
-            GameManager.InGameData.MyPlayer.StatUpdate();
         }
         /// <summary> 보유 중인 아이템 버리기 </summary>
-        public void MyInventoryDelete(int idx)
+        public void ReplaceItem(int idx, ItemData newItem)
         {
-            _myInventory.RemoveAt(idx);
+            _myInventory[idx] = newItem;
             GameManager.InGameData.MyPlayer.StatUpdate();
         }
         #endregion
@@ -240,6 +246,7 @@ namespace Client
         public void Clear()
         {
             _money = _score = _wave = 0;
+            _money = 1000;
             Cooldown.Clear();
             _myInventory.Clear();
         }

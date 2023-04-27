@@ -1,9 +1,10 @@
-﻿/*
+/******
 작성자 : 이우열
 작성일 : 23.03.31
-최근 수정 일자 : 23.03.31
-최근 수정 사항 : 기본 UI 시스템 구현
-*/
+
+최근 수정 일자 : 23.04.27
+최근 수정 사항 : UI_IdxEventHandler Bind 추가, Init UIManager에서 호출하도록 변경
+******/
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,10 +25,7 @@ namespace Client
         /// UI 최초 초기화
         /// </summary>
         public abstract void Init();
-        private void Start()
-        {
-            Init();
-        }
+
         /// <summary>
         /// 산하의 T type object들 _objects dictionary에 저장
         /// </summary>
@@ -92,6 +90,21 @@ namespace Client
                 case Define.UIEvent.DragEnd:
                     evt.OnDragEndHandler -= action;
                     evt.OnDragEndHandler += action;
+                    break;
+            }
+        }
+
+        /// <summary> 반복문으로 사용하기 위한 index 사용 event 할당 </summary>
+        public static void BindEvent(GameObject go, Action<PointerEventData, int> action, int idx, Define.UIEvent type = Define.UIEvent.Click)
+        {
+            UI_IdxEventHandler evt = Util.GetOrAddComponent<UI_IdxEventHandler>(go);
+            evt.Idx = idx;
+
+            switch(type)
+            {
+                case Define.UIEvent.Click:
+                    evt.OnClickHandler -= action;
+                    evt.OnClickHandler += action;
                     break;
             }
         }
