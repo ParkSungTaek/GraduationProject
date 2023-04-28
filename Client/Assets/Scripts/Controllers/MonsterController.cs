@@ -35,11 +35,11 @@ namespace Client
         // Start is called before the first frame update
         void Start()
         {
-            init();
+            Init();
 
         }
 
-        protected override void init()
+        protected override void Init()
         {
             _monsterName = (Define.MonsterName)Enum.Parse(typeof(Define.MonsterName), name);
             MonsterStat mystat = GameManager.InGameData.MonsterStats[_monsterName];

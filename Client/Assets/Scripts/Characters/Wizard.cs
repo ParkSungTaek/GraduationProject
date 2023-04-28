@@ -1,4 +1,4 @@
-﻿/*
+/*
 작성자 : 이우열
 작성일 : 23.03.29
 최근 수정 일자 : 23.04.14
@@ -34,12 +34,11 @@ namespace Client
                 Debug.Log("skill cool");
         }
 
-        protected override void init()
+        protected override void Init()
         {
-            base.init();
+            base.Init();
             MyClass = Define.Charcter.Wizard;
             AttackDMG = 20;
-            Position = Vector2.zero;// 시작위치
 
             StatUpdate();
         }

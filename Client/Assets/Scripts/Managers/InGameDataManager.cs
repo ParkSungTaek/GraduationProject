@@ -9,7 +9,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Client
 {
@@ -61,8 +60,7 @@ namespace Client
         #endregion Score
 
         #region Item
-        //Item 구매 관련 작성자 : 박성택
-        //Item 보유 정보, 장착 및 스텟 관련 작성자 : 이우열
+        //Item 관련 작성자 : 이우열
 
         /// <summary> 모든 아이템 정보 </summary>
         ItemDataHandler _itemData;
@@ -80,26 +78,32 @@ namespace Client
         /// <summary> 현재 보유 중인 아이템 정보 </summary>
         List<ItemData> _myInventory = new List<ItemData>();
         /// <summary> 현재 보유 중인 아이템 정보 </summary>
-        public List<ItemData> MyInventory { get { return _myInventory; } }
+        public List<ItemData> MyInventory { get => _myInventory; }
 
-        /// <summary> 새로운 아이템 구매, 구매 성공 여부 반환 </summary>
+        /// <summary> 작성자 : 이우열 <br/>
+        /// 새로운 아이템 구매
+        /// </summary>
         public void AddRandomItem(Action<int> textUpdate) 
         {
             Money -= ItemCost;
 
+            //빈 자리 있음 -> 새로운 아이템 만들어 채우기
             if (_myInventory.Count < MAXITEMCOUNT)
             {
                 _myInventory.Add(_itemData.GetRandomItem());
                 GameManager.InGameData.MyPlayer.StatUpdate();
                 textUpdate.Invoke(_myInventory.Count - 1);
             }
+            //빈 자리 없음 -> 버리기 UI 띄우기
             else
             {
                 UI_DropItem ui_DropItem = GameManager.UI.ShowPopUpUI<UI_DropItem>();
                 ui_DropItem.ItemUpdate(_itemData.GetRandomItem(), textUpdate);
             }
         }
-        /// <summary> 보유 중인 아이템 버리기 </summary>
+        /// <summary> 작성자 : 이우열 <br/>
+        /// 보유 중인 아이템 버리기 
+        /// </summary>
         public void ReplaceItem(int idx, ItemData newItem)
         {
             _myInventory[idx] = newItem;

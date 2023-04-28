@@ -19,7 +19,7 @@ namespace Client
         Transform Tower_UI_Scene;
         // Start is called before the first frame update
 
-        protected override void init()
+        protected override void Init()
         {
             MaxHP = 10000000;
             Nowhp = MaxHP;

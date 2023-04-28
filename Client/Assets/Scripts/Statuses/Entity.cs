@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 공동 작성
 작성 일자 : 23.03.29
 
@@ -31,13 +31,12 @@ namespace Client
         
         protected float MoveSpeed { get { return _moveSpeed; } set { _moveSpeed = value; } }
         public int AttackDMG { get { return _attackDMG; } set { _attackDMG = value; } }
-        public Vector2 Position { get { return _position; } set { _position = value; } }
-        protected abstract void init();
+        protected abstract void Init();
 
         protected abstract void Dead();
         private void Start()
         {
-            init();
+            Init();
         }
 
         public virtual void BeAttacked(int DMG)

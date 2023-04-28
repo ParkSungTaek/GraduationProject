@@ -44,18 +44,18 @@ namespace Client
         void BindEvent()
         {
             for (Buttons b = Buttons.Drop0; b <= Buttons.DropNew; b++)
-                BindEvent(GetButton((int)b).gameObject, Btn_DropItem, (int)b);
+                BindEvent(GetButton((int)b).gameObject, Btn_DropItem, b);
         }
 
         /// <summary> 아이템 버리기 </summary>
-        void Btn_DropItem(PointerEventData evt, int idx)
+        void Btn_DropItem(PointerEventData evt, object pivot)
         {
-            Buttons kind = (Buttons)idx;
+            Buttons kind = (Buttons)pivot;
 
             if (kind != Buttons.DropNew)
             {
-                GameManager.InGameData.ReplaceItem(idx, _newItem);
-                _textUpdate(idx);
+                GameManager.InGameData.ReplaceItem((int)kind, _newItem);
+                _textUpdate((int)kind);
             }         
 
             _newItem = null;

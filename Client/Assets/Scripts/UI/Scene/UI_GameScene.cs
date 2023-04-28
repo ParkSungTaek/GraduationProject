@@ -1,9 +1,10 @@
-/*
+/******
 작성자 : 이우열
 작성일 : 23.04.01
+
 최근 수정 일자 : 23.04.07
 최근 수정 사항 : 플레이어 생성 기능 InGameManager로 이전
-*/
+******/
 
 using UnityEngine;
 using UnityEngine.UI;

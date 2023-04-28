@@ -1,9 +1,10 @@
-/*
+/******
 작성자 : 이우열
 작성일 : 23.04.05
+
 최근 수정 일자 : 23.04.05
 최근 수정 사항 : 타이틀 씬 구현
-*/
+******/
 
 using UnityEngine;
 using UnityEngine.EventSystems;

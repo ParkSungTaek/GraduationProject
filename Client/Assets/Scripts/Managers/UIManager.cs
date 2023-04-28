@@ -1,10 +1,10 @@
-/*
+/******
 작성자 : 이우열
 작성 일자 : 23.03.29
 
 최근 수정 일자 : 23.04.27
 최근 수정 사항 : UI 인스턴스 Init 호출 Show 함수에서 하도록 변경
-*/
+******/
 
 using System.Collections;
 using System.Collections.Generic;

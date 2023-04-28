@@ -1,10 +1,10 @@
-/*
+/******
 공동 작성
 작성일 : 23.03.31
 
 최근 수정 일자 : 23.04.05
 최근 수정 사항 : json parsing 함수 구현
-*/
+******/
 using UnityEngine;
 
 namespace Client

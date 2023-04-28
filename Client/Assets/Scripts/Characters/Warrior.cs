@@ -59,12 +59,11 @@ namespace Client
                 Debug.Log("skill cool");
         }
 
-        protected override void init()
+        protected override void Init()
         {
-            base.init();
+            base.Init();
             MyClass = Define.Charcter.Warrior;
             AttackDMG = 20;
-            Position = Vector2.zero;// 시작위치
 
             StatUpdate();
         }

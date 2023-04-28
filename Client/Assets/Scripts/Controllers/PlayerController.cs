@@ -1,10 +1,10 @@
-/*
+/******
 작성자 : 이우열
 작성일 : 23.03.29
 
 최근 수정 일자 : 23.04.14
 최근 수정 사항 : 아이템 스텟 확장
-*/
+******/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,14 +29,14 @@ namespace Client
         protected Vector3 _currPosition { get => transform.position + Vector3.up; }
 
         /// <summary> animation 연결 및 초기화 </summary>
-        protected override void init()
+        protected override void Init()
         {
             _char4D = GetComponent<Character4D>();
             _char4D.AnimationManager.SetState(CharacterState.Idle);
 
             GameObject camera = GameObject.Find("Main Camera").gameObject;
             camera.transform.parent = transform;
-            camera.transform.localPosition = new Vector3(0,1,-10);
+            camera.transform.localPosition = new Vector3(0, 1, -10);
         }
         
         /// <summary> 공격 시전, 단일 공격 기준 </summary>

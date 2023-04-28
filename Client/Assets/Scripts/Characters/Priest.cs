@@ -1,9 +1,10 @@
-﻿/*
+/******
 작성자 : 이우열
 작성일 : 23.03.29
+
 최근 수정 일자 : 23.04.14
 최근 수정 사항 : 아이템 스텟 확장
-*/
+******/
 
 using System;
 using System.Collections;
@@ -40,13 +41,12 @@ namespace Client
                 Debug.Log("skill cool");
         }
 
-        protected override void init()
+        protected override void Init()
         {
-            base.init();
+            base.Init();
             MyClass = Define.Charcter.Priest;
             MoveSpeed = 5.0f;
             AttackDMG = 20;
-            Position = Vector2.zero;// 시작위치
 
             StatUpdate();
         }

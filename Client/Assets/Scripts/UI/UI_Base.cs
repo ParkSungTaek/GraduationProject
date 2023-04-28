@@ -95,10 +95,10 @@ namespace Client
         }
 
         /// <summary> 반복문으로 사용하기 위한 index 사용 event 할당 </summary>
-        public static void BindEvent(GameObject go, Action<PointerEventData, int> action, int idx, Define.UIEvent type = Define.UIEvent.Click)
+        public static void BindEvent(GameObject go, Action<PointerEventData, object> action, object pivot, Define.UIEvent type = Define.UIEvent.Click)
         {
-            UI_IdxEventHandler evt = Util.GetOrAddComponent<UI_IdxEventHandler>(go);
-            evt.Idx = idx;
+            UI_PivotEventHandler evt = Util.GetOrAddComponent<UI_PivotEventHandler>(go);
+            evt.Pivot = pivot;
 
             switch(type)
             {
