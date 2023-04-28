@@ -1,4 +1,4 @@
-﻿/*
+/*
 작성자 : 이우열
 작성일 : 23.03.29
 
@@ -33,6 +33,10 @@ namespace Client
         {
             _char4D = GetComponent<Character4D>();
             _char4D.AnimationManager.SetState(CharacterState.Idle);
+
+            GameObject camera = GameObject.Find("Main Camera").gameObject;
+            camera.transform.parent = transform;
+            camera.transform.localPosition = new Vector3(0,1,-10);
         }
         
         /// <summary> 공격 시전, 단일 공격 기준 </summary>

@@ -25,8 +25,8 @@ namespace Client
         GameObject[] SpawnPoint;
         GameObject Monster;
         int SpawnPointNum = 12;
-        float Xradius = 10;
-        float yradius = 5;
+        float Xradius = 39f;
+        float yradius = 19f;
         /// <summary> 몬스터 생성 Coroutine </summary>
         IEnumerator _startCreateMonster;
         /// <summary> 현재 생성 Monster 종류 </summary>
