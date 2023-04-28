@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 박성택
 작성 일자 : 23.03.31
 
@@ -21,7 +21,7 @@ namespace Client
 
         protected override void init()
         {
-            MaxHP = 1000000;
+            MaxHP = 10000000;
             Nowhp = MaxHP;
             AttackDMG = 0;
             MoveSpeed = 0;

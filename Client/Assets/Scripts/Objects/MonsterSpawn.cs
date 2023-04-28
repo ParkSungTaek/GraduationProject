@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 박성택
 작성 일자 : 23.03.29
 
@@ -100,7 +100,7 @@ namespace Client
                 {
                     MonsterController mon = InstantiateMonster((Define.MonsterName)(GameManager.InGameData.Wave), SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
                     _monsters.Add(mon);
-                    yield return new WaitForSecondsRealtime(_monsterToMonster * 0.1f);
+                    yield return new WaitForSecondsRealtime(_monsterToMonster *0.1f);
                     _count += 1;
 
                 }

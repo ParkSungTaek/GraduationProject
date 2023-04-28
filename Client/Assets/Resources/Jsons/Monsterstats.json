@@ -91,8 +91,8 @@
   
   {
     "Name": "BlackWolf",
-    "MaxHP" : 37,
-    "AttackDMG" : 11,
+    "MaxHP" : 370,
+    "AttackDMG" : 44,
     "MoveSpeed" : 3,
     "AttackSpeed" : 1,
     "_offsetCorrection" : -1,
@@ -191,8 +191,8 @@
   
   {
           "Name": "BlackBear",
-          "MaxHP" : 67,
-          "AttackDMG" : 21,
+          "MaxHP" : 670,
+          "AttackDMG" : 84,
           "MoveSpeed" : 3,
           "AttackSpeed" : 1,
           "_offsetCorrection" : -1,
@@ -291,8 +291,8 @@
   
   {
           "Name": "MinerBoar",
-          "MaxHP" : 97,
-          "AttackDMG" : 31,
+          "MaxHP" : 970,
+          "AttackDMG" : 124,
           "MoveSpeed" : 3,
           "AttackSpeed" : 1,
           "_offsetCorrection" : -1,
@@ -391,8 +391,8 @@
   
   {
           "Name": "Cerberus",
-          "MaxHP" : 127,
-          "AttackDMG" : 41,
+          "MaxHP" : 1270,
+          "AttackDMG" : 164,
           "MoveSpeed" : 3,
           "AttackSpeed" : 1,
           "_offsetCorrection" : -1,
@@ -491,8 +491,8 @@
   
   {
           "Name": "SlugQueen",
-          "MaxHP" : 157,
-          "AttackDMG" : 51,
+          "MaxHP" : 1570,
+          "AttackDMG" : 204,
           "MoveSpeed" : 3,
           "AttackSpeed" : 1,
           "_offsetCorrection" : -1,
@@ -591,8 +591,8 @@
   
   {
           "Name": "Nightmare",
-          "MaxHP" : 187,
-          "AttackDMG" : 61,
+          "MaxHP" : 1870,
+          "AttackDMG" : 244,
           "MoveSpeed" : 3,
           "AttackSpeed" : 1,
           "_offsetCorrection" : -1,

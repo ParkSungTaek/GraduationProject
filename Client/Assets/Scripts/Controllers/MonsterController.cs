@@ -1,8 +1,8 @@
-﻿/******
+/******
 작성자 : 박성택
 작성 일자 : 23.03.31
 
-최근 수정 일자 : 23.04.21
+최근 수정 일자 : 23.04.28
 최근 수정 내용 : 좌표 보정식 수정
  ******/
 
@@ -52,7 +52,7 @@ namespace Client
             AttackDMG = mystat.AttackDMG;
             MoveSpeed = mystat.MoveSpeed;
             AttackSpeed = mystat.AttackSpeed;
-            _offsetCorrection = new Vector3 (0, mystat._offsetCorrection , 0);
+            _offsetCorrection = new Vector3 (0, -GetComponent<BoxCollider2D>().offset.y, 0);
             _monsterHpBarOffset = new Vector3 (0, mystat._monsterHpBarOffset, 0);
 
 
@@ -101,7 +101,7 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
         {
             if (_monsterState != Define.MonsterState.Death)
             {
-                Move(GameManager.InGameData.Tower.transform.position + _offsetCorrection);
+                Move(GameManager.InGameData.Tower.transform.position + _offsetCorrection * transform.localScale.y);
                 _monsterHpBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + _monsterHpBarOffset);
             }
         }
