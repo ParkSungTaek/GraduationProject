@@ -1,9 +1,10 @@
-﻿/*
+/******
 작성자 : 이우열
 작성일 : 23.03.29
-최근 수정 일자 : 23.04.14
-최근 수정 사항 : 아이템 스텟 확장
-*/
+
+최근 수정 일자 : 23.04.28
+최근 수정 사항 : 인식 사거리 증가
+******/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,9 @@ namespace Client
 {
     public class Warrior : PlayerController
     {
+        /// <summary> 인식 사거리 비율 </summary>
+        const float RANGE_MULTI = 2.5f;
+
         /// <summary> 워리어 기본 공격 : 근접, 범위 </summary>
         public override void IsAttack()
         {
@@ -22,7 +26,7 @@ namespace Client
                 MonsterController mon = NearMoster();
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= RANGE_MULTI* _itemStat.AttackRange)
                 {
                     SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Attack();
@@ -43,7 +47,7 @@ namespace Client
                 PlayerStat stat = GameManager.InGameData.PlayerStats[MyClass];
 
                 //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= stat.SkillRange)
+                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= RANGE_MULTI * stat.SkillRange)
                 {
                     SeeTarget(mon.CorrectPosition);
                     _char4D.AnimationManager.Attack();
