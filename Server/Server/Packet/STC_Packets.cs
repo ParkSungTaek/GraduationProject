@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 플레이어 이동, 방 생성, 방장 변경 패킷 추가
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : 플레이어 입장/퇴장 패킷 추가
  ******/
 
 using ServerCore;
@@ -107,20 +107,90 @@ namespace Server
         }
     }
 
-    public class STC_SuccessEnter : IPacket
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 서버 -> 방 내 모든 클라 새로운 플레이어 입장 알림
+    /// </summary>
+    public class STC_PlayerEnter : IPacket
     {
-        public ushort Protocol => throw new NotImplementedException();
+        public int playerId;
+        public ushort Protocol => (ushort) PacketID.STC_PlayerEnter;
 
         public void Read(ArraySegment<byte> segment)
         {
-            throw new NotImplementedException();
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            //protocol
+            count += sizeof(ushort);
+
+            playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
         }
 
         public ArraySegment<byte> Write()
         {
-            throw new NotImplementedException();
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
         }
     }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 서버 -> 방 내 모든 클라 새로운 플레이어 입장 알림
+    /// </summary>
+    public class STC_PlayerLeave : IPacket
+    {
+        public int playerId;
+        public ushort Protocol => (ushort)PacketID.STC_PlayerLeave;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            //protocol
+            count += sizeof(ushort);
+
+            playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
 
     /// <summary>
     /// 작성자 : 이우열 <br/>

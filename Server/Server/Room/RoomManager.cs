@@ -14,8 +14,6 @@ namespace Server
 {
     public class RoomManager
     {
-        readonly int MAX_PLAYER_COUNT = 4;
-
         /// <summary> 현재 존재하는 방들 </summary>
         Dictionary<string, Room> _rooms = new Dictionary<string, Room>();
         /// <summary> 작업 관리 큐 </summary>
@@ -53,6 +51,11 @@ namespace Server
             session.Room = room;
 
             _rooms.Add(roomName, room);
+
+            //방 생성 성공 알림
+            STC_PlayerEnter enterPacket = new STC_PlayerEnter();
+            enterPacket.playerId = session.SessionId;
+            session.Send(enterPacket.Write());
         }
 
         /// <summary> 방 입장 </summary>
@@ -67,14 +70,6 @@ namespace Server
             {
                 STC_RejectEnter_Exist existPacket = new STC_RejectEnter_Exist();
                 session.Send(existPacket.Write());
-                return;
-            }
-
-            //풀방
-            if(room.Count >= MAX_PLAYER_COUNT)
-            {
-                STC_RejectEnter_Full fullPacket = new STC_RejectEnter_Full();
-                session.Send(fullPacket.Write());
                 return;
             }
 

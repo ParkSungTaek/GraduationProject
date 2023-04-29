@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 틀 생성
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : 방 퇴장 패킷 추가
  ******/
 
 using ServerCore;
@@ -12,6 +12,8 @@ using System.Text;
 
 namespace Server
 {
+    //TODO : CTS_Login
+
     /// <summary>
     /// 작성자 : 이우열<br/>
     /// 방 생성 패킷
@@ -103,5 +105,37 @@ namespace Server
         }
     }
 
+    /// <summary>
+    /// 작성자 : 이우열<br/>
+    /// 방 퇴장 패킷
+    /// </summary>
+    public class CTS_LeaveRoom : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID.CTS_LeaveRoom;
 
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.CTS_EnterRoom), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 }

@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : PlayerMove 패킷 처리 추가
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : LeaveRoom 패킷 처리 추가
  ******/
 
 using ServerCore;
@@ -34,6 +34,24 @@ namespace Server
             CTS_CreateRoom enterPacket = packet as CTS_CreateRoom;
 
             RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, enterPacket.roomName));
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열<br/>
+        /// 방 퇴장 패킷 처리
+        /// </summary>
+        public static void CTS_LeaveRoomHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_LeaveRoom leavePacket = packet as CTS_LeaveRoom;
+
+            if(clientSession.Room != null)
+            {
+                Room room = clientSession.Room;
+
+                room.Push(() => room.Leave(clientSession));
+                clientSession.Room = null;
+            }
         }
 
         #region Ingame

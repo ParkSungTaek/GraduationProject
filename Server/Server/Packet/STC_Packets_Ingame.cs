@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 플레이어 이동 패킷 생성
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : 패킷 목록 작성
  ******/
 
 using ServerCore;
@@ -11,6 +11,31 @@ using System;
 
 namespace Server
 {
+    #region Non-Playable
+    //TODO : STC_MosterCreate
+
+    //TODO : STC_MonsterMove
+
+    //TODO : STC_MonsterDie
+
+    //TODO : STC_TowerUpdate : 타워 체력 업데이트
+
+    //TODO : STC_GameOver
+
+    //TODO : STC_GameClear
+    #endregion Non-Playable
+
+    #region Playable
+    //TODO : STC_GetScoreAndMoney
+
+    //TODO : STC_SelectPlayerClass
+
+    //TODO : STC_PlayerAttack : 애니메이션 재생용
+
+    //TODO : STC_ItemUpdate
+
+    //TODO : STC_PriestBuff
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 플레이어 이동 패킷
@@ -67,4 +92,5 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
+    #endregion Playable
 }

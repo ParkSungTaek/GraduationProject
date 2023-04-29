@@ -16,12 +16,18 @@ namespace Server
     {
         CTS_CreateRoom,
         CTS_EnterRoom,
+        CTS_LeaveRoom,
         
+
         STC_OnConnect,
+
         STC_RejectRoom,
         STC_RejectEnter_Exist,
         STC_RejectEnter_Full,
-        STC_SuccessEnter,
+
+        STC_PlayerEnter,
+        STC_PlayerLeave,
+
         STC_SetSuper,
     }
 

@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 클래스 추가
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : LeaveRoom Register 추가
  ******/
 
 using ServerCore;
@@ -30,9 +30,11 @@ namespace Server
         {
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
+            _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
 
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
             _handler.Add((ushort)PacketID.CTS_EnterRoom, PacketHandler.CTS_EnterRoomHandler);
+            _handler.Add((ushort)PacketID.CTS_LeaveRoom, PacketHandler.CTS_LeaveRoomHandler);
 
             #region Ingame
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerMove, MakePacket<CTS_PlayerMove>);

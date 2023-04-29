@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 플레이어 이동 패킷 추가
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : 필요한 패킷 목록 정리
  ******/
 
 using ServerCore;
@@ -11,6 +11,18 @@ using System;
 
 namespace Server
 {
+    //TODO : CTS_StartGame
+    
+    //TODO : CTS_SelectPlayerClass
+
+    //TODO : CTS_PlayerAttack - 애니메이션 재생용 : 방향 표기, 피해받은 몬스터들 정보
+
+    //TODO : CTS_PriestBuff - 버프
+    
+    //TODO : CTS_ItemUpdate
+
+    //TODO : CTS_TowerDamage
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 클라 -> 서버 플레이어 이동 패킷

@@ -15,7 +15,9 @@ namespace Server
     public class Room
     {
         public string RoomName;
-        IngameData _ingameData;
+        IngameData _ingameData = new IngameData();
+
+        readonly int MAX_PLAYER_COUNT = 4;
 
         /// <summary> 현재 방에 존재하는 클라이언트들 </summary>
         List<ClientSession> _sessions = new List<ClientSession>();
@@ -50,10 +52,21 @@ namespace Server
         /// <summary> 새로운 클라이언트 입장 </summary>
         public void Enter(ClientSession session)
         {
+            //풀방 -> 입장 불가
+            if(_sessions.Count >= MAX_PLAYER_COUNT)
+            {
+                STC_RejectEnter_Full fullPacket = new STC_RejectEnter_Full();
+                session.Send(fullPacket.Write());
+                return;
+            }
+
             _sessions.Add(session);
             session.Room = this;
 
-            //TODO : Enter Packet BroadCast
+            STC_PlayerEnter enterPacket = new STC_PlayerEnter();
+            enterPacket.playerId = session.SessionId;
+
+            Broadcast(enterPacket.Write());
         }
 
         /// <summary> 클라이언트 퇴장 </summary>
@@ -63,6 +76,9 @@ namespace Server
             if (_sessions.Count <= 1)
             {
                 RoomManager.Instance.Push(() => RoomManager.Instance.Remove(this));
+                _sessions.Clear();
+                RoomName = string.Empty;
+                _ingameData = null;
                 return;
             }
 
@@ -75,7 +91,10 @@ namespace Server
 
             _sessions.Remove(session);
 
-            //TODO : Leave Packet BroadCast
+            STC_PlayerLeave leavePacket = new STC_PlayerLeave();
+            leavePacket.playerId = session.SessionId;
+
+            _jobQueue.Push(() => Broadcast(leavePacket.Write()));
         }
 
         /// <summary> 플레이어 이동 동기화 </summary>
