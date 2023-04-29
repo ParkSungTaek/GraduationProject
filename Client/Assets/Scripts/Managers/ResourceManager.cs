@@ -22,7 +22,9 @@ namespace Client
         public T Load<T>(string path) where T : Object
         {
             int idx = path.LastIndexOf('/');
-            string name = path.Substring(idx + 1);
+            string name = path;
+            if (idx >= 0)
+                name = path.Substring(idx + 1);
 
             Object obj;
             //캐시에 존재 -> 캐시에서 반환
