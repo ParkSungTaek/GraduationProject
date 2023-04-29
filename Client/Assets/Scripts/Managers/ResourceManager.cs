@@ -1,9 +1,9 @@
-﻿/******
+/******
 작성자 : 공동 작성
 작성 일자 : 23.03.29
 
-최근 수정 일자 : 23.04.10
-최근 수정 내용 : 주석 정리
+최근 수정 일자 : 23.04.29
+최근 수정 내용 : 캐시 추가
 ******/
 
 using System.Collections;
@@ -14,25 +14,26 @@ namespace Client
 {
     public class ResourceManager
     {
+        /// <summary> 로드한 적 있는 object cache </summary>
+        Dictionary<string, Object> _cache = new Dictionary<string, Object>();
+
         /// <summary> Resources.Load로 불러오기
-        /// <para> 캐싱을 할 것인가?? </para> </summary>
+        /// </summary>
         public T Load<T>(string path) where T : Object
         {
-            /*
-            if (typeof(T) == typeof(GameObject))
-            {
-                string name = path;
-                int index = name.LastIndexOf('/');
-                if (index >= 0)
-                    name = name.Substring(index + 1);
+            int idx = path.LastIndexOf('/');
+            string name = path.Substring(idx + 1);
 
-                GameObject go = GameManager.Pool.GetOriginal(name);
-                if (go != null)
-                    return go as T;
-            }
-            */
+            Object obj;
+            //캐시에 존재 -> 캐시에서 반환
+            if (_cache.TryGetValue(name, out obj))
+                return obj as T;
 
-            return Resources.Load<T>(path);
+            //캐시에 없음 -> 로드하여 캐시에 저장 후 반환
+            obj = Resources.Load<T>(path);
+            _cache.Add(name, obj);
+
+            return obj as T;
         }
 
         /// <summary> GameObject 생성 </summary>
@@ -55,7 +56,7 @@ namespace Client
 
         public void Clear()
         {
-
+            _cache.Clear();
         }
     }
 }
