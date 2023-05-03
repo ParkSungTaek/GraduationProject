@@ -29,7 +29,7 @@ namespace Client
         Vector3 _offsetCorrection;
         Vector3 _monsterHpBarOffset;
 
-        public Vector3 CorrectPosition { get => transform.position - _offsetCorrection * transform.localScale.y; }
+        public Vector3 CorrectPosition { get => transform.position + _offsetCorrection; }
 
 
         // Start is called before the first frame update
@@ -52,7 +52,7 @@ namespace Client
             AttackDMG = mystat.AttackDMG;
             MoveSpeed = mystat.MoveSpeed;
             AttackSpeed = mystat.AttackSpeed;
-            _offsetCorrection = new Vector3 (0, -GetComponent<BoxCollider2D>().offset.y, 0);
+            _offsetCorrection = new Vector3 (0, GetComponent<BoxCollider2D>().offset.y / transform.localScale.y, 0);
             _monsterHpBarOffset = new Vector3 (0, mystat._monsterHpBarOffset, 0);
 
 

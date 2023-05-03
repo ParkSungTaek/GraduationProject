@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 이우열
 작성일 : 23.04.13
 
@@ -19,7 +19,7 @@ namespace ServerCore
         /// <summary> 통신을 위한 소켓 </summary>
         Socket _socket;
         /// <summary> 연결 종료 상태 </summary>
-        protected int _disconnected = 0;
+        int _disconnected = 0;
 
         /// <summary> lock variable </summary>
         object _lock = new object();
@@ -83,15 +83,9 @@ namespace ServerCore
             if (sendBuffList.Count <= 0)
                 return;
 
-            if(!_socket.Connected)
-            {
-                Disconnect();
-                return;
-            }
-
             lock (_lock)
             {
-                foreach(var sendBuff in sendBuffList)
+                foreach (var sendBuff in sendBuffList)
                     _sendQueue.Enqueue(sendBuff);
 
                 if (_pendingList.Count == 0)
@@ -102,16 +96,10 @@ namespace ServerCore
         /// <param name="data"> 보낼 데이터 </param>
         public void Send(ArraySegment<byte> data)
         {
-            if (!_socket.Connected)
-            {
-                Disconnect();
-                return;
-            }
-
-            lock ( _lock)
+            lock (_lock)
             {
                 _sendQueue.Enqueue(data);
-                if(_pendingList.Count == 0)
+                if (_pendingList.Count == 0)
                     RegisterSend();
             }
         }
@@ -122,7 +110,7 @@ namespace ServerCore
             if (_disconnected == 1)
                 return;
 
-            while(_sendQueue.Count > 0)
+            while (_sendQueue.Count > 0)
             {
                 ArraySegment<byte> buff = _sendQueue.Dequeue();
                 _pendingList.Add(buff);
@@ -135,19 +123,18 @@ namespace ServerCore
                 if (pending == false)
                     OnSendCompleted(null, _sendArgs);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Failed to RegisterSend : {e}");
-                Disconnect();
             }
         }
 
         /// <summary> 비동기 송신 완료 </summary>
         void OnSendCompleted(object sender, SocketAsyncEventArgs args)
         {
-            lock(_lock)
+            lock (_lock)
             {
-                if(args.BytesTransferred >0 && args.SocketError == SocketError.Success)
+                if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
                 {
                     try
                     {
@@ -160,10 +147,9 @@ namespace ServerCore
                         if (_sendQueue.Count > 0)
                             RegisterSend();
                     }
-                    catch(Exception e)
+                    catch (Exception e)
                     {
                         Console.WriteLine($"Failed to OnSendCompleted : {e}");
-                        Disconnect();
                     }
                 }
             }
@@ -172,7 +158,7 @@ namespace ServerCore
         /// <summary> 보낼 데이터 초기화(queue, list) </summary>
         void Clear()
         {
-            lock(_lock)
+            lock (_lock)
             {
                 _pendingList.Clear();
                 _sendQueue.Clear();
@@ -197,10 +183,9 @@ namespace ServerCore
                 if (pending == false)
                     OnRecvCompleted(null, _recvArgs);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine($"Failed To RegisterRecv : {e}");
-                Disconnect();
             }
 
         }
@@ -208,24 +193,24 @@ namespace ServerCore
         /// <summary> 비동기 수신 완료 </summary>
         void OnRecvCompleted(object sender, SocketAsyncEventArgs args)
         {
-            if(args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
+            if (args.BytesTransferred > 0 && args.SocketError == SocketError.Success)
             {
                 try
                 {
-                    if(_recvBuffer.OnWrite(args.BytesTransferred) == false)
+                    if (_recvBuffer.OnWrite(args.BytesTransferred) == false)
                     {
                         Disconnect();
                         return;
                     }
 
                     int processLen = OnRecv(_recvBuffer.ReadSegment);
-                    if(processLen < 0 || _recvBuffer.DataSize < processLen)
+                    if (processLen < 0 || _recvBuffer.DataSize < processLen)
                     {
                         Disconnect();
                         return;
                     }
 
-                    if(_recvBuffer.OnRead(processLen) == false)
+                    if (_recvBuffer.OnRead(processLen) == false)
                     {
                         Disconnect();
                         return;
@@ -233,10 +218,9 @@ namespace ServerCore
 
                     RegisterRecv();
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine($"Failed To OnRecvCompleted : {e}");
-                    Disconnect();
                 }
             }
         }

@@ -1,55 +1,40 @@
-﻿/******
+/******
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
 최근 수정 일자 : 23.04.29
-최근 수정 내용 : 패킷 목록 작성
+최근 수정 내용 : 필요한 패킷 목록 정리
  ******/
 
 using ServerCore;
 using System;
 
-namespace Server
+namespace Client
 {
-    #region Non-Playable
-    //TODO : STC_MosterCreate - 스폰 위치, 몬스터 id(ushort), 몬스터 종류
+    //TODO : CTS_StartGame
+    
+    //TODO : CTS_SelectPlayerClass
 
-    //TODO : STC_MonsterMove
+    //TODO : CTS_PlayerAttack - 애니메이션 재생용 : 방향 표기, 피해받은 몬스터들 정보
 
-    //TODO : STC_MonsterDie
+    //TODO : CTS_PriestBuff - 버프
+    
+    //TODO : CTS_ItemUpdate
 
-    //TODO : STC_TowerUpdate : 타워 체력 업데이트
-
-    //TODO : STC_GameOver
-
-    //TODO : STC_GameClear
-    #endregion Non-Playable
-
-    #region Playable
-    //TODO : STC_GetScoreAndMoney
-
-    //TODO : STC_SelectPlayerClass
-
-    //TODO : STC_PlayerAttack : 애니메이션 재생용
-
-    //TODO : STC_ItemUpdate
-
-    //TODO : STC_PriestBuff
+    //TODO : CTS_TowerDamage
 
     /// <summary>
     /// 작성자 : 이우열 <br/>
-    /// 서버 -> 클라 플레이어 이동 패킷
+    /// 클라 -> 서버 플레이어 이동 패킷
     /// </summary>
-    public class STC_PlayerMove : IPacket
+    public class CTS_PlayerMove : IPacket
     {
-        /// <summary> 플레이어 id </summary>
-        public int playerId;
         /// <summary> x 좌표 </summary>
         public float posX;
         /// <summary> y 좌표 </summary>
         public float posY;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_PlayerMove;
+        public ushort Protocol => (ushort)PacketID_Ingame.CTS_PlayerMove;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -60,8 +45,6 @@ namespace Server
             //protocol
             count += sizeof(ushort);
 
-            playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-            count += sizeof(int);
             posX = BitConverter.ToSingle(segment.Array, segment.Offset + count);
             count += sizeof(float);
             posY = BitConverter.ToSingle(segment.Array, segment.Offset + count);
@@ -76,11 +59,8 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_PlayerMove), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.CTS_PlayerMove), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
-            count += sizeof(int);
 
             Array.Copy(BitConverter.GetBytes(posX), 0, segment.Array, segment.Offset + count, sizeof(float));
             count += sizeof(float);
@@ -92,5 +72,4 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
-    #endregion Playable
 }

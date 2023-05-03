@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
@@ -9,10 +9,10 @@
 using ServerCore;
 using System;
 
-namespace Server
+namespace Client
 {
     #region Non-Playable
-    //TODO : STC_MosterCreate - 스폰 위치, 몬스터 id(ushort), 몬스터 종류
+    //TODO : STC_MosterCreate
 
     //TODO : STC_MonsterMove
 

@@ -43,6 +43,8 @@ namespace Server
                 room.Push(() => room.Leave(this));
                 Room = null;
             }
+
+            Console.WriteLine($"OnDisconnected : {endPoint}");
         }
     }
 

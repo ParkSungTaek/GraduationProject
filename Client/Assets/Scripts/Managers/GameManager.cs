@@ -71,11 +71,14 @@ namespace Client
         /// <summary> 모든 정보 초기화 </summary>
         public static void Clear()
         {
-            //_instance._inputManager.Clear();
-            _instance._networkManager.Clear();
             _instance._poolManager.Clear();
             _instance._resourceManager.Clear();
             _instance._soundManager.Clear();
+        }
+
+        private void Update()
+        {
+            _instance._networkManager.Flush();
         }
 
     }

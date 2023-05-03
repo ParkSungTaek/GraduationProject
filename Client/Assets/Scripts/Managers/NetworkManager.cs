@@ -1,9 +1,14 @@
+/******
+작성자 : 공동 작성
+작성 일자 : 23.05.03
+
+최근 수정 일자 : 23.05.03
+최근 수정 내용 : 최초 서버 연결 함수 작성
+ ******/
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net;
-using System.Threading;
-using UnityEngine;
 using ServerCore;
 
 namespace Client
@@ -11,43 +16,61 @@ namespace Client
 
     public class NetworkManager
     {
+        ServerSession _session;
 
-        public void Init()
-        {
+        object _lock = new object();
+        Queue<Action> _jobQueue = new Queue<Action>();
 
-        }
-        static void Connect(string[] args)
+        const int PORT = 7777;
+
+        /// <summary>
+        /// 서버 endPoint 반환 <br/>
+        /// 현재는 로컬 서버 가정, 추후 AWS 사용 시 변경 필요
+        /// </summary>
+        IPEndPoint GetServerEndPoint()
         {
-            // DNS (Domain Name System)
             string host = Dns.GetHostName();
             IPHostEntry ipHost = Dns.GetHostEntry(host);
             IPAddress ipAddr = ipHost.AddressList[0];
-            IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
+            return new IPEndPoint(ipAddr, PORT);
+        }
+
+        /// <summary> connector를 사용하여 서버에 연결 </summary>
+        public void Init()
+        {
+            IPEndPoint endPoint = GetServerEndPoint();
 
             Connector connector = new Connector();
 
             connector.Connect(endPoint,
-                () => { return SessionManager.Instance.Generate(); },
-                500);
+                () => { return Generate(); });
+        }
 
-            while (true)
+        /// <summary> 연결 성공 시 세션 생성 함수 </summary>
+        ServerSession Generate() => (_session = new ServerSession());
+
+        public void Send(ArraySegment<byte> segment) => _session?.Send(segment);
+        public void Send(List<ArraySegment<byte>> segmentList) => _session?.Send(segmentList);
+    
+        /// <summary> 패킷을 받았을 때 처리할 작업 넣기 </summary>
+        public void Push(Action job)
+        {
+            lock(_lock)
             {
-                try
-                {
-                    SessionManager.Instance.SendForEach();
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.ToString());
-                }
-
-                Thread.Sleep(250);
+                _jobQueue.Enqueue(job);
             }
         }
-        public void Clear()
+        /// <summary>
+        /// 유니티는 메인이 아닌 쓰레드에서 게임 컨텐츠 접근 불가 <br/>
+        /// -> queue에 넣어놓고 Update에서 호출
+        /// </summary>
+        public void Flush()
         {
-
+            while(_jobQueue.Count > 0)
+            {
+                Action job = _jobQueue.Dequeue();
+                job.Invoke();
+            }
         }
     }
-
 }

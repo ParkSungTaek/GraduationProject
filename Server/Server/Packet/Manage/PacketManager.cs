@@ -44,7 +44,7 @@ namespace Server
         }
 
         /// <summary> 패킷 종류에 따라 handler 호출 </summary>
-        public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action onRecvCallback = null)
+        public void OnRecvPacket(PacketSession session, ArraySegment<byte> buffer, Action<PacketSession, IPacket> onRecvCallback = null)
         {
             ushort count = 0;
 
@@ -59,7 +59,7 @@ namespace Server
                 IPacket packet = func.Invoke(session, buffer);
 
                 if (onRecvCallback != null)
-                    onRecvCallback.Invoke();
+                    onRecvCallback.Invoke(session, packet);
                 else
                     HandlePacket(session, packet);
 
