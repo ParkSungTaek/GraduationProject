@@ -35,7 +35,9 @@ namespace Server
     public enum PacketID_Ingame
     {
         CTS_PlayerMove,
-
+        CTS_GenerateMonster,
+        CTS_TowerDamage,
+        CTS_ItemUpdate,
         STC_PlayerMove,
     }
 

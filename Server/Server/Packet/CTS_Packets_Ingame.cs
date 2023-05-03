@@ -12,16 +12,118 @@ using System;
 namespace Server
 {
     //TODO : CTS_StartGame
-    
+
     //TODO : CTS_SelectPlayerClass
 
     //TODO : CTS_PlayerAttack - 애니메이션 재생용 : 방향 표기, 피해받은 몬스터들 정보
 
     //TODO : CTS_PriestBuff - 버프
-    
-    //TODO : CTS_ItemUpdate
 
-    //TODO : CTS_TowerDamage
+    //TODO : CTS_ItemUpdate - ItemInput , ItemPop (이게 Pop이 필요한가? Pop이 필요한 상황이 더 많겠지?)
+
+   
+    /// <summary>
+    /// 작성자 : 박성택
+    /// 몬스터의 DMG
+    /// </summary>
+    public class CTS_TowerDamage : IPacket
+    {
+        /// <summary> 몬스터 데미지</summary>
+        public ushort DMG;
+        
+        public ushort Protocol => (ushort)PacketID_Ingame.CTS_TowerDamage;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            DMG = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.CTS_TowerDamage), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(DMG), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    /// <summary>
+    /// 작성자 : 박성택 
+    /// Monster Generate위치, Monster type, Monster ID
+    /// </summary>
+    public class CTS_GenerateMonster : IPacket 
+    {
+        /// <summary> 시작 위치 12개</summary>
+        public ushort generateIDX;
+        /// <summary> Monster 타입 번호 </summary>
+        public ushort typeNum;
+        /// <summary> Monster 식별 번호 </summary>
+        public ushort ID;
+
+        public ushort Protocol => (ushort)PacketID_Ingame.CTS_GenerateMonster;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            generateIDX = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            typeNum = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.CTS_GenerateMonster), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(generateIDX), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(typeNum), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
 
     /// <summary>
     /// 작성자 : 이우열 <br/>
