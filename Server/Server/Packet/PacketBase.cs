@@ -29,12 +29,14 @@ namespace Server
         STC_PlayerLeave,
 
         STC_SetSuper,
+
+        MaxCount
     }
 
     /// <summary> 인게임 상 패킷 종류 enum </summary>
     public enum PacketID_Ingame
     {
-        CTS_PlayerMove,
+        CTS_PlayerMove = PacketID.MaxCount,
         CTS_TowerDamage,
         CTS_ItemUpdate,
 
