@@ -141,7 +141,8 @@ namespace Client
         public BuffController Buff { get; } = new BuffController();
         #endregion Player
 
-        #region Monster 박성택 작업부
+        #region Monster
+        //작성자 : 박성택
         /// <summary> 모든 몬스터 스텟 정보 </summary>
         public MonsterStatHandler MonsterStats { get; private set; }
         /// <summary> 몬스터 소환 관리 클래스 </summary>
@@ -152,10 +153,11 @@ namespace Client
         GameObject _hpBarPrefab;
         /// <summary> 몬스터 체력바 프리팹 </summary>
         public GameObject HPBarPrefab { get { return _hpBarPrefab; } }
-        
+
         #endregion
 
-        #region Tower 박성택 작업부
+        #region Tower
+        //작성자 : 박성택
         /// <summary> 중앙 타워 </summary>
         TowerController _tower;
         /// <summary> 중앙 타워 </summary>

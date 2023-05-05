@@ -18,6 +18,7 @@ namespace Client
         Dictionary<string, Object> _cache = new Dictionary<string, Object>();
 
         /// <summary> Resources.Load로 불러오기
+        /// <para> 몬스터는 다음 라운드로 넘어갈 때 빼는게 좋겠다 </para>
         /// </summary>
         public T Load<T>(string path) where T : Object
         {
