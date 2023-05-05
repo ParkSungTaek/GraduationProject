@@ -12,17 +12,223 @@ using System;
 namespace Server
 {
     #region Non-Playable
-    //TODO : STC_MosterCreate - 스폰 위치, 몬스터 id(ushort), 몬스터 종류
 
-    //TODO : STC_MonsterMove
+    //삭제 : STC_MonsterMove
 
-    //TODO : STC_MonsterDie
+    /// <summary>
+    /// 작성자 : 박성택 
+    /// Monster create위치, Monster type, Monster ID
+    /// </summary>
+    public class STC_MosterCreate : IPacket 
+    {
+        /// <summary> 시작 위치 12개</summary>
+        public ushort createIDX;
+        /// <summary> Monster 타입 번호 </summary>
+        public ushort typeNum;
+        /// <summary> Monster 식별 번호 </summary>
+        public ushort ID;
 
-    //TODO : STC_TowerUpdate : 타워 체력 업데이트
+        public ushort Protocol => (ushort)PacketID_Ingame.STC_MosterCreate;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            createIDX = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            typeNum = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_MosterCreate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(createIDX), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(typeNum), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+
+    /// <summary>
+    /// 작성자 : 박성택 
+    /// STC_MonsterDie -> STC_MonsterHPUpdate 로 class명 수정 모든 몬스터 OBJ는 체력이 0이하인 OBJ를 죽은것으로 간주한다. 따로 죽음을 처리해주지는 않는다.
+    /// ID : 데미지를 입은 몬스터의 ID 
+    /// updateHP : 후의 HP;
+    /// </summary>
+    public class STC_MonsterHPUpdate : IPacket
+    {
+        /// <summary> 몬스터의 ID</summary>
+        public ushort ID;
+
+        /// <summary> 몬스터의 HP 0 이하의 음수라면 죽음 -가능 할수도</summary>
+        public short updateHP;
+        
+        public ushort Protocol => (ushort)PacketID_Ingame.STC_MonsterHPUpdate;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            updateHP = BitConverter.ToInt16(segment.Array, segment.Offset + count);
+            count += sizeof(short);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_MonsterHPUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(updateHP), 0, segment.Array, segment.Offset + count, sizeof(short));
+            count += sizeof(short);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+
+
+    /// <summary>
+    /// 작성자 : 박성택 
+    /// TowerHP short범위를 넘어설 수도 있을듯 하여 int
+    /// </summary>
+    public class STC_TowerUpdate : IPacket
+    {
+        /// <summary> 몬스터가 받은 DMG</summary>
+        public int updateHP;
+
+        public ushort Protocol => (ushort)PacketID_Ingame.STC_TowerUpdate;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            updateHP = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_TowerUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(updateHP), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 
     //TODO : STC_GameOver
+    /// <summary>
+    /// 작성자 : 박성택 
+    /// GameOver패킷이 왔다 == 게임이 이미 끝났다. 
+    /// 이 패킷 안에서 굳이 뭔가 게임이 진행중인지 더 설명해야하나? 아니다. 
+    /// 그저 이겼냐 졌냐만 알려주면 된다.
+    /// win 이 true면 이김 false 면 짐
+    /// </summary>
+    public class STC_GameOver : IPacket
+    {
+        /// <summary> 몬스터가 받은 DMG</summary>
+        public bool win;
 
-    //TODO : STC_GameClear
+        public ushort Protocol => (ushort)PacketID_Ingame.STC_TowerUpdate;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            win = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+            count += sizeof(bool);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_TowerUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(win), 0, segment.Array, segment.Offset + count, sizeof(bool));
+            count += sizeof(bool);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    //TODO : STC_GameClear -- ?? 이게 무슨 패킷이지? 데이터를 초기화 하는 패킷인가? 아니면 위가 게임 진경우 이게 게임 이긴 경우인가? 
+    
     #endregion Non-Playable
 
     #region Playable

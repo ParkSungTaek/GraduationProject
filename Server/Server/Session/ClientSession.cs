@@ -28,6 +28,7 @@ namespace Server
         public override void OnRecvPacket(ArraySegment<byte> buffer)
         {
             PacketManager.Instance.OnRecvPacket(this, buffer);
+            Console.WriteLine("OnRecvPacket");
         }
 
         public override void OnSend(int byteTransfered)

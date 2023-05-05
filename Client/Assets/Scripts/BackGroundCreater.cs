@@ -1,73 +1,48 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Client
 {
     public class BackGroundCreater : MonoBehaviour
     {
-        GameObject[] TreesObj;
-        List<GameObject> Objs = new List<GameObject>();
-        int SpawnPointNum = 60;
-        float Xradius = 40f;
-        float yradius = 20f;
-        float DX = 1f;
-        float DY = 0.5f;
-        float Mul = 1.1f;
-        int Round = 40;
-        
-        enum Trees
-        {
-            AshTree,
-            BlackOakTree,
-            GreenAppleTree,
-            IvyTree,
-            ManticoreTree,
-            MapleTree,
-            OakTree,
-            RedAppleTree,
-            RedSandalTree,
-            WillowTree,
-            YewTree,
-            MaxCount
-        }
-        void init()
-        {
-
-            TreesObj = new GameObject[(int)Trees.MaxCount];
-            string[] TreesObjstr = Enum.GetNames(typeof(Trees));
-
-            for (int i = 0; i < (int)Trees.MaxCount; i++)
-            {
-                TreesObj[i] = Resources.Load<GameObject>($"Prefabs/Trees/{TreesObjstr[i]}");
-                Debug.Log(TreesObj[i].name);
-            }
-
-            for (int idx = 0; idx < Round; idx++)
-            {
-                for (int i = 0; i < SpawnPointNum; i++)
-                {
-                    GameObject tmp;
-                    tmp = Instantiate(TreesObj[UnityEngine.Random.Range(0,(int)Trees.MaxCount)]);
-                    tmp.transform.parent = transform;
-                    tmp.transform.position = new Vector3(Mathf.Cos(((2 * Mathf.PI) / SpawnPointNum) * i) * Xradius,
-                        Mathf.Sin(((2 * Mathf.PI) / SpawnPointNum) * i) * yradius, 0);
-                }
-                Xradius += DX;
-                yradius += DY;
-                SpawnPointNum = (int)(SpawnPointNum * Mul);
-            }
-            
-
-        }
-
         private void Start()
         {
-            init();
-            string filename = "screenshot.png";
-            
-            ScreenCapture.CaptureScreenshot(filename, ScreenCapture.StereoScreenCaptureMode.RightEye);
+            GameManager.Sound.Play(Define.SFX.MaxCount);
         }
+        public void TmpTmp()
+        {
+            CTS_PlayerMove cTS_PlayerMove = new CTS_PlayerMove();
+
+            ushort count = sizeof(ushort) + sizeof(ushort) + sizeof(float) + sizeof(float);
+
+            ushort Protocol = (ushort)PacketID_Ingame.CTS_PlayerMove;
+            float value3 = 1.25f;
+            float value4 = 2.77f;
+
+            // 값을 바이트 배열로 변환
+            byte[] valueBytes1 = BitConverter.GetBytes(count);
+            byte[] valueBytes2 = BitConverter.GetBytes(Protocol);
+            byte[] valueBytes3 = BitConverter.GetBytes(value3);
+            byte[] valueBytes4 = BitConverter.GetBytes(value4);
+
+
+            // 바이트 배열을 참조하는 ArraySegment<byte> 생성
+            byte[] buffer = new byte[valueBytes1.Length + valueBytes2.Length + valueBytes3.Length + valueBytes4.Length];
+
+            Buffer.BlockCopy(valueBytes1, 0, buffer, 0, valueBytes1.Length);
+            Buffer.BlockCopy(valueBytes2, 0, buffer, valueBytes1.Length, valueBytes2.Length);
+            Buffer.BlockCopy(valueBytes3, 0, buffer, valueBytes1.Length + valueBytes2.Length, valueBytes3.Length);
+            Buffer.BlockCopy(valueBytes4, 0, buffer, valueBytes1.Length + valueBytes2.Length + valueBytes3.Length, valueBytes4.Length);
+
+            ArraySegment<byte> bytes = new ArraySegment<byte>(buffer);
+            cTS_PlayerMove.Read(bytes);
+
+            GameManager.Network.Send(cTS_PlayerMove.Write());
+
+        }
+
     }
 }
