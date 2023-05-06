@@ -2,13 +2,14 @@
 작성자 : 이우열
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.14
-최근 수정 사항 : 아이템 스텟 확장
+최근 수정 일자 : 23.05.06
+최근 수정 사항 : 가장 가까운 플레이어 버프 걸기(패킷 보내기 제외)
 ******/
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace Client
@@ -32,7 +33,11 @@ namespace Client
                 Func<IEnumerator> buffCounting = GameManager.InGameData.Buff.AddBuff(new Buff(_itemStat.SkillRatio));
                 StartCoroutine(buffCounting.Invoke());
 
-                //TODO : 가장 가까운 아군에게 버프 시전
+                PlayerController near = GameManager.InGameData.NearPlayer;
+                if(near != null)
+                {
+                    //TODO : 버프 패킷 전송
+                }
 
 
                 GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);

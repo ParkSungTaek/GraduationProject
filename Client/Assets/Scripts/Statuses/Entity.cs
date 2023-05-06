@@ -56,7 +56,7 @@ namespace Client
             }
         }
 
-        public void Move(Vector3 _destPos)
+        public virtual void Move(Vector3 _destPos)
         {            
             transform.position = Vector3.MoveTowards(transform.position, _destPos, _moveSpeed * Time.deltaTime);
         }

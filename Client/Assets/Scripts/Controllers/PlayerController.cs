@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.14
-최근 수정 사항 : 아이템 스텟 확장
+최근 수정 일자 : 23.05.06
+최근 수정 사항 : 패킷을 이용한 플레이어 이동 함수 구현
 ******/
 using System.Collections;
 using System.Collections.Generic;
@@ -16,6 +16,9 @@ namespace Client
 {
     public abstract class PlayerController : Entity
     {
+        /// <summary> 내 플레이어 여부 </summary>
+        public bool MyPlayer { get; set; }
+
         /// <summary> 내 직업 </summary>
         public Define.Charcter MyClass { get; protected set; }
 
@@ -94,30 +97,46 @@ namespace Client
         {
             Idle,
             Move,
-            Attack,
-            Skill,
         }
 
-        /// <summary>
-        /// 현재 플레이어 상태
-        /// </summary>
+        /// <summary> 현재 플레이어 상태 </summary>
         PlayerState _state = PlayerState.Idle;
-        /// <summary>
-        /// 이동 방향 벡터
-        /// </summary>
-        Vector2 _moveDirection = Vector2.zero;
         private void FixedUpdate()
         {
-            if (_state == PlayerState.Move)
-                IsMove();
+            if (MyPlayer && _state == PlayerState.Move)
+                JoystickMove();
+            else if (_state == PlayerState.Move)
+                Move(_targetPos);
         }
 
-        public void IsMove() => transform.Translate(_moveDirection * Time.deltaTime * _itemStat.Speed);
-        
-        /// <summary>
-        /// 조이스틱에 따라 방향 결정
-        /// </summary>
-        /// <param name="dir"></param>
+        /// <summary> 패킷으로 받은 목표 지점 </summary>
+        Vector2 _targetPos;
+        /// <summary> 패킷으로 받은 목표 지점 설정 </summary>
+        public void SetTargetPos(Vector2 pos)
+        {
+            _targetPos = pos;
+            _state = PlayerState.Move;
+            SeeTarget(pos);
+            _char4D.AnimationManager.SetState(CharacterState.Run);
+        }
+        /// <summary> 패킷으로 받은 목표 지점으로 이동 </summary>
+        public override void Move(Vector3 _destPos)
+        {
+            if (Vector3.Distance(_currPosition, _destPos) < 0.05f * MoveSpeed)
+            {
+                _state = PlayerState.Idle;
+                _char4D.AnimationManager.SetState(CharacterState.Idle);
+            }
+            else
+                transform.position = Vector3.MoveTowards(transform.position, _destPos, _itemStat.Speed * Time.deltaTime);
+        }
+
+
+        /// <summary> 조이스틱 방향 벡터 </summary>
+        Vector2 _moveDirection = Vector2.zero;
+        /// <summary> 조이스틱을 이용한 플레이어 직접 조종 </summary>
+        public void JoystickMove() => transform.Translate(_moveDirection * Time.deltaTime * _itemStat.Speed);
+        /// <summary> 조이스틱에 따라 방향 결정 </summary>
         public void SetDirection(Vector2 dir)
         {
             _state = PlayerState.Move;
@@ -125,9 +144,7 @@ namespace Client
             SeeDirection(dir);
             _char4D.AnimationManager.SetState(CharacterState.Run);
         }
-        /// <summary>
-        /// 조이스틱 조작 종료
-        /// </summary>
+        /// <summary> 조이스틱 조작 종료 </summary>
         public void StopMove()
         {
             _state = PlayerState.Idle;
