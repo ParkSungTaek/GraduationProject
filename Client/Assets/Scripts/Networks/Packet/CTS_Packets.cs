@@ -59,6 +59,43 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
+
+
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 해당 Room 게임 시작 패킷
+    /// </summary>
+    public class CTS_StartGameRoom : IPacket
+    {
+        
+        public ushort Protocol => (ushort)PacketID.CTS_StartGameRoom;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)PacketID.CTS_StartGameRoom), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
     /// <summary>
     /// 작성자 : 이우열<br/>
     /// 방 입장 패킷

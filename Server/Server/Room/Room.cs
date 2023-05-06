@@ -8,7 +8,9 @@
 
 using ServerCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -16,8 +18,8 @@ namespace Server
     {
         public string RoomName;
         IngameData _ingameData = new IngameData();
-
         readonly int MAX_PLAYER_COUNT = 4;
+        Random random = new Random();
 
         /// <summary> 현재 방에 존재하는 클라이언트들 </summary>
         List<ClientSession> _sessions = new List<ClientSession>();
@@ -26,11 +28,13 @@ namespace Server
         /// <summary> broadcasting 대기 중인 데이터들 </summary>
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
     
+
         /// <summary> 새로운 작업 수행 예약 </summary>
         public void Push(Action job) => _jobQueue.Push(job);
 
         /// <summary> 방 인원 수 </summary>
         public int Count => _sessions.Count;
+
 
         //job queue에서 수행하기 때문에 싱글 쓰레드 가정
         #region Jobs
@@ -108,6 +112,47 @@ namespace Server
 
             Broadcast(packet.Write());
         }
+
+        /// <summary> Monster 생성 </summary>
+        public void CreateMonster()
+        {
+            STC_MosterCreate packet = new STC_MosterCreate();
+            packet.createIDX = (ushort)random.Next(0,12);
+            packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
+            packet.typeNum = _ingameData.MonsterControlInfo.MonsterTypeNum;
+
+            Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");
+
+            Broadcast(packet.Write());
+        }
+
+        public async void Start()
+        {
+            _ingameData.State = IngameData.state.Play;
+            while (_ingameData.State == IngameData.state.Play)
+            {
+
+                //몬스터 생성
+                CreateMonster();
+                Console.WriteLine("_ingameData.MonsterControlInfo.MonsterToMonster: " + _ingameData.MonsterControlInfo.MonsterToMonster);
+                await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.MonsterToMonster * 0.1f));
+
+                //다음 Wave
+                if (_ingameData.MonsterControlInfo.NextWave)
+                {
+                    Console.WriteLine("------------------");
+                    Console.WriteLine("_ingameData.MonsterControlInfo.WaveToWave; " + _ingameData.MonsterControlInfo.WaveToWave);
+                    await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.WaveToWave));
+                    _ingameData.MonsterControlInfo.NextWave = false;
+                    Console.WriteLine("------------------");
+                }
+                
+            }
+
+
+        }
+
+        
         #endregion Jobs
     }
 }

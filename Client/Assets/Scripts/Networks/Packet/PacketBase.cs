@@ -15,9 +15,9 @@ namespace Client
     public enum PacketID
     {
         CTS_CreateRoom,
+        CTS_StartGameRoom,
         CTS_EnterRoom,
         CTS_LeaveRoom,
-
 
         STC_OnConnect,
 

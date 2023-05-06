@@ -6,6 +6,7 @@
 최근 수정 내용 : LeaveRoom 패킷 처리 추가
  ******/
 
+using System;
 using ServerCore;
 
 namespace Server
@@ -53,7 +54,13 @@ namespace Server
                 clientSession.Room = null;
             }
         }
+        public static void  CTS_StartGameRoomHandler (PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
 
+            RoomManager.Instance.Start(clientSession);
+            Console.WriteLine( $"{clientSession.Room.RoomName}방 게임 시작" );
+        }
         #region Ingame
         /// <summary>
         /// 작성자 : 이우열 <br/>

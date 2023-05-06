@@ -31,10 +31,17 @@ namespace Server
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
+            _makeFunc.Add((ushort)PacketID.CTS_StartGameRoom, MakePacket<CTS_StartGameRoom>);
+
+            
+
 
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
             _handler.Add((ushort)PacketID.CTS_EnterRoom, PacketHandler.CTS_EnterRoomHandler);
             _handler.Add((ushort)PacketID.CTS_LeaveRoom, PacketHandler.CTS_LeaveRoomHandler);
+            _handler.Add((ushort)PacketID.CTS_StartGameRoom, PacketHandler.CTS_StartGameRoomHandler);
+
+            
 
             #region Ingame
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerMove, MakePacket<CTS_PlayerMove>);
@@ -52,6 +59,8 @@ namespace Server
             count += 2;
             ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
             count += 2;
+
+            Console.WriteLine("From PacketManager 수신 패킷 : " + Enum.GetName(typeof(PacketID),id));
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
             if(_makeFunc.TryGetValue(id, out func))

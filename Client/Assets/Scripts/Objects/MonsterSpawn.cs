@@ -100,7 +100,7 @@ namespace Client
                 {
                     MonsterController mon = InstantiateMonster((Define.MonsterName)(GameManager.InGameData.Wave), SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
                     _monsters.Add(mon);
-                    yield return new WaitForSecondsRealtime(_monsterToMonster *0.1f);
+                    yield return new WaitForSeconds(_monsterToMonster *0.1f);
                     _count += 1;
 
                 }
@@ -114,7 +114,7 @@ namespace Client
                     {
                         break;
                     }
-                    yield return new WaitForSecondsRealtime(_waveToWave);
+                    yield return new WaitForSeconds(_waveToWave);
 
                 }
             }

@@ -9,6 +9,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 namespace Client
 {
@@ -21,11 +22,16 @@ namespace Client
             WizardBtn,
             PriestBtn,
         }
+        enum InputTexts
+        {
+            RoomName,
+        }
         public override void Init()
         {
             base.Init();
             Bind<Button>(typeof(Buttons));
-
+            Bind<TMP_InputField>(typeof(InputTexts));
+            
             ButtonBind();
         }
 
@@ -47,6 +53,12 @@ namespace Client
         {
             PlayerPrefs.SetInt("Class", (int)character);
             SceneManager.LoadScene(Define.Scenes.Game);
+            CTS_CreateRoom _createRoom = new CTS_CreateRoom();
+            _createRoom.roomName = Get<TMP_InputField>((int)InputTexts.RoomName).text;
+            GameManager.Network.Send(_createRoom.Write());
+            CTS_StartGameRoom _startGameRoom = new CTS_StartGameRoom();
+            GameManager.Network.Send(_startGameRoom.Write());
+
         }
         #endregion Button
 
