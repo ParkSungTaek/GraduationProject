@@ -2,8 +2,8 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.27
-최근 수정 사항 : 아이템 가득 찬 경우 추가
+최근 수정 일자 : 23.05.06
+최근 수정 사항 : 플레이어 구조 dictionary로 변경(key : SessionId), 패킷을 통한 이동 함수 구현
 ******/
 
 using System;
@@ -67,13 +67,10 @@ namespace Client
 
         /// <summary> 아이템 최대 보유 가능 수 </summary>
         public readonly int MAXITEMCOUNT = 8;
+        /// <summary> 아이템 구매에 필요한 비용 </summary>
+        public int ItemCost { get; set; } = 10;
         /// <summary> 아이템 구매 가능 여부 반환 </summary>
-        public bool CanBuyItem { get => _money >= _itemCost; }
-        /// <summary>
-        /// 이게 가격 변동이 있을 일이 있나?
-        /// </summary>
-        int _itemCost = 10;
-        public int ItemCost { get { return _itemCost; } set { _itemCost = value; } }
+        public bool CanBuyItem { get => _money >= ItemCost; }
 
         /// <summary> 현재 보유 중인 아이템 정보 </summary>
         List<ItemData> _myInventory = new List<ItemData>();
@@ -118,24 +115,41 @@ namespace Client
         public CooldownController Cooldown { get; } = new CooldownController();
         /// <summary> 모든 직업에 대한 스텟 정보 </summary>
         public PlayerStatHandler PlayerStats { get; private set; }
-        /// <summary> 현재 게임에 참여한 플레이어 캐릭터 오브젝트들 </summary>
-        List<PlayerController> _playerControllers = new List<PlayerController>();
+        /// <summary> 현재 게임에 참여한 플레이어 캐릭터 오브젝트들 (SessionId가 key)</summary>
+        Dictionary<int, PlayerController> _playerControllers = new Dictionary<int, PlayerController>();
         /// <summary> 클라이언트의 캐릭터 </summary>
         public PlayerController MyPlayer
         {
             get
             {
-                if (_playerControllers.Count > 0)
-                    return _playerControllers[0];
+                PlayerController myPlayer;
+                if(_playerControllers.TryGetValue(GameManager.Network.PlayerId, out myPlayer))
+                    return myPlayer;
 
                 return null;
             }
         }
-        /// <summary>
-        /// 사제 버프 받을 가장 가까운 플레이어<br/>
-        /// 서버 연동 시 변경 예정
-        /// </summary>
-        public PlayerController NearPlayer => null;
+        /// <summary> 사제 버프 받을 가장 가까운 플레이어 </summary>
+        public PlayerController NearPlayer
+        {
+            get
+            {
+                PlayerController near = null;
+
+                foreach(PlayerController player in _playerControllers.Values)
+                {
+                    if(player.MyPlayer == false)
+                    {
+                        if (near == null)
+                            near = player;
+                        else if(Vector3.Distance(MyPlayer.transform.position, near.transform.position) > Vector3.Distance(MyPlayer.transform.position, player.transform.position))
+                            near = player;
+                    }
+                }
+
+                return near;
+            }
+        }
 
         /// <summary> 클라이언트 캐릭터가 받은 버프 관리자 </summary>
         public BuffController Buff { get; } = new BuffController();
@@ -244,15 +258,27 @@ namespace Client
             }
 
             playerGO.transform.position = 2 * Vector3.up;
-            _playerControllers.Add(playerController);
+            _playerControllers.Add(GameManager.Network.PlayerId, playerController);
         }
         #endregion GameStart_Generate
+
+        /// <summary> 내가 아닌 플레이어의 이동 동기화 </summary>
+        public void Move(int playerId, Vector2 targetPos)
+        {
+            PlayerController player;
+            if(_playerControllers.TryGetValue(playerId, out player))
+            {
+                player.SetTargetPos(targetPos);
+            }
+        }
 
         /// <summary> 게임 플레이 정보 초기화 </summary>
         public void Clear()
         {
             _money = _score = _wave = 0;
             _money = 1000;
+
+            _playerControllers.Clear();
             Cooldown.Clear();
             _myInventory.Clear();
         }

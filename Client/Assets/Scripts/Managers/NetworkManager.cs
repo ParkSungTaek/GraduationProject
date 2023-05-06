@@ -2,7 +2,7 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.03
+최근 수정 일자 : 23.05.06
 최근 수정 내용 : 최초 서버 연결 함수 작성
  ******/
 
@@ -17,6 +17,8 @@ namespace Client
     public class NetworkManager
     {
         ServerSession _session;
+
+        public int PlayerId { get => _session.SessionId; }
 
         object _lock = new object();
         Queue<Action> _jobQueue = new Queue<Action>();
