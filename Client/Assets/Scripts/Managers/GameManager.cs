@@ -42,7 +42,6 @@ namespace Client
                 _instance = gm.GetComponent<GameManager>();
                 DontDestroyOnLoad(gm);
 
-                _instance._networkManager.Init();
                 _instance._poolManager.Init();
                 _instance._soundManager.Init();
                 _instance._inGameDataManager.Init();

@@ -32,7 +32,7 @@ namespace Server
         public static void CTS_EnterRoomHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
-            CTS_CreateRoom enterPacket = packet as CTS_CreateRoom;
+            CTS_EnterRoom enterPacket = packet as CTS_EnterRoom;
 
             RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, enterPacket.roomName));
         }

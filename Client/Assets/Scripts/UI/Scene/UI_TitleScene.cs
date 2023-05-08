@@ -1,66 +1,77 @@
 /******
 작성자 : 이우열
-작성일 : 23.04.05
+작성 일자 : 23.05.08
 
-최근 수정 일자 : 23.04.05
-최근 수정 사항 : 타이틀 씬 구현
-******/
+최근 수정 일자 : 23.05.08
+최근 수정 내용 : UI_RobyScene 클래스 생성
+ ******/
 
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using TMPro;
 
 namespace Client
 {
     public class UI_TitleScene : UI_Scene
     {
+        /// <summary> 버튼 목록 </summary>
         enum Buttons
         {
-            WarriorBtn,
-            RiflemanBtn,
-            WizardBtn,
-            PriestBtn,
+            CreateBtn,
+            EnterBtn,
         }
-        enum InputTexts
+
+        enum Texts
         {
-            RoomName,
+            RoomNameTxt,
         }
+
+        /// <summary> 바인드 </summary>
         public override void Init()
         {
             base.Init();
             Bind<Button>(typeof(Buttons));
-            Bind<TMP_InputField>(typeof(InputTexts));
-            
-            ButtonBind();
+            Bind<TMP_Text>(typeof(Texts));
+
+            BindEvent(GetButton((int)Buttons.CreateBtn).gameObject, CreateRoomBtn);
+            BindEvent(GetButton((int)Buttons.EnterBtn).gameObject, EnterRoomBtn);
         }
 
-        #region Button
-        void ButtonBind()
+        /// <summary> 방 생성 버튼 </summary>
+        void CreateRoomBtn(PointerEventData evt)
         {
-            BindEvent(Get<Button>((int)Buttons.WarriorBtn).gameObject, SelectWarrior);
-            BindEvent(Get<Button>((int)Buttons.RiflemanBtn).gameObject, SelectRifleman);
-            BindEvent(Get<Button>((int)Buttons.WizardBtn).gameObject, SelectWizard);
-            BindEvent(Get<Button>((int)Buttons.PriestBtn).gameObject, SelectPriest);
+            string roomName = GetText((int)Texts.RoomNameTxt).text;
+
+            if(string.IsNullOrEmpty(roomName))
+            {
+                Debug.Log("빈 방 이름");
+                return;
+            }
+
+            CTS_CreateRoom pkt = new CTS_CreateRoom();
+            pkt.roomName = roomName;
+
+            GameManager.Network.Send(pkt.Write());
+            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 생성 중");
         }
 
-        void SelectWarrior(PointerEventData evt) => SelectClass(Define.Charcter.Warrior);
-        void SelectRifleman(PointerEventData evt) => SelectClass(Define.Charcter.Rifleman);
-        void SelectWizard(PointerEventData evt) => SelectClass(Define.Charcter.Wizard);
-        void SelectPriest(PointerEventData evt) => SelectClass(Define.Charcter.Priest);
-
-        void SelectClass(Define.Charcter character)
+        /// <summary> 방 입장 버튼 </summary>
+        void EnterRoomBtn(PointerEventData evt)
         {
-            PlayerPrefs.SetInt("Class", (int)character);
-            SceneManager.LoadScene(Define.Scenes.Game);
-            CTS_CreateRoom _createRoom = new CTS_CreateRoom();
-            _createRoom.roomName = Get<TMP_InputField>((int)InputTexts.RoomName).text;
-            GameManager.Network.Send(_createRoom.Write());
-            CTS_StartGameRoom _startGameRoom = new CTS_StartGameRoom();
-            GameManager.Network.Send(_startGameRoom.Write());
+            string roomName = GetText((int)Texts.RoomNameTxt).text;
 
+            if (string.IsNullOrEmpty(roomName))
+            {
+                Debug.Log("빈 방 이름");
+                return;
+            }
+
+            CTS_EnterRoom pkt = new CTS_EnterRoom();
+            pkt.roomName = roomName;
+
+            GameManager.Network.Send(pkt.Write());
+            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 입장 중");
         }
-        #endregion Button
-
     }
 }

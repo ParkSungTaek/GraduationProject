@@ -56,9 +56,6 @@ namespace Server
             STC_PlayerEnter enterPacket = new STC_PlayerEnter();
             enterPacket.playerId = session.SessionId;
             session.Send(enterPacket.Write());
-
-
-            
         }
 
         /// <summary> 새로운 방 생성 </summary>

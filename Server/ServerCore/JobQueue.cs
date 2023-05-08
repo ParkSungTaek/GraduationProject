@@ -47,7 +47,10 @@ namespace ServerCore
                 Action action = Pop();
 
                 if (action == null)
+                {
+                    _flush = false;
                     return;
+                }
 
                 action.Invoke();
             }

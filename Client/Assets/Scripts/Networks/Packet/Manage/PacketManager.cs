@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.03
-최근 수정 내용 : OnConnectHandler 연결
+최근 수정 일자 : 23.05.08
+최근 수정 내용 : 방 생성/입장 관련 Handler 추가
  ******/
 
 using ServerCore;
@@ -30,9 +30,17 @@ namespace Client
 		{
 			_makeFunc.Add((ushort)PacketID.STC_OnConnect, MakePacket<STC_OnConnect>);
 			_makeFunc.Add((ushort)PacketID.STC_SetSuper, MakePacket<STC_SetSuper>);
+			_makeFunc.Add((ushort)PacketID.STC_RejectRoom, MakePacket<STC_RejectRoom>);
+			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Full, MakePacket<STC_RejectEnter_Full>);
+			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Exist, MakePacket<STC_RejectEnter_Exist>);
+			_makeFunc.Add((ushort)PacketID.STC_PlayerEnter,MakePacket<STC_PlayerEnter>);
 
 			_handler.Add((ushort)PacketID.STC_OnConnect, PacketHandler.STC_OnConnectHandler);
 			_handler.Add((ushort)PacketID.STC_SetSuper, PacketHandler.STC_SetSuperHandler);
+			_handler.Add((ushort)PacketID.STC_RejectRoom, PacketHandler.STC_RejectRoomHandler);
+			_handler.Add((ushort)PacketID.STC_RejectEnter_Full, PacketHandler.STC_RejectEnter_FullHandler);
+			_handler.Add((ushort)PacketID.STC_RejectEnter_Exist, PacketHandler.STC_RejectEnter_ExistHandler);
+			_handler.Add((ushort)PacketID.STC_PlayerEnter, PacketHandler.STC_PlayerEnterHandler);
 		}
 
         /// <summary> 패킷 종류에 따라 handler 호출 </summary>

@@ -60,6 +60,7 @@ namespace ServerCore
 			else
 			{
 				Console.WriteLine($"OnConnectCompleted Fail: {args.SocketError}");
+				Client.GameManager.Network.Push(() => { Client.GameManager.UI.CloseAllPopUpUI(); Client.GameManager.UI.ShowPopUpUI<Client.UI_FailConnect>(); });
 			}
 		}
 	}

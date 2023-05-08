@@ -6,8 +6,6 @@
 최근 수정 사항 : 타이틀 씬 제작
 ******/
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Client
@@ -17,6 +15,7 @@ namespace Client
         void Start()
         {
             GameManager.UI.ShowSceneUI<UI_TitleScene>();
+            GameManager.Network.Connect();
         }
     }
 }

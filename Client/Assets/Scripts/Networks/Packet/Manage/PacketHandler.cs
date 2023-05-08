@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.06
-최근 수정 사항 : PlayerMove Handler 작성
+최근 수정 일자 : 23.05.08
+최근 수정 사항 : OnConnectHandler에 PopUp 닫기 추가, 방 생성/입장 관련 handler 추가
  ******/
 
 using ServerCore;
@@ -24,7 +24,70 @@ namespace Client
 
 			serverSession.SessionId = pkt.playerId;
 
-			GameManager.Network.Push(() => Debug.Log($"OnConnect : {pkt.playerId}"));
+			GameManager.Network.Push(() => { GameManager.UI.CloseAllPopUpUI(); });
+		}
+
+		/// <summary> 
+		/// 작성자 : 이우열 <br/>
+		/// 방 생성 실패 패킷 처리
+		/// </summary>
+		public static void STC_RejectRoomHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(() => 
+			{ 
+				GameManager.UI.CloseAllPopUpUI(); 
+				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복된 방 이름입니다."); 
+			});
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 풀방이라 입장 실패 패킷 처리
+		/// </summary>
+		public static void STC_RejectEnter_FullHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(() =>
+			{
+				GameManager.UI.CloseAllPopUpUI();
+				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("가득찬 방입니다.");
+			});
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 없는 방이라 입장 실패 패킷 처리
+		/// </summary>
+		public static void STC_RejectEnter_ExistHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(() =>
+			{
+				GameManager.UI.CloseAllPopUpUI();
+				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("존재하지 않는 방입니다.");
+			});
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 플레이어 입장 성공 패킷 처리
+		/// </summary>
+		public static void STC_PlayerEnterHandler(PacketSession session, IPacket packet)
+		{
+			STC_PlayerEnter pkt = packet as STC_PlayerEnter;
+			ServerSession serverSession = session as ServerSession;
+
+			//방 생성 성공
+			if(pkt.playerId == GameManager.Network.PlayerId)
+			{
+				GameManager.Network.Push(() => 
+				{
+					SceneManager.LoadScene(Define.Scenes.Loby);
+				});
+			}
+			//다른 플레이어 입장
+			else
+			{
+
+			}
 		}
 
 		/// <summary>

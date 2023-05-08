@@ -38,8 +38,10 @@ namespace Client
         }
 
         /// <summary> connector를 사용하여 서버에 연결 </summary>
-        public void Init()
+        public void Connect()
         {
+            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("서버와 연결 중");
+
             IPEndPoint endPoint = GetServerEndPoint();
 
             Connector connector = new Connector();
@@ -70,7 +72,11 @@ namespace Client
         {
             while(_jobQueue.Count > 0)
             {
-                Action job = _jobQueue.Dequeue();
+                Action job;
+                lock (_lock)
+                {
+                    job = _jobQueue.Dequeue();
+                }
                 job.Invoke();
             }
         }

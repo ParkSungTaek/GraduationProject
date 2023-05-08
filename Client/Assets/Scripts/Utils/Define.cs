@@ -1,4 +1,4 @@
-﻿/******
+/******
 공동 작성
 작성일 : 23.03.31
 
@@ -82,6 +82,7 @@ namespace Client
         public enum Scenes
         { 
             Title,
+            Loby,
             Game,
         }
 
