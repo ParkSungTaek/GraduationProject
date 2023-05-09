@@ -54,14 +54,37 @@ namespace Server
                 clientSession.Room = null;
             }
         }
-        public static void  CTS_StartGameRoomHandler (PacketSession session, IPacket packet)
+        
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 로비 -> 클래스 선택 전환 패킷 처리
+        /// </summary>
+        /// <param name="session"></param>
+        /// <param name="packet"></param>
+        public static void CTS_ReadyGameHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
 
-            RoomManager.Instance.Start(clientSession);
-            Console.WriteLine( $"{clientSession.Room.RoomName}방 게임 시작" );
+            Room room = clientSession.Room;
+
+            room.Push(() => { room.Ready(clientSession); });
         }
+
         #region Ingame
+        /// <summary>
+        /// 작성자 : 이우열<br/>
+        /// 클래스 선택 패킷 처리
+        /// </summary>
+        public static void CTS_SelectClassHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_SelectClass pkt = packet as CTS_SelectClass;
+
+            Room room = clientSession.Room;
+
+            room.Push(() => room.SelectClass(clientSession, (Define.PlayerClass)pkt.PlayerClass));
+        }
+
         /// <summary>
         /// 작성자 : 이우열 <br/>
         /// 클 -> 서 플레이어 이동 패킷 처리

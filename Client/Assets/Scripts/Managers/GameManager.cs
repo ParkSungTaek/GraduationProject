@@ -2,9 +2,10 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.10
-최근 수정 사항 : 주석 정리
+최근 수정 일자 : 23.05.09
+최근 수정 사항 : 게임 시작 변경
 ******/
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Client
@@ -20,12 +21,14 @@ namespace Client
         SoundManager _soundManager = new SoundManager();
         InGameDataManager _inGameDataManager = new InGameDataManager();
         UIManager _uiManager = new UIManager();
+        RoomManager _roomManager = new RoomManager();
         public static NetworkManager Network { get { return Instance._networkManager; } }
         public static PoolManager Pool { get { return Instance._poolManager; } }
         public static ResourceManager Resource { get { return Instance._resourceManager; } }
         public static SoundManager Sound { get { return Instance._soundManager; } }
         public static InGameDataManager InGameData { get { return Instance._inGameDataManager; } }
         public static UIManager UI { get { return Instance._uiManager; } }
+        public static RoomManager Room => Instance._roomManager;
         #endregion
 
         /// <summary> instance 생성, 산하 매니저들 초기화 </summary>
@@ -42,6 +45,7 @@ namespace Client
                 _instance = gm.GetComponent<GameManager>();
                 DontDestroyOnLoad(gm);
 
+                _instance._networkManager.Connect();
                 _instance._poolManager.Init();
                 _instance._soundManager.Init();
                 _instance._inGameDataManager.Init();
@@ -49,11 +53,13 @@ namespace Client
 
         }
         /// <summary> 게임 시작, 상태 변경, 인게임 정보 초기화 </summary>
-        public static void GameStart()
+        public static void GameStart(Dictionary<int, Define.Charcter> players)
         {
+            UI.CloseAllPopUpUI();
+
             Time.timeScale = 1;
             InGameData.StateChange(Define.State.Play);
-            _instance._inGameDataManager.GameStart();
+            InGameData.GameStart(players);
         }
         /// <summary> 승리 또는 패배 시 호출, 시간 정지, 상태 변경, UI 띄우기 </summary>
         public static void GameOver(Define.State endState)

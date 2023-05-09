@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.29
-최근 수정 내용 : 필요한 패킷 목록 정리
+최근 수정 일자 : 23.05.09
+최근 수정 내용 : SelectClass 패킷 구현
  ******/
 
 using ServerCore;
@@ -11,9 +11,46 @@ using System;
 
 namespace Server
 {
-    //TODO : CTS_StartGame
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 플레이어 클래스 선택 정보 
+    /// </summary>
+    public class CTS_SelectClass : IPacket
+    {
+        public ushort PlayerClass;
+        public ushort Protocol { get => (ushort)PacketID_Ingame.CTS_SelectClass; }
 
-    //TODO : CTS_SelectPlayerClass
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            PlayerClass = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(PlayerClass), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 
     //TODO : CTS_PlayerAttack - 애니메이션 재생용 : 방향 표기, 피해받은 몬스터들 정보
 
@@ -53,7 +90,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.CTS_ItemUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes(ItemInput), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
@@ -99,7 +136,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.CTS_TowerDamage), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes(DMG), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
@@ -147,7 +184,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.CTS_PlayerMove), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(posX), 0, segment.Array, segment.Offset + count, sizeof(float));

@@ -2,8 +2,8 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.05.06
-최근 수정 사항 : 플레이어 구조 dictionary로 변경(key : SessionId), 패킷을 통한 이동 함수 구현
+최근 수정 일자 : 23.05.09
+최근 수정 사항 : 플레이어 생성 멀티 플레이 구현
 ******/
 
 using System;
@@ -200,11 +200,11 @@ namespace Client
         }
 
         /// <summary> 새로운 게임 시작 - 몬스터 스폰 위치와 중앙 타워 생성 </summary>
-        public void GameStart()
+        public void GameStart(Dictionary<int, Define.Charcter> players)
         {
             GenerateMonsterSpawnPoint();
             GenerateTower();
-            GeneratePlayer();
+            GeneratePlayer(players);
         }
         #region GameStart_Generate
         /// <summary> 작성자 : 박성택 <br/>
@@ -228,37 +228,52 @@ namespace Client
             _tower = tower.GetComponent<TowerController>();
         }
         /// <summary> 작성자 : 이우열 <br/>
-        /// 플레이어 생성 <br/>
-        /// 현재는 하나만 생성하지만, 나중에 참여 인원수만큼 생성 </summary>
-        void GeneratePlayer()
+        /// 플레이어 생성
+        /// </summary>
+        void GeneratePlayer(Dictionary<int, Define.Charcter> players)
         {
             _playerControllers.Clear();
 
-            int classIdx = PlayerPrefs.GetInt("Class", 0);
-            GameObject playerGO;
-            PlayerController playerController = null;
-            switch (classIdx)
-            {
-                case 0:
-                    playerGO = GameManager.Resource.Instantiate("Player/Warrior");
-                    playerController = Util.GetOrAddComponent<Warrior>(playerGO);
-                    break;
-                case 1:
-                    playerGO = GameManager.Resource.Instantiate("Player/Rifleman");
-                    playerController = Util.GetOrAddComponent<Rifleman>(playerGO);
-                    break;
-                case 2:
-                    playerGO = GameManager.Resource.Instantiate("Player/Wizard");
-                    playerController = Util.GetOrAddComponent<Wizard>(playerGO);
-                    break;
-                default:
-                    playerGO = GameManager.Resource.Instantiate("Player/Priest");
-                    playerController = Util.GetOrAddComponent<Priest>(playerGO);
-                    break;
-            }
+            int xPos = -3;
 
-            playerGO.transform.position = 2 * Vector3.up;
-            _playerControllers.Add(GameManager.Network.PlayerId, playerController);
+            foreach (var player in players)
+            {
+                GameObject playerGO;
+                PlayerController playerController = null;
+
+                switch (player.Value)
+                {
+                    case Define.Charcter.Warrior:
+                        playerGO = GameManager.Resource.Instantiate("Player/Warrior");
+                        playerController = Util.GetOrAddComponent<Warrior>(playerGO);
+                        break;
+                    case Define.Charcter.Rifleman:
+                        playerGO = GameManager.Resource.Instantiate("Player/Rifleman");
+                        playerController = Util.GetOrAddComponent<Rifleman>(playerGO);
+                        break;
+                    case Define.Charcter.Wizard:
+                        playerGO = GameManager.Resource.Instantiate("Player/Wizard");
+                        playerController = Util.GetOrAddComponent<Wizard>(playerGO);
+                        break;
+                    default:
+                        playerGO = GameManager.Resource.Instantiate("Player/Priest");
+                        playerController = Util.GetOrAddComponent<Priest>(playerGO);
+                        break;
+                }
+
+                playerGO.transform.position = 2 * Vector3.up + Vector3.right * xPos;
+                xPos += 2;
+
+                _playerControllers.Add(player.Key, playerController);
+                playerController.MyPlayer = player.Key == GameManager.Network.PlayerId;
+
+                if(playerController.MyPlayer)
+                {
+                    GameObject camera = Camera.main.gameObject;
+                    camera.transform.parent = playerController.transform;
+                    camera.transform.localPosition = new Vector3(0, 1, -10);
+                }
+            }
         }
         #endregion GameStart_Generate
 
@@ -267,9 +282,7 @@ namespace Client
         {
             PlayerController player;
             if(_playerControllers.TryGetValue(playerId, out player))
-            {
                 player.SetTargetPos(targetPos);
-            }
         }
 
         /// <summary> 게임 플레이 정보 초기화 </summary>

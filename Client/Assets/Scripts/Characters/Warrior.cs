@@ -29,7 +29,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= RANGE_MULTI* _itemStat.AttackRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.Attack();
+                    _char4D?.AnimationManager?.Attack();
                     GenerateRangedArea(_itemStat.AttackRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
                 }
@@ -50,7 +50,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= RANGE_MULTI * stat.SkillRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.Attack();
+                    _char4D?.AnimationManager?.Attack();
                     GenerateRangedArea(_itemStat.SkillRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
                 }

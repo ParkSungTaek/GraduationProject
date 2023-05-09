@@ -2,13 +2,10 @@
 작성자 : 이우열
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.05
-최근 수정 사항 : 게임 씬 로드 시 수행할 기능 이 클래스로 이전
+최근 수정 일자 : 23.05.09
+최근 수정 사항 : 게임 시작 트리거 제거, GameManager로 이관
 ******/
 
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Client
@@ -17,9 +14,9 @@ namespace Client
     {
         private void Start()
         {
-            GameManager.InGameData.StateChange(Define.State.Play);
             GameManager.UI.ShowSceneUI<UI_GameScene>();
-            GameManager.GameStart();
+            GameManager.UI.ShowPopUpUI<UI_ClassSelect>();
+
             StartCoroutine(GameManager.InGameData.Cooldown.CooldownCoroutine());
         }
     }

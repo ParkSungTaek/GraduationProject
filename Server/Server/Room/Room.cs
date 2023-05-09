@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 클래스 인터페이스 설계
+최근 수정 일자 : 23.05.09
+최근 수정 내용 : 클래스 선택, 방 입장/퇴장, 게임 시작 구현
  ******/
 
 using ServerCore;
@@ -18,7 +18,6 @@ namespace Server
     {
         public string RoomName;
         IngameData _ingameData = new IngameData();
-        readonly int MAX_PLAYER_COUNT = 4;
         Random random = new Random();
 
         /// <summary> 현재 방에 존재하는 클라이언트들 </summary>
@@ -41,8 +40,9 @@ namespace Server
         /// <summary> 대기 중인 broadcasting 모두 수행 </summary>
         public void Flush()
         {
-            foreach (ClientSession session in _sessions)
-                session.Send(_pendingList);
+            if (_pendingList.Count > 0)
+                foreach (ClientSession session in _sessions)
+                    session.Send(_pendingList);
 
             _pendingList.Clear();
         }
@@ -53,11 +53,12 @@ namespace Server
             _pendingList.Add(segment);
         }
 
+        #region ReadyToPlay
         /// <summary> 새로운 클라이언트 입장 </summary>
         public void Enter(ClientSession session)
         {
             //풀방 -> 입장 불가
-            if(_sessions.Count >= MAX_PLAYER_COUNT)
+            if(_sessions.Count >= RoomManager.MAX_PLAYER_COUNT)
             {
                 STC_RejectEnter_Full fullPacket = new STC_RejectEnter_Full();
                 session.Send(fullPacket.Write());
@@ -66,6 +67,12 @@ namespace Server
 
             _sessions.Add(session);
             session.Room = this;
+
+            STC_ExistPlayers existPacket = new STC_ExistPlayers();
+            foreach (var s in _sessions)
+                existPacket.Players.Add(s.SessionId);
+
+            session.Send(existPacket.Write());
 
             STC_PlayerEnter enterPacket = new STC_PlayerEnter();
             enterPacket.playerId = session.SessionId;
@@ -101,6 +108,39 @@ namespace Server
             _jobQueue.Push(() => Broadcast(leavePacket.Write()));
         }
 
+        /// <summary> 로비 -> 캐릭터 선택 전환 </summary>
+        public void Ready(ClientSession session)
+        {
+            _ingameData.Init(_sessions);
+
+            STC_ReadyGame readyPacket = new STC_ReadyGame();
+
+            Broadcast(readyPacket.Write());
+        }
+
+        /// <summary> 클라이언트의 직업 선택 </summary>
+        public void SelectClass(ClientSession session, Define.PlayerClass playerClass)
+        {
+            bool allSelected = _ingameData.SelectClass(session.SessionId, playerClass);
+
+            //선택 정보 다른 클라이언트에 공유
+            STC_SelectClass selectPacket = new STC_SelectClass();
+            selectPacket.PlayerId = session.SessionId;
+            selectPacket.PlayerClass = (ushort)playerClass;
+            Broadcast(selectPacket.Write());
+
+            //모두 선택 시, 게임 시작
+            if(allSelected)
+            {
+                STC_StartGame startPacket = new STC_StartGame();
+                Broadcast(startPacket.Write());
+
+                JobTimer.Instance.Push(Start, 100);
+            }
+        }
+        #endregion ReadyToPlay
+
+        #region Ingame
         /// <summary> 플레이어 이동 동기화 </summary>
         /// <param name="session"> 이동 패킷 보낸 세션 </param>
         public void Move(ClientSession session, CTS_PlayerMove movePacket)
@@ -151,8 +191,7 @@ namespace Server
 
 
         }
-
-        
+        #endregion Ingame
         #endregion Jobs
     }
 }

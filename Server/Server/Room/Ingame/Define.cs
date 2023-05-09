@@ -12,7 +12,7 @@ namespace Server
     {
         public enum PlayerClass
         {
-            Warrior, Rifleman, Wizzard, Priest,
+            Warrior, Rifleman, Wizzard, Priest, UnSelected,
         }
     }
 }

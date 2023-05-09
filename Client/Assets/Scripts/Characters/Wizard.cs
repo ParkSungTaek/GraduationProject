@@ -25,7 +25,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.Jab();
+                    _char4D?.AnimationManager?.Jab();
                     GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
                 }

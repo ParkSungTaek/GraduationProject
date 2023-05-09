@@ -26,7 +26,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.ShotBow();
+                    _char4D?.AnimationManager?.ShotBow();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
@@ -49,7 +49,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.ShotBow();
+                    _char4D?.AnimationManager?.ShotBow();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);

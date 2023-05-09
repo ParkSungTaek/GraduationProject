@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.08
-최근 수정 사항 : OnConnectHandler에 PopUp 닫기 추가, 방 생성/입장 관련 handler 추가
+최근 수정 일자 : 23.05.09
+최근 수정 사항 : Enter, Leave, ExistPlayer Handler 수정
  ******/
 
 using ServerCore;
@@ -21,17 +21,18 @@ namespace Client
 		{
 			STC_OnConnect pkt = packet as STC_OnConnect;
 			ServerSession serverSession = session as ServerSession;
-
+		
 			serverSession.SessionId = pkt.playerId;
 
 			GameManager.Network.Push(() => { GameManager.UI.CloseAllPopUpUI(); });
 		}
 
-		/// <summary> 
-		/// 작성자 : 이우열 <br/>
-		/// 방 생성 실패 패킷 처리
-		/// </summary>
-		public static void STC_RejectRoomHandler(PacketSession session, IPacket packet)
+        #region Create/Enter Room
+        /// <summary> 
+        /// 작성자 : 이우열 <br/>
+        /// 방 생성 실패 패킷 처리
+        /// </summary>
+        public static void STC_RejectRoomHandler(PacketSession session, IPacket packet)
 		{
 			GameManager.Network.Push(() => 
 			{ 
@@ -75,31 +76,83 @@ namespace Client
 			STC_PlayerEnter pkt = packet as STC_PlayerEnter;
 			ServerSession serverSession = session as ServerSession;
 
-			//방 생성 성공
-			if(pkt.playerId == GameManager.Network.PlayerId)
-			{
-				GameManager.Network.Push(() => 
-				{
-					SceneManager.LoadScene(Define.Scenes.Loby);
-				});
-			}
 			//다른 플레이어 입장
-			else
-			{
+			if (pkt.playerId != GameManager.Network.PlayerId)
+				GameManager.Network.Push(() => GameManager.Room.EnterPlayer(pkt.playerId));
+        }
 
-			}
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 플레이어 퇴장 패킷 처리
+		/// </summary>
+		public static void STC_PlayerLeaveHandler(PacketSession session, IPacket packet)
+		{
+			STC_PlayerLeave pkt = packet as STC_PlayerLeave;
+
+			if (pkt.playerId != GameManager.Network.PlayerId)
+				GameManager.Network.Push(() =>
+				{
+					GameManager.Room.LeavePlayer(pkt.playerId);
+				});
 		}
 
 		/// <summary>
 		/// 작성자 : 이우열 <br/>
-		/// 통신 테스트를 위해
+		/// 최초 입장 시, 이미 존재하는 플레이어 목록 받음(지금 입장한 나도 포함됨)
 		/// </summary>
-		public static void STC_SetSuperHandler(PacketSession session, IPacket packet)
+		public static void STC_ExistPlayersHandler(PacketSession session, IPacket packet)
+		{
+			STC_ExistPlayers pkt = packet as STC_ExistPlayers;
+
+			GameManager.Network.Push(() =>
+            {
+                SceneManager.LoadScene(Define.Scenes.Loby);
+                GameManager.Room.SetExistPlayers(pkt.Players);
+			});
+		}
+        #endregion Create/Enter Room
+
+        #region Loby
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 호스트 변경 패킷
+        /// </summary>
+        public static void STC_SetSuperHandler(PacketSession session, IPacket packet)
 		{
 			STC_SetSuper pkt = packet as STC_SetSuper;
 			ServerSession serverSession = session as ServerSession;
 
-			GameManager.Network.Push(() => Debug.Log("Set Super"));
+			GameManager.Network.Push(() => Debug.Log("set super"));
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 로비 -> 캐릭터 선택 씬 전환
+		/// </summary>
+		public static void STC_ReadyGameHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(() => SceneManager.LoadScene(Define.Scenes.Game));
+		}
+        #endregion Loby
+
+        #region Ingame
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 다른 플레이어의 클래스 선택 정보 공유받음 처리
+		/// </summary>
+		public static void STC_SelectClassHandler(PacketSession session, IPacket packet)
+		{
+			STC_SelectClass pkt = packet as STC_SelectClass;
+
+			GameManager.Network.Push(() => GameManager.Room.SelectClass(pkt.PlayerId, (Define.Charcter)pkt.PlayerClass));
+		}
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 모든 플레이어 클래스 선택 완료 -> 게임 시작
+        /// </summary>
+        public static void STC_StartGameHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(GameManager.Room.GameStart);
 		}
 
 		/// <summary>
@@ -111,14 +164,17 @@ namespace Client
 			STC_PlayerMove pkt = packet as STC_PlayerMove;
 			ServerSession serverSession = session as ServerSession;
 
+			Debug.Log($"{pkt.playerId}, {new Vector2(pkt.posX, pkt.posY)}");
+
 			//내가 보낸 패킷 -> 아무것도 안함
-            if (serverSession.SessionId == GameManager.Network.PlayerId)
+            if (pkt.playerId == GameManager.Network.PlayerId)
                 return;
 
             GameManager.Network.Push(() =>
 			{
-				GameManager.InGameData.Move(serverSession.SessionId, new Vector2(pkt.posX, pkt.posY));
+				GameManager.InGameData.Move(pkt.playerId, new Vector2(pkt.posX, pkt.posY));
 			});
 		}
-	}
+        #endregion Ingame
+    }
 }

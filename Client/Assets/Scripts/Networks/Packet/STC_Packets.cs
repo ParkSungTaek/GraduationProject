@@ -2,12 +2,13 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.29
-최근 수정 내용 : 플레이어 입장/퇴장 패킷 추가
+최근 수정 일자 : 23.05.09
+최근 수정 내용 : 방에 이미 존재하는 플레이어 정보 공유(ExistPlayers) 패킷, ReadyGame 추가
  ******/
 
 using ServerCore;
 using System;
+using System.Collections.Generic;
 
 namespace Client
 {
@@ -54,6 +55,33 @@ namespace Client
     }
 
 
+    #region Create/Enter Room
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 서버 -> 클라 방 생성 불가
+    /// </summary>
+    public class STC_RejectRoom : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID.STC_RejectRoom;
+
+        public void Read(ArraySegment<byte> segment) { }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 방 입장 불가 : 방 없음
@@ -72,7 +100,7 @@ namespace Client
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.STC_RejectEnter_Exist), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
@@ -98,7 +126,7 @@ namespace Client
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.STC_RejectEnter_Full), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
@@ -114,7 +142,7 @@ namespace Client
     public class STC_PlayerEnter : IPacket
     {
         public int playerId;
-        public ushort Protocol => (ushort) PacketID.STC_PlayerEnter;
+        public ushort Protocol => (ushort)PacketID.STC_PlayerEnter;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -191,37 +219,63 @@ namespace Client
         }
     }
 
-
     /// <summary>
     /// 작성자 : 이우열 <br/>
-    /// 서버 -> 클라 방 생성 불가
+    /// 새로 입장한 클라이언트에게 기존 존재 클라이언트 정보 알림
     /// </summary>
-    public class STC_RejectRoom : IPacket
+    public class STC_ExistPlayers : IPacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_RejectRoom;
+        public ushort Protocol => (ushort)PacketID.STC_ExistPlayers;
+        public List<int> Players = new List<int>();
 
-        public void Read(ArraySegment<byte> segment) { }
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ushort listLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+
+            for (ushort i = 0; i < listLen; i++)
+            {
+                Players.Add(BitConverter.ToInt32(segment.Array, segment.Offset + count));
+                count += sizeof(int);
+            }
+        }
 
         public ArraySegment<byte> Write()
         {
             ArraySegment<byte> segment = SendBufferHelper.Open(4096);
             ushort count = 0;
 
-            //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.STC_RejectRoom), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes((ushort)Players.Count), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Array.Copy(BitConverter.GetBytes(Players[i]), 0, segment.Array, segment.Offset + count, sizeof(int));
+                count += sizeof(int);
+            }
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
             return SendBufferHelper.Close(count);
         }
     }
+    #endregion Create/Enter Room
 
+    #region Loby
     /// <summary>
     /// 작성자 : 이우열 <br/>
-    /// 서버 -> 클라 방장 변경 패킷
+    /// Host 퇴장 시, Host 변경 패킷
     /// </summary>
     public class STC_SetSuper : IPacket
     {
@@ -236,7 +290,7 @@ namespace Client
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID.STC_SetSuper), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
@@ -244,4 +298,35 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 방장의 로비 -> 캐릭터 선택 씬 전환 요구 브로드캐스팅
+    /// </summary>
+    public class STC_ReadyGame : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID.STC_ReadyGame;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+    #endregion Loby
 }

@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 이우열
 작성 일자 : 23.04.05
 
@@ -17,6 +17,9 @@ namespace Client
             GameManager.UI.Clear();
             //게임 진행사항 초기화
             GameManager.InGameData.Clear();
+
+            GameManager.Room.LobyUpdate = null;
+
             UnityEngine.SceneManagement.SceneManager.LoadScene((int)scene);
         }
     }

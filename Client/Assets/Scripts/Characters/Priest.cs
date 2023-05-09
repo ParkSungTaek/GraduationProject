@@ -27,7 +27,7 @@ namespace Client
             {
                 //애니메이션 재생
                 SeeDirection(Vector2.down);
-                _char4D.AnimationManager.Jab();
+                _char4D?.AnimationManager?.Jab();
 
                 //나에게 버프 시전
                 Func<IEnumerator> buffCounting = GameManager.InGameData.Buff.AddBuff(new Buff(_itemStat.SkillRatio));

@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 패킷 기본 구조
+최근 수정 일자 : 23.05.09
+최근 수정 내용 : PacketId 수정
  ******/
 
 using ServerCore;
@@ -15,9 +15,9 @@ namespace Client
     public enum PacketID
     {
         CTS_CreateRoom,
-        CTS_StartGameRoom,
         CTS_EnterRoom,
         CTS_LeaveRoom,
+        CTS_ReadyGame,
 
         STC_OnConnect,
 
@@ -26,9 +26,11 @@ namespace Client
         STC_RejectEnter_Full,
 
         STC_PlayerEnter,
+        STC_ExistPlayers,
         STC_PlayerLeave,
 
         STC_SetSuper,
+        STC_ReadyGame,
 
         MaxCount
     }
@@ -36,11 +38,13 @@ namespace Client
     /// <summary> 인게임 상 패킷 종류 enum </summary>
     public enum PacketID_Ingame
     {
-        CTS_StartGame = PacketID.MaxCount,
+        CTS_SelectClass = PacketID.MaxCount,
         CTS_PlayerMove,
         CTS_TowerDamage,
         CTS_ItemUpdate,
 
+        STC_SelectClass,
+        STC_StartGame,
         STC_PlayerMove,
         STC_MosterCreate,
         STC_MonsterHPUpdate,

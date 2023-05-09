@@ -15,6 +15,8 @@ namespace Client
         void Start()
         {
             GameManager.UI.ShowSceneUI<UI_LobyScene>();
+            //ui update 용
+            GameManager.Room.EnterPlayer(GameManager.Network.PlayerId);
         }
     }
 }

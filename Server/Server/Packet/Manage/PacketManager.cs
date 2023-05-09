@@ -31,21 +31,18 @@ namespace Server
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
-            _makeFunc.Add((ushort)PacketID.CTS_StartGameRoom, MakePacket<CTS_StartGameRoom>);
-
+            _makeFunc.Add((ushort)PacketID.CTS_ReadyGame, MakePacket<CTS_ReadyGame>);
             
-
-
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
             _handler.Add((ushort)PacketID.CTS_EnterRoom, PacketHandler.CTS_EnterRoomHandler);
             _handler.Add((ushort)PacketID.CTS_LeaveRoom, PacketHandler.CTS_LeaveRoomHandler);
-            _handler.Add((ushort)PacketID.CTS_StartGameRoom, PacketHandler.CTS_StartGameRoomHandler);
-
-            
+            _handler.Add((ushort)PacketID.CTS_ReadyGame, PacketHandler.CTS_ReadyGameHandler);
 
             #region Ingame
+            _makeFunc.Add((ushort)PacketID_Ingame.CTS_SelectClass, MakePacket<CTS_SelectClass>);
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerMove, MakePacket<CTS_PlayerMove>);
 
+            _handler.Add((ushort)PacketID_Ingame.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PlayerMove, PacketHandler.CTS_PlayerMoveHandler);
             #endregion Ingame
         }
@@ -60,7 +57,10 @@ namespace Server
             ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
             count += 2;
 
-            Console.WriteLine("From PacketManager 수신 패킷 : " + Enum.GetName(typeof(PacketID),id));
+            if (id < (ushort)PacketID.MaxCount)
+                Console.WriteLine($"Packet 수신 : {(PacketID)id}");
+            else
+                Console.WriteLine($"Packet 수신 : {(PacketID_Ingame)id}");
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
             if(_makeFunc.TryGetValue(id, out func))

@@ -14,6 +14,7 @@ namespace Server
 {
     public class RoomManager
     {
+        public const int MAX_PLAYER_COUNT = 4;
         /// <summary> 현재 존재하는 방들 </summary>
         Dictionary<string, Room> _rooms = new Dictionary<string, Room>();
         /// <summary> 작업 관리 큐 </summary>
@@ -27,8 +28,8 @@ namespace Server
         /// <summary> 모든 방들 예약된 브로드캐스트 수행 </summary>
         public void Flush()
         {
-            foreach(Room room in _rooms.Values)
-                room.Flush();
+            foreach (Room room in _rooms.Values)
+                room.Push(room.Flush);
         }
 
         #region jobs
@@ -51,21 +52,7 @@ namespace Server
             session.Room = room;
 
             _rooms.Add(roomName, room);
-
-            //방 생성 성공 알림
-            STC_PlayerEnter enterPacket = new STC_PlayerEnter();
-            enterPacket.playerId = session.SessionId;
-            session.Send(enterPacket.Write());
         }
-
-        /// <summary> 새로운 방 생성 </summary>
-        /// <param name="session"> 게임 시작 시도 클라이언트 </param>
-        public void Start(ClientSession session)
-        {
-            _rooms[session.Room.RoomName].Start();
-            
-        }
-
 
         /// <summary> 방 입장 </summary>
         /// <param name="session"> 입장 시도 클라이언트 </param>

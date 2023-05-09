@@ -2,15 +2,14 @@
 작성자 : 이우열
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.05.06
-최근 수정 사항 : 패킷을 이용한 플레이어 이동 함수 구현
+최근 수정 일자 : 23.05.09
+최근 수정 사항 : 카메라 따라가기 기능 IngameDataManager로 이동, 이동 패킷 송신
 ******/
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.HeroEditor4D.Common.Scripts.CharacterScripts;
 using Assets.HeroEditor4D.Common.Scripts.Enums;
-using Unity.VisualScripting;
 
 namespace Client
 {
@@ -36,10 +35,6 @@ namespace Client
         {
             _char4D = GetComponent<Character4D>();
             _char4D.AnimationManager.SetState(CharacterState.Idle);
-
-            GameObject camera = GameObject.Find("Main Camera").gameObject;
-            camera.transform.parent = transform;
-            camera.transform.localPosition = new Vector3(0, 1, -10);
         }
         
         /// <summary> 공격 시전, 단일 공격 기준 </summary>
@@ -54,7 +49,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.Attack();
+                    _char4D?.AnimationManager.Attack();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
@@ -78,7 +73,7 @@ namespace Client
                 if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
                 {
                     SeeTarget(mon.CorrectPosition);
-                    _char4D.AnimationManager.Attack();
+                    _char4D?.AnimationManager.Attack();
 
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
@@ -107,6 +102,8 @@ namespace Client
                 JoystickMove();
             else if (_state == PlayerState.Move)
                 Move(_targetPos);
+
+            SyncMove();
         }
 
         /// <summary> 패킷으로 받은 목표 지점 </summary>
@@ -114,18 +111,21 @@ namespace Client
         /// <summary> 패킷으로 받은 목표 지점 설정 </summary>
         public void SetTargetPos(Vector2 pos)
         {
+            if (Vector2.Distance(transform.position, pos) < 0.05f * _itemStat.Speed)
+                return;
+
             _targetPos = pos;
             _state = PlayerState.Move;
             SeeTarget(pos);
-            _char4D.AnimationManager.SetState(CharacterState.Run);
+            _char4D?.AnimationManager.SetState(CharacterState.Run);
         }
         /// <summary> 패킷으로 받은 목표 지점으로 이동 </summary>
         public override void Move(Vector3 _destPos)
         {
-            if (Vector3.Distance(_currPosition, _destPos) < 0.05f * MoveSpeed)
+            if (Vector2.Distance(transform.position, _destPos) < 0.05f * _itemStat.Speed)
             {
                 _state = PlayerState.Idle;
-                _char4D.AnimationManager.SetState(CharacterState.Idle);
+                _char4D?.AnimationManager.SetState(CharacterState.Idle);
             }
             else
                 transform.position = Vector3.MoveTowards(transform.position, _destPos, _itemStat.Speed * Time.deltaTime);
@@ -142,13 +142,26 @@ namespace Client
             _state = PlayerState.Move;
             _moveDirection = dir;
             SeeDirection(dir);
-            _char4D.AnimationManager.SetState(CharacterState.Run);
+            _char4D?.AnimationManager.SetState(CharacterState.Run);
         }
         /// <summary> 조이스틱 조작 종료 </summary>
         public void StopMove()
         {
             _state = PlayerState.Idle;
-            _char4D.AnimationManager.SetState(CharacterState.Idle);
+            _char4D?.AnimationManager.SetState(CharacterState.Idle);
+        }
+        
+        /// <summary> 플레이어 이동 동기화 패킷 전송 </summary>
+        void SyncMove()
+        {
+            if (!MyPlayer)
+                return;
+
+            CTS_PlayerMove movePacket = new CTS_PlayerMove();
+            movePacket.posX = transform.position.x;
+            movePacket.posY = transform.position.y;
+
+            GameManager.Network.Send(movePacket.Write());
         }
         #endregion Move
 
@@ -231,7 +244,7 @@ namespace Client
             else
                 resultDir = (dir.y < 0 ? Vector2.down : Vector2.up);
 
-            _char4D.SetDirection(resultDir);
+            _char4D?.SetDirection(resultDir);
         }
         #endregion AnimationDirection
 

@@ -10,7 +10,16 @@ namespace Server
 {
     public struct PlayerInfo
     {
-        public int PlayerId;
         public Define.PlayerClass PlayerClass;
+
+        public PlayerInfo()
+        {
+            PlayerClass = Define.PlayerClass.UnSelected;
+        }
+
+        public PlayerInfo(Define.PlayerClass playerClass)
+        {
+            PlayerClass = playerClass;
+        }
     }
 }

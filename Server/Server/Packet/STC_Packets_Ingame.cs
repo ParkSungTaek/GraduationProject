@@ -2,15 +2,87 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.29
-최근 수정 내용 : 패킷 목록 작성
+최근 수정 일자 : 23.05.09
+최근 수정 내용 : SelectClass, Start Packet 구현
  ******/
 
 using ServerCore;
 using System;
+using System.Threading;
 
 namespace Server
 {
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 클라이언트의 선택 정보 공유 패킷
+    /// </summary>
+    public class STC_SelectClass : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID_Ingame.STC_SelectClass;
+        public int PlayerId;
+        public ushort PlayerClass;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            PlayerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+            PlayerClass = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            int count = 0;
+
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(PlayerId), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
+            Array.Copy(BitConverter.GetBytes(PlayerClass), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 모든 클라이언트가 캐릭터 선택 완료 -> 게임 시작 브로드캐스팅
+    /// </summary>
+    public class STC_StartGame : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID_Ingame.STC_StartGame;
+        public void Read(ArraySegment<byte> segment)
+        {
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
     #region Non-Playable
 
     //삭제 : STC_MonsterMove
@@ -57,7 +129,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_MosterCreate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(createIDX), 0, segment.Array, segment.Offset + count, sizeof(ushort));
@@ -115,7 +187,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_MonsterHPUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
@@ -165,7 +237,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_TowerUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(updateHP), 0, segment.Array, segment.Offset + count, sizeof(int));
@@ -215,7 +287,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_TowerUpdate), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(win), 0, segment.Array, segment.Offset + count, sizeof(bool));
@@ -282,7 +354,7 @@ namespace Server
             //packet size
             count += sizeof(ushort);
 
-            Array.Copy(BitConverter.GetBytes((ushort)PacketID_Ingame.STC_PlayerMove), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
