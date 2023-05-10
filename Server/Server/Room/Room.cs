@@ -105,7 +105,7 @@ namespace Server
             STC_PlayerLeave leavePacket = new STC_PlayerLeave();
             leavePacket.playerId = session.SessionId;
 
-            _jobQueue.Push(() => Broadcast(leavePacket.Write()));
+            Broadcast(leavePacket.Write());
         }
 
         /// <summary> 로비 -> 캐릭터 선택 전환 </summary>
@@ -156,6 +156,9 @@ namespace Server
         /// <summary> Monster 생성 </summary>
         public void CreateMonster()
         {
+            if (_ingameData == null)
+                return;
+
             STC_MosterCreate packet = new STC_MosterCreate();
             packet.createIDX = (ushort)random.Next(0,12);
             packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
@@ -177,6 +180,9 @@ namespace Server
                 Console.WriteLine("_ingameData.MonsterControlInfo.MonsterToMonster: " + _ingameData.MonsterControlInfo.MonsterToMonster);
                 await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.MonsterToMonster * 0.1f));
 
+                if (_ingameData == null)
+                    break;
+
                 //다음 Wave
                 if (_ingameData.MonsterControlInfo.NextWave)
                 {
@@ -186,10 +192,7 @@ namespace Server
                     _ingameData.MonsterControlInfo.NextWave = false;
                     Console.WriteLine("------------------");
                 }
-                
             }
-
-
         }
         #endregion Ingame
         #endregion Jobs

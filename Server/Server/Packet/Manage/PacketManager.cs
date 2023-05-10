@@ -59,7 +59,7 @@ namespace Server
 
             if (id < (ushort)PacketID.MaxCount)
                 Console.WriteLine($"Packet 수신 : {(PacketID)id}");
-            else
+            else if(id != (ushort)PacketID_Ingame.CTS_PlayerMove)
                 Console.WriteLine($"Packet 수신 : {(PacketID_Ingame)id}");
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;

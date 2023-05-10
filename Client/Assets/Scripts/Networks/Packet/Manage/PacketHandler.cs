@@ -122,7 +122,7 @@ namespace Client
 			STC_SetSuper pkt = packet as STC_SetSuper;
 			ServerSession serverSession = session as ServerSession;
 
-			GameManager.Network.Push(() => Debug.Log("set super"));
+			GameManager.Network.Push(GameManager.Room.SetHost);
 		}
 
 		/// <summary>
