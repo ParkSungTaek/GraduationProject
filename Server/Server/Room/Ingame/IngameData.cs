@@ -27,7 +27,8 @@ namespace Server
         Dictionary<int, MonsterInfo> _monters = new Dictionary<int, MonsterInfo>();
         public Dictionary<int, MonsterInfo> MontersDic { get { return _monters; } }
         public MonsterControlInfo MonsterControlInfo;
-
+        public MonsterStatHandler monsterStatHandler { get; set; }
+        
         public state State { get; set; }
 
         /// <summary> 플레이어 정보 </summary>
@@ -36,6 +37,11 @@ namespace Server
         public IngameData()
         {
             State = state.Pause;
+            monsterStatHandler = Util.ParseJson<MonsterStatHandler>("Monsterstats");
+            for(int i =0; i < monsterStatHandler.monsterstats.Count; i++)
+            {
+                System.Console.WriteLine(i);
+            }
         }
 
         /// <summary>

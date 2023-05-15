@@ -165,7 +165,7 @@ namespace Server
             packet.createIDX = (ushort)random.Next(0,12);
             packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
             packet.typeNum = _ingameData.MonsterControlInfo.MonsterTypeNum;
-            _ingameData.MontersDic[_ingameData.MonsterControlInfo.NextMosterID] = new MonsterInfo(_ingameData.MonsterControlInfo.NextMosterID, );
+            _ingameData.MontersDic[_ingameData.MonsterControlInfo.NextMosterID] = new MonsterInfo(_ingameData.MonsterControlInfo.NextMosterID, 33);
 
 
             Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");

@@ -191,6 +191,7 @@ namespace Client
             GameManager.Network.Push(() =>
             {
                 GameManager.InGameData.MonsterSpawn.CreateMonster(pkt.createIDX, pkt.typeNum, pkt.ID);
+				
             });
         }
 
