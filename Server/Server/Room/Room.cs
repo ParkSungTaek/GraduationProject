@@ -159,14 +159,22 @@ namespace Server
             if (_ingameData == null)
                 return;
 
+
+
             STC_MosterCreate packet = new STC_MosterCreate();
             packet.createIDX = (ushort)random.Next(0,12);
             packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
             packet.typeNum = _ingameData.MonsterControlInfo.MonsterTypeNum;
+            _ingameData.MontersDic[_ingameData.MonsterControlInfo.NextMosterID] = new MonsterInfo(_ingameData.MonsterControlInfo.NextMosterID, );
+
 
             Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");
 
             Broadcast(packet.Write());
+            if (packet.typeNum >= 60)
+            {
+                _ingameData.State = IngameData.state.EndWave;
+            }
         }
 
         public async void Start()

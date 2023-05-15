@@ -10,11 +10,20 @@ namespace Server
 {
     public struct MonsterInfo
     {
+        
         public int MonsterId;
 
         public int CurrHp;
 
-        public float PosX;
-        public float PosY;
+        public MonsterInfo(int monsterId, int currHp)
+        {
+            MonsterId = monsterId;
+            CurrHp = currHp;
+        }
+
+
+        //우선 없이 한번 가본다.
+        //public float PosX;
+        //public float PosY;
     }
 }

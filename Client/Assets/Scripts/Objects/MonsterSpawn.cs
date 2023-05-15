@@ -27,8 +27,6 @@ namespace Client
         int SpawnPointNum = 12;
         float Xradius = 39f;
         float yradius = 19f;
-        /// <summary> 몬스터 생성 Coroutine </summary>
-        IEnumerator _startCreateMonster;
         /// <summary> 현재 생성 Monster 종류 </summary>
         Define.MonsterName _nowMonster;
         /// <summary> 이번 Wave 몬스터 나온 숫자 </summary>
@@ -67,7 +65,6 @@ namespace Client
             SpawnPoint = new GameObject[SpawnPointNum];
             _nowMonster = Define.MonsterName._0BlackBoar;
             _monsterHPCanvas = GameManager.UI.ShowSceneUI<UI_MonsterHP>().transform;
-            _startCreateMonster = StartCreateMonster();
             _count = 0;
             for (int i = 0; i < SpawnPointNum; i++)
             {
@@ -83,12 +80,22 @@ namespace Client
         void Start()
         {
             init();
-            StartCoroutine(_startCreateMonster);
+            //StartCoroutine(_startCreateMonster);
         }
 
         public bool WaveEnd()
         {
             return _nowMonster == Define.MonsterName.MaxCount;
+        }
+
+
+
+        public void CreateMonster(ushort createIDX, ushort typeNum, ushort ID)
+        {
+            MonsterController mon = InstantiateMonster((Define.MonsterName)(typeNum), SpawnPoint[createIDX].transform).GetComponent<MonsterController>();
+            _monsters.Add(mon);
+            _count += 1;
+
         }
 
         IEnumerator StartCreateMonster()
@@ -101,7 +108,7 @@ namespace Client
                     MonsterController mon = InstantiateMonster((Define.MonsterName)(GameManager.InGameData.Wave), SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
                     _monsters.Add(mon);
                     yield return new WaitForSeconds(_monsterToMonster *0.1f);
-                    _count += 1;
+                    
 
                 }
                 //다음 Wave

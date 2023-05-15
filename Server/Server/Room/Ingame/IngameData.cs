@@ -18,13 +18,14 @@ namespace Server
             Pause,
             Play,
             Win,
-            Lose
+            Lose,
+            EndWave
         }
         /// <summary> 중앙 타워 체력 정보 </summary>
         TowerInfo _towerInfo;
         /// <summary> 몬스터 정보 </summary>
-        List<MonsterInfo> _mosters = new List<MonsterInfo>();
-
+        Dictionary<int, MonsterInfo> _monters = new Dictionary<int, MonsterInfo>();
+        public Dictionary<int, MonsterInfo> MontersDic { get { return _monters; } }
         public MonsterControlInfo MonsterControlInfo;
 
         public state State { get; set; }
@@ -44,7 +45,7 @@ namespace Server
         public void Init(List<ClientSession> clients)
         {
             _players.Clear();
-            _mosters.Clear();
+            _monters.Clear();
             State = state.Pause;
 
             foreach (var client in clients)

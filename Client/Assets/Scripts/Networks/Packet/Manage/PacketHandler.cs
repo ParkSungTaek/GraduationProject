@@ -175,6 +175,25 @@ namespace Client
 				GameManager.InGameData.Move(pkt.playerId, new Vector2(pkt.posX, pkt.posY));
 			});
 		}
+
+        /// <summary>
+        /// 작성자 : 박성택 <br/>
+        /// 몬스터 생성 동기화
+        /// </summary>
+        public static void STC_MosterCreateHandler(PacketSession session, IPacket packet)
+        {
+            STC_MosterCreate pkt = packet as STC_MosterCreate;
+            ServerSession serverSession = session as ServerSession;
+
+            Debug.Log($"{pkt.ID}, {pkt.createIDX}, {pkt.typeNum}");
+
+            
+            GameManager.Network.Push(() =>
+            {
+                GameManager.InGameData.MonsterSpawn.CreateMonster(pkt.createIDX, pkt.typeNum, pkt.ID);
+            });
+        }
+
         #endregion Ingame
     }
 }
