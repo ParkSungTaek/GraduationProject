@@ -56,6 +56,7 @@ namespace Client
         GameObject InstantiateMonster(Define.MonsterName monster,Transform SpawnPoint)
         {
             string monsterStr = Enum.GetName(typeof(Define.MonsterName), monster);
+            Debug.Log("monsterStr:  " + monsterStr);
             return GameManager.Resource.Instantiate($"Monster/{monsterStr}", SpawnPoint);
         }
 
@@ -92,7 +93,18 @@ namespace Client
 
         public void CreateMonster(ushort createIDX, ushort typeNum, ushort ID)
         {
-            MonsterController mon = InstantiateMonster((Define.MonsterName)(typeNum), SpawnPoint[createIDX].transform).GetComponent<MonsterController>();
+            Debug.Log($"typeNum : {typeNum}");
+            
+            
+            // 이게 빠지면 왜 버그가 나지??? 이해하기 어려운 버그
+            if (SpawnPoint[createIDX].transform == null) { Debug.Log(">???");  }
+
+            GameObject _mon = InstantiateMonster((Define.MonsterName)(typeNum), SpawnPoint[createIDX].transform);
+            if (_mon == null) { Debug.Log("GameObject: NU;;");  }
+            MonsterController mon = _mon.GetComponent<MonsterController>();
+            if (mon == null) { Debug.Log("MonsterController: NU;;"); }
+
+
             _monsters.Add(mon);
             _count += 1;
 

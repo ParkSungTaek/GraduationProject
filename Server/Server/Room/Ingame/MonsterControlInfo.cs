@@ -19,27 +19,31 @@ namespace Server
         ushort _monsterTypeNum;
 
         public ushort NextMosterID { get { ThistypeCount++; return _nextMosterID++; } /*set { _nextMosterID = value; }*/ }
-        public ushort MonsterTypeNum { get { return _monsterTypeNum; } /*set { _monsterTypeNum = value; }*/ }
+        public ushort MonsterTypeNum { get { return _monsterTypeNum; } set { _monsterTypeNum = value; } }
         public float MonsterToMonster { get { return (26.0f / (16.0f + _monsterTypeNum)); } }
         public float WaveToWave { get { return 8f; } }
 
 
         public bool NextWave { get; set; }
         /// <summary> 이번 라운드 몬스터 나와야 할 수량 </summary>
-        int _wavenum { get { return _monsterTypeNum % 10 != 9 ? (4 * (_monsterTypeNum / 10 ) + 2 * (_monsterTypeNum % 10) + 8) : 1; } }
-        
+        int _wavenum { get { return _monsterTypeNum % 10 != 9 ? (4 * (_monsterTypeNum / 10) + 2 * (_monsterTypeNum % 10) + 8) : 1; } }
+
+        public void MonsterTypePlus()
+        {
+            if(_thistypeCount > _wavenum)
+            {
+                _monsterTypeNum++;
+                NextWave = true;
+                _thistypeCount = 0;
+            }
+           
+        }
+
         /// <summary> 이번 라운드 몬스터 나온 숫자 </summary>
         ushort ThistypeCount { 
             get { return _thistypeCount; }
             set { 
                 _thistypeCount = value;
-                if(_thistypeCount > _wavenum)
-                {
-                    NextWave = true;
-                    _monsterTypeNum++;
-                    _thistypeCount = 0;
-                    
-                }
             } 
         }
         public MonsterControlInfo() 

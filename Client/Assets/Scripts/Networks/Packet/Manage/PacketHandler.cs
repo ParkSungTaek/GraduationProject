@@ -185,7 +185,7 @@ namespace Client
             STC_MosterCreate pkt = packet as STC_MosterCreate;
             ServerSession serverSession = session as ServerSession;
 
-            Debug.Log($"{pkt.ID}, {pkt.createIDX}, {pkt.typeNum}");
+            Debug.Log($"pkt.ID: {pkt.ID}, pkt.createIDX: {pkt.createIDX}, pkt.typeNum: {pkt.typeNum}");
 
             
             GameManager.Network.Push(() =>

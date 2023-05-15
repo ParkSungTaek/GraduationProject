@@ -58,11 +58,15 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_SelectClass, MakePacket<STC_SelectClass>);
             _makeFunc.Add((ushort)PacketID_Ingame.STC_StartGame, MakePacket<STC_StartGame>);
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_PlayerMove, MakePacket<STC_PlayerMove>);
+            _makeFunc.Add((ushort)PacketID_Ingame.STC_MosterCreate, MakePacket<STC_MosterCreate>);
 
-			_handler.Add((ushort)PacketID_Ingame.STC_SelectClass, PacketHandler.STC_SelectClassHandler);
+
+            _handler.Add((ushort)PacketID_Ingame.STC_SelectClass, PacketHandler.STC_SelectClassHandler);
 			_handler.Add((ushort)PacketID_Ingame.STC_StartGame, PacketHandler.STC_StartGameHandler);
             _handler.Add((ushort)PacketID_Ingame.STC_PlayerMove, PacketHandler.STC_PlayerMoveHandler);
-			#endregion Ingame
+            _handler.Add((ushort)PacketID_Ingame.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
+
+            #endregion Ingame
         }
 
         /// <summary> 패킷 종류에 따라 handler 호출 </summary>

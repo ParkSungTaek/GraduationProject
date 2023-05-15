@@ -38,10 +38,7 @@ namespace Server
         {
             State = state.Pause;
             monsterStatHandler = Util.ParseJson<MonsterStatHandler>("Monsterstats");
-            for(int i =0; i < monsterStatHandler.monsterstats.Count; i++)
-            {
-                System.Console.WriteLine(i);
-            }
+            
         }
 
         /// <summary>

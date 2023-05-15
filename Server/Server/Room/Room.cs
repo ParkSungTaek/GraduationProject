@@ -160,19 +160,18 @@ namespace Server
                 return;
 
 
-
             STC_MosterCreate packet = new STC_MosterCreate();
             packet.createIDX = (ushort)random.Next(0,12);
             packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
             packet.typeNum = _ingameData.MonsterControlInfo.MonsterTypeNum;
-            _ingameData.MontersDic[_ingameData.MonsterControlInfo.NextMosterID] = new MonsterInfo(_ingameData.MonsterControlInfo.NextMosterID, 33);
-
-
+            _ingameData.MontersDic[_ingameData.MonsterControlInfo.NextMosterID] = new MonsterInfo(packet.ID, _ingameData.monsterStatHandler.monsterstats[packet.typeNum].MaxHP);
+            _ingameData.MonsterControlInfo.MonsterTypePlus();
             Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");
 
             Broadcast(packet.Write());
-            if (packet.typeNum >= 60)
+            if (_ingameData.MonsterControlInfo.MonsterTypeNum >= 59)
             {
+                Console.WriteLine("End");
                 _ingameData.State = IngameData.state.EndWave;
             }
         }
@@ -180,13 +179,15 @@ namespace Server
         public async void Start()
         {
             _ingameData.State = IngameData.state.Play;
+            await Task.Delay(TimeSpan.FromSeconds(1.0f));
+
             while (_ingameData.State == IngameData.state.Play)
             {
 
                 //몬스터 생성
                 CreateMonster();
                 Console.WriteLine("_ingameData.MonsterControlInfo.MonsterToMonster: " + _ingameData.MonsterControlInfo.MonsterToMonster);
-                await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.MonsterToMonster * 0.1f));
+                await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.MonsterToMonster));
 
                 if (_ingameData == null)
                     break;
