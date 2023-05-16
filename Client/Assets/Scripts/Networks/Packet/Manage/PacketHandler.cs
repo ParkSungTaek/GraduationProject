@@ -164,8 +164,6 @@ namespace Client
 			STC_PlayerMove pkt = packet as STC_PlayerMove;
 			ServerSession serverSession = session as ServerSession;
 
-			Debug.Log($"{pkt.playerId}, {new Vector2(pkt.posX, pkt.posY)}");
-
 			//내가 보낸 패킷 -> 아무것도 안함
             if (pkt.playerId == GameManager.Network.PlayerId)
                 return;
@@ -174,6 +172,48 @@ namespace Client
 			{
 				GameManager.InGameData.Move(pkt.playerId, new Vector2(pkt.posX, pkt.posY));
 			});
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 플레이어 애니메이션 동기화
+		/// </summary>
+		public static void STC_PlayerAttackHandler(PacketSession session, IPacket packet)
+		{
+			STC_PlayerAttack pkt = packet as STC_PlayerAttack;
+
+			if (pkt.playerId == GameManager.Network.PlayerId)
+				return;
+
+			GameManager.Network.Push(() =>
+			{
+				GameManager.InGameData.Attack(pkt.playerId, pkt.direction, pkt.skillType == 1);
+			});
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 사제 버프
+		/// </summary>
+		public static void STC_PriestBuffHandler(PacketSession session, IPacket packet)
+		{
+			STC_PriestBuff buffPacket = packet as STC_PriestBuff;
+
+			GameManager.Network.Push(() => GameManager.InGameData.AddBuff(buffPacket.buffRate));
+		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 아이템 동기화
+		/// </summary>
+		public static void STC_ItemUpdateHandler(PacketSession session, IPacket packet)
+		{
+			STC_ItemUpdate itemPacket = packet as STC_ItemUpdate;
+
+			if (itemPacket.playerId == GameManager.Network.PlayerId)
+				return;
+
+			GameManager.Network.Push(() => GameManager.InGameData.SyncItemInfo(itemPacket.playerId, itemPacket.position, itemPacket.itemIdx));
 		}
 
         /// <summary>

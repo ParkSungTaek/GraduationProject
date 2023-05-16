@@ -6,7 +6,6 @@
 최근 수정 내용 : PacketId 수정
  ******/
 
-using ServerCore;
 using System;
 
 namespace Server
@@ -40,12 +39,17 @@ namespace Server
     {
         CTS_SelectClass = PacketID.MaxCount,
         CTS_PlayerMove,
-        CTS_TowerDamage,
+        CTS_PlayerAttack,
+        CTS_PriestBuff,
         CTS_ItemUpdate,
+        CTS_TowerDamage,
 
         STC_SelectClass,
         STC_StartGame,
         STC_PlayerMove,
+        STC_PlayerAttack,
+        STC_PriestBuff,
+        STC_ItemUpdate,
         STC_MosterCreate,
         STC_MonsterHPUpdate,
         STC_TowerUpdate,

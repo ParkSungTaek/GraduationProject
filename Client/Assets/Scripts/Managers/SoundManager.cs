@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 박성택
 작성 일자 : 23.03.29
 
@@ -25,11 +25,11 @@ namespace Client
             {
                 root = new GameObject { name = "@Sound" };
                 UnityEngine.Object.DontDestroyOnLoad(root);
-                string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
-                for (int i = 0; i < soundNames.Length - 1; i++)
+
+                for (Define.Sound s = Define.Sound.BGM; s < Define.Sound.MaxCount; s++)
                 {
-                    GameObject go = new GameObject { name = soundNames[i] };
-                    _audioSources[i] = go.AddComponent<AudioSource>();
+                    GameObject go = new GameObject { name = $"{s}" };
+                    _audioSources[(int)s] = go.AddComponent<AudioSource>();
                     go.transform.parent = root.transform;
                 }
 
@@ -37,15 +37,13 @@ namespace Client
             }
             else
             {
-                string[] soundNames = System.Enum.GetNames(typeof(Define.Sound));
-                for (int i = 0; i < soundNames.Length - 1; i++)
+                for (Define.Sound s = Define.Sound.BGM; s < Define.Sound.MaxCount; s++)
                 {
-                    GameObject go = root.transform.Find(soundNames[i]).gameObject;
-                    _audioSources[i] = go.GetComponent<AudioSource>();
+                    GameObject go = root.transform.Find($"{s}").gameObject;
+                    _audioSources[(int)s] = go.GetComponent<AudioSource>();
                 }
 
                 _audioSources[(int)Define.Sound.BGM].loop = true;
-
             }
 
 
@@ -59,7 +57,7 @@ namespace Client
 
         public void Play(Define.SFX SFXSound, float pitch = 1.0f)
         {
-            string path = Enum.GetName(typeof(Define.SFX), SFXSound);
+            string path = $"{SFXSound}";
             AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.SFX);
             Play(audioClip, Define.Sound.SFX, pitch);
         }
@@ -70,12 +68,12 @@ namespace Client
         /// <param name="pitch"></param>
         public void Play(Define.BGM BGMSound, float pitch = 1.0f)
         {
-            string path = Enum.GetName(typeof(Define.BGM), BGMSound);
+            string path = $"{BGMSound}";
             AudioClip audioClip = GetOrAddAudioClip(path, Define.Sound.BGM);
             Play(audioClip, Define.Sound.BGM, pitch);
         }
 
-        public void Play(AudioClip audioClip, Define.Sound type = Define.Sound.SFX, float pitch = 1.0f)
+        void Play(AudioClip audioClip, Define.Sound type = Define.Sound.SFX, float pitch = 1.0f)
         {
             if (audioClip == null)
                 return;

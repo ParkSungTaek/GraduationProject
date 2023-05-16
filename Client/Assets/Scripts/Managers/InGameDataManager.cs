@@ -2,11 +2,12 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.05.09
-최근 수정 사항 : 플레이어 생성 멀티 플레이 구현
+최근 수정 일자 : 23.05.16
+최근 수정 사항 : 플레이어 애니메이션 동기화 구현
 ******/
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,8 +27,7 @@ namespace Client
             set
             {
                 _money = value;
-                UI_GameScene.TextChangeAction?.Invoke();
-                UI_GetItem.OnMoneyChangedAction?.Invoke();
+                OnMoneyChanged?.Invoke();
             }
         }
 
@@ -36,6 +36,8 @@ namespace Client
         /// </summary>
         int _moneyRewards = 5;
         public int MoneyRewards { get { return _moneyRewards; } }
+
+        public Action OnMoneyChanged { get; set; } = null;
         #endregion Money
 
         #region Score
@@ -54,9 +56,12 @@ namespace Client
             set
             {
                 _score = value;
-                UI_GameScene.TextChangeAction?.Invoke();
+                OnScoreChanged?.Invoke();
             }
         }
+
+        /// <summary> score 변경 ui에 적용 </summary>
+        public Action OnScoreChanged { get; set; } = null;
         #endregion Score
 
         #region Item
@@ -76,6 +81,17 @@ namespace Client
         List<ItemData> _myInventory = new List<ItemData>();
         /// <summary> 현재 보유 중인 아이템 정보 </summary>
         public List<ItemData> MyInventory { get => _myInventory; }
+        /// <summary> 내 아이템 정보 인덱스 배열로 변환 </summary>
+        List<int> InventoryToInt()
+        {
+            List<int> list = new List<int>();
+            foreach (ItemData data in _myInventory)
+                list.Add(data.Idx);
+
+            return list;
+        }
+
+        public Action<int, int, int> ItemInfoUpdate { get; set; } = null;
 
         /// <summary> 작성자 : 이우열 <br/>
         /// 새로운 아이템 구매
@@ -90,6 +106,9 @@ namespace Client
                 _myInventory.Add(_itemData.GetRandomItem());
                 GameManager.InGameData.MyPlayer.StatUpdate();
                 textUpdate.Invoke(_myInventory.Count - 1);
+
+                SendItemInfo(_myInventory.Count - 1, _myInventory[_myInventory.Count - 1].Idx);
+                ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, _myInventory.Count - 1, _myInventory[_myInventory.Count - 1].Idx);
             }
             //빈 자리 없음 -> 버리기 UI 띄우기
             else
@@ -101,11 +120,27 @@ namespace Client
         /// <summary> 작성자 : 이우열 <br/>
         /// 보유 중인 아이템 버리기 
         /// </summary>
-        public void ReplaceItem(int idx, ItemData newItem)
+        public void ReplaceItem(int position, ItemData newItem)
         {
-            _myInventory[idx] = newItem;
-            GameManager.InGameData.MyPlayer.StatUpdate();
+            _myInventory[position] = newItem;
+            MyPlayer.StatUpdate();
+
+            SendItemInfo(position, newItem.Idx);
+            ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, position, newItem.Idx);
         }
+
+        /// <summary> 아이템 정보 동기화 전송 </summary>
+        void SendItemInfo(int position, int itemIdx)
+        {
+            CTS_ItemUpdate itemPacket = new CTS_ItemUpdate();
+            itemPacket.position = (ushort)position;
+            itemPacket.itemIdx = (ushort)itemIdx;
+
+            GameManager.Network.Send(itemPacket.Write());
+        }
+
+        /// <summary> 패킷으로 받은 아이템 정보 동기화 </summary>
+        public void SyncItemInfo(int playerId, int position, int itemIdx) => ItemInfoUpdate?.Invoke(playerId, position, itemIdx);
         #endregion
 
         #region Player
@@ -130,24 +165,31 @@ namespace Client
             }
         }
         /// <summary> 사제 버프 받을 가장 가까운 플레이어 </summary>
-        public PlayerController NearPlayer
+        int NearPlayerId
         {
             get
             {
                 PlayerController near = null;
+                int nearIdx = -1;
 
-                foreach(PlayerController player in _playerControllers.Values)
+                foreach(var player in _playerControllers)
                 {
-                    if(player.MyPlayer == false)
+                    if(player.Value.MyPlayer == false)
                     {
                         if (near == null)
-                            near = player;
-                        else if(Vector3.Distance(MyPlayer.transform.position, near.transform.position) > Vector3.Distance(MyPlayer.transform.position, player.transform.position))
-                            near = player;
+                        {
+                            nearIdx = player.Key;
+                            near = player.Value;
+                        }
+                        else if(Vector3.Distance(MyPlayer.transform.position, near.transform.position) > Vector3.Distance(MyPlayer.transform.position, player.Value.transform.position))
+                        {
+                            nearIdx = player.Key;
+                            near = player.Value;
+                        }
                     }
                 }
 
-                return near;
+                return nearIdx;
             }
         }
 
@@ -202,7 +244,9 @@ namespace Client
         /// <summary> 새로운 게임 시작 - 몬스터 스폰 위치와 중앙 타워 생성 </summary>
         public void GameStart(Dictionary<int, Define.Charcter> players)
         {
-            GenerateMonsterSpawnPoint();
+            OnMoneyChanged?.Invoke();
+            OnScoreChanged?.Invoke();
+
             GenerateTower();
             GeneratePlayer(players);
         }
@@ -210,7 +254,7 @@ namespace Client
         /// <summary> 작성자 : 박성택 <br/>
         /// 몬스터 스폰 포인트 생성 
         /// </summary>
-        void GenerateMonsterSpawnPoint()
+        public void GenerateMonsterSpawnPoint()
         {
             GameObject monsterSpawn = GameObject.Find("MonsterSpawn");
             if (monsterSpawn == null)
@@ -277,7 +321,10 @@ namespace Client
         }
         #endregion GameStart_Generate
 
-        /// <summary> 내가 아닌 플레이어의 이동 동기화 </summary>
+        /// <summary> 
+        /// 작성자 : 이우열 <br/>
+        /// 내가 아닌 플레이어의 이동 동기화 
+        /// </summary>
         public void Move(int playerId, Vector2 targetPos)
         {
             PlayerController player;
@@ -285,11 +332,52 @@ namespace Client
                 player.SetTargetPos(targetPos);
         }
 
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 내가 아닌 플레이어의 공격 애니메이션 동기화
+        /// </summary>
+        public void Attack(int playerId, int direction, bool isSkill)
+        {
+            PlayerController player;
+            if (_playerControllers.TryGetValue(playerId, out player))
+                player.SyncAnimationInfo(direction, isSkill);
+        }
+
+        /// <summary> 내 플레이어에게 버프 </summary>
+        public void AddBuff(float buffRate)
+        {
+            Func<IEnumerator> buffCoroutine = Buff.AddBuff(new Buff(buffRate));
+
+            MyPlayer.StatUpdate();
+            MyPlayer.StartCoroutine(buffCoroutine.Invoke());
+        }
+
+        /// <summary> 가까운 플레이어에게 버프 전달 </summary>
+        public void SendBuff(float buffRate)
+        {
+            CTS_PriestBuff buffPacket = new CTS_PriestBuff();
+
+            int playerId = NearPlayerId;
+            if (playerId < 0)
+                return;
+
+            buffPacket.buffRate = buffRate;
+            buffPacket.playerId = playerId;
+
+            GameManager.Network.Send(buffPacket.Write());
+        }
+
+
         /// <summary> 게임 플레이 정보 초기화 </summary>
         public void Clear()
         {
             _money = _score = _wave = 0;
             _money = 1000;
+            _score = 0;
+
+            OnMoneyChanged = null;
+            OnScoreChanged = null;
+            ItemInfoUpdate = null;
 
             _playerControllers.Clear();
             Cooldown.Clear();

@@ -36,54 +36,12 @@ namespace Client
             _char4D = GetComponent<Character4D>();
             _char4D.AnimationManager.SetState(CharacterState.Idle);
         }
-        
-        /// <summary> 공격 시전, 단일 공격 기준 </summary>
-        public virtual void IsAttack()
-        {
-            //쿨타임 중이 아닐 때
-            if (GameManager.InGameData.Cooldown.CanAttack())
-            {
-                MonsterController mon = NearMoster();
 
-                //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.AttackRange)
-                {
-                    SeeTarget(mon.CorrectPosition);
-                    _char4D?.AnimationManager.Attack();
+        /// <summary> 공격 시전 </summary>
+        public abstract void IsAttack();
+        /// <summary> 스킬 시전 </summary>
+        public abstract void IsSkill();
 
-                    mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
-                }
-                else
-                    Debug.Log("no near mon");
-            }
-            else
-                Debug.Log("attack cool");
-
-        }
-        /// <summary> 스킬 시전, 단일 공격 기준 </summary>
-        public virtual void IsSkill()
-        {
-            //쿨타임 중이 아닐 때
-            if (GameManager.InGameData.Cooldown.CanSkill())
-            {
-                MonsterController mon = NearMoster();
-
-                //사거리 내에 몬스터가 존재할 때
-                if (mon != null && Vector2.Distance(_currPosition, mon.CorrectPosition) <= _itemStat.SkillRange)
-                {
-                    SeeTarget(mon.CorrectPosition);
-                    _char4D?.AnimationManager.Attack();
-
-                    mon.BeAttacked(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
-                    GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
-                }
-                else
-                    Debug.Log("no near mon");
-            }
-            else
-                Debug.Log("skill cool");
-        }
         /// <summary> 플레이어는 죽을 일 없음, 빈 함수 </summary>
         protected sealed override void Dead() { }
 
@@ -225,28 +183,74 @@ namespace Client
         }
         #endregion TargetSelect
 
-        #region AnimationDirection
+        #region Animation
+        /// <summary> 플레이어 애니메이션 동기화 </summary>
+        protected void SendAnimationInfo(int direction, bool isSkill)
+        {
+            CTS_PlayerAttack attackPacket = new CTS_PlayerAttack();
+            attackPacket.direction = (ushort)direction;
+            attackPacket.skillType = (ushort)(isSkill ? 1 : 0);
+
+            GameManager.Network.Send(attackPacket.Write());
+        }
+
+        /// <summary> 수신한 패킷으로 애니메이션 재생 </summary>
+        public abstract void SyncAnimationInfo(int direction, bool isSkill);
+
         /// <summary>
         /// 대상 위치에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
         /// </summary>
         /// <param name="targetPos">대상 위치</param>
-        protected void SeeTarget(Vector3 targetPos) => SeeDirection((targetPos - _currPosition).normalized);
+        protected int SeeTarget(Vector3 targetPos) => SeeDirection((targetPos - _currPosition).normalized);
 
         /// <summary>
         /// 조이스틱 방향에 따라 상하좌우 중 가장 근접한 방향으로 애니메이션 돌리기
         /// </summary>
         /// <param name="dir">조이스틱 방향(normalized)</param>
-        protected void SeeDirection(Vector2 dir)
+        protected int SeeDirection(Vector2 dir)
         {
             Vector2 resultDir;
             if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y))
+            {
                 resultDir = (dir.x < 0 ? Vector2.left : Vector2.right);
+            }
             else
                 resultDir = (dir.y < 0 ? Vector2.down : Vector2.up);
 
             _char4D?.SetDirection(resultDir);
+
+            return GetDirectionIdx(resultDir);
         }
-        #endregion AnimationDirection
+
+        /// <summary> 바라보는 방향 int값으로 변환 </summary>
+        int GetDirectionIdx(Vector2 dir)
+        {
+            if (dir == Vector2.up)
+                return 0;
+            else if (dir == Vector2.right)
+                return 1;
+            else if (dir == Vector2.down)
+                return 2;
+            else
+                return 3;
+        }
+
+        /// <summary> int 값 방향으로 변환 </summary>
+        protected Vector2 GetDirection(int directionIdx)
+        {
+            switch (directionIdx)
+            {
+                case 0:
+                    return Vector2.up;
+                case 1:
+                    return Vector2.right;
+                case 2:
+                    return Vector2.down;
+                default:
+                    return Vector2.right;
+            }
+        }
+        #endregion Animation
 
         #region StatUpdate
         /// <summary> 아이템 및 버프 상태에 따른 스텟 계산 </summary>

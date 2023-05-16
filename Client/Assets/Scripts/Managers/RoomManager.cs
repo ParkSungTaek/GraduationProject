@@ -91,6 +91,8 @@ namespace Client
             GameManager.GameStart(_roomInfo.PlayerClasses);
         }
 
+        public Dictionary<int, Define.Charcter> GetPlayerInfo() => _roomInfo.PlayerClasses;
+
         public void Clear()
         {
             _roomInfo.Clear();

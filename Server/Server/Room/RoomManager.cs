@@ -2,13 +2,14 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.06
-최근 수정 내용 : 클래스 인터페이스 설계
+최근 수정 일자 : 23.05.16
+최근 수정 내용 : Flush를 멀티 쓰레드로 실행하도록 변경
  ******/
 
 using ServerCore;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Server
 {
@@ -29,7 +30,7 @@ namespace Server
         public void Flush()
         {
             foreach (Room room in _rooms.Values)
-                room.Push(room.Flush);
+                Task.Factory.StartNew(() => room.Push(room.Flush));
         }
 
         #region jobs

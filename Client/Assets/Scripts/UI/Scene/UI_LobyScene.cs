@@ -69,7 +69,7 @@ namespace Client
         /// <summary> 사람 들어오거나 나갈 때 정보 업데이트 </summary>
         void LobyUpdate(RoomInfo roomInfo)
         {
-            GetButton((int)Buttons.StartBtn).interactable = roomInfo.IsHost;
+            GetButton((int)Buttons.StartBtn).gameObject.SetActive(roomInfo.IsHost);
 
             int i = 0;
             foreach(int p in roomInfo.PlayerClasses.Keys)

@@ -1,179 +1,209 @@
 [
   {
+    "Idx": 0,
     "Name": "전설 데미지",
     "Kind": 0,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
+    "Idx": 1,
     "Name": "에픽 데미지",
     "Kind": 0,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
+    "Idx": 2,
     "Name": "유니크 데미지",
     "Kind": 0,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
+    "Idx": 3,
     "Name": "레어 데미지",
     "Kind": 0,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
+    "Idx": 4,
     "Name": "일반 데미지",
     "Kind": 0,
     "Stat": 0.1,
     "Prob": 0.09
   },
   {
+    "Idx": 5,
     "Name": "전설 범위",
     "Kind": 1,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
+    "Idx": 6,
     "Name": "에픽 범위",
     "Kind": 1,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
+    "Idx": 7,
     "Name": "유니크 범위",
     "Kind": 1,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
+    "Idx": 8,
     "Name": "레어 범위",
     "Kind": 1,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
+    "Idx": 9,
     "Name": "일반 범위",
     "Kind": 1,
     "Stat": 0.1,
     "Prob": 0.09
   },
   {
+    "Idx": 10,
     "Name": "전설 쿨타임",
     "Kind": 2,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
+    "Idx": 11,
     "Name": "에픽 쿨타임",
     "Kind": 2,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
+    "Idx": 12,
     "Name": "유니크 쿨타임",
     "Kind": 2,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
+    "Idx": 13,
     "Name": "레어 쿨타임",
     "Kind": 2,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
+    "Idx": 14,
     "Name": "일반 쿨타임",
     "Kind": 2,
     "Stat": 0.1,
     "Prob": 0.09
   },
   {
+    "Idx": 15,
     "Name": "전설 무게",
     "Kind": 3,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
+    "Idx": 16,
     "Name": "에픽 무게",
     "Kind": 3,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
+    "Idx": 17,
     "Name": "유니크 무게",
     "Kind": 3,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
+    "Idx": 18,
     "Name": "레어 무게",
     "Kind": 3,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
+    "Idx": 19,
     "Name": "일반 무게",
     "Kind": 3,
     "Stat": 0.1,
     "Prob": 0.09
   },
   {
+    "Idx": 20,
     "Name": "전설 속도",
     "Kind": 4,
     "Stat": 10,
     "Prob": 0.0009
   },
   {
+    "Idx": 21,
     "Name": "에픽 속도",
     "Kind": 4,
     "Stat": 5,
     "Prob": 0.0027
   },
   {
+    "Idx": 22,
     "Name": "유니크 속도",
     "Kind": 4,
     "Stat": 0.4,
     "Prob": 0.0144
   },
   {
+    "Idx": 23,
     "Name": "레어 속도",
     "Kind": 4,
     "Stat": 0.2,
     "Prob": 0.072
   },
   {
+    "Idx": 24,
     "Name": "일반 속도",
     "Kind": 4,
     "Stat": 0.1,
     "Prob": 0.09
   },
   {
+    "Idx": 25,
     "Name": "전설 슬로우",
     "Kind": 5,
     "Stat": 0.9,
     "Prob": 0.0005
   },
   {
+    "Idx": 26,
     "Name": "에픽 슬로우",
     "Kind": 5,
     "Stat": 0.5,
     "Prob": 0.0015
   },
   {
+    "Idx": 27,
     "Name": "유니크 슬로우",
     "Kind": 5,
     "Stat": 0.3,
     "Prob": 0.008
   },
   {
+    "Idx": 28,
     "Name": "레어 슬로우",
     "Kind": 5,
     "Stat": 0.2,
     "Prob": 0.04
   },
   {
+    "Idx": 29,
     "Name": "일반 슬로우",
     "Kind": 5,
     "Stat": 0.1,

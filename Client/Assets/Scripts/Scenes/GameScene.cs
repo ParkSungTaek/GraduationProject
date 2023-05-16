@@ -17,6 +17,8 @@ namespace Client
             GameManager.UI.ShowSceneUI<UI_GameScene>();
             GameManager.UI.ShowPopUpUI<UI_ClassSelect>();
 
+            GameManager.InGameData.GenerateMonsterSpawnPoint();
+
             StartCoroutine(GameManager.InGameData.Cooldown.CooldownCoroutine());
         }
     }

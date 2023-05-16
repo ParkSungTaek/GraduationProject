@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.09
-최근 수정 내용 : 클래스 선택, 방 입장/퇴장, 게임 시작 구현
+최근 수정 일자 : 23.05.16
+최근 수정 내용 : 공격 애니메이션 동기화, 사제 버프, 아이템 동기화 구현
  ******/
 
 using ServerCore;
@@ -151,6 +151,40 @@ namespace Server
             packet.posY = movePacket.posY;
 
             Broadcast(packet.Write());
+        }
+
+        /// <summary> 플레이어 공격 애니메이션 동기화 </summary>
+        public void Attack(ClientSession session, CTS_PlayerAttack attackPacket)
+        {
+            STC_PlayerAttack packet =  new STC_PlayerAttack();
+            packet.playerId = session.SessionId;
+            packet.skillType= attackPacket.skillType;
+            packet.direction = attackPacket.direction;
+
+            Broadcast(packet.Write());
+        }
+
+        /// <summary> 사제 버프 </summary>
+        public void Buff(CTS_PriestBuff buffPacket)
+        {
+            STC_PriestBuff packet = new STC_PriestBuff();
+            packet.buffRate = buffPacket.buffRate;
+
+            ClientSession? session = _sessions.Find(x => x.SessionId == buffPacket.playerId);
+
+            if (session != null)
+                session.Send(packet.Write());
+        }
+
+        /// <summary> 아이템 정보 동기화 </summary>
+        public void ItemUpdate(ClientSession session, CTS_ItemUpdate itemPacket)
+        {
+            STC_ItemUpdate updatePacket = new STC_ItemUpdate();
+            updatePacket.playerId = session.SessionId;
+            updatePacket.position = itemPacket.position;
+            updatePacket.itemIdx = itemPacket.itemIdx;
+
+            Broadcast(updatePacket.Write());
         }
 
         /// <summary> Monster 생성 </summary>

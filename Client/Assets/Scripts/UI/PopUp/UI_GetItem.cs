@@ -15,9 +15,6 @@ namespace Client
 {
     public class UI_GetItem : UI_PopUp
     {
-        /// <summary> 재화 수치 변경 시 콜백 </summary>
-        public static Action OnMoneyChangedAction { get; private set; }
-        
         enum Buttons
         { 
             CloseBtn,
@@ -48,18 +45,18 @@ namespace Client
             BindEvent(GetButton((int)Buttons.CloseBtn).gameObject, Btn_Close);
             BindEvent(GetButton((int)Buttons.BuyBtn).gameObject, Btn_Buy);
 
-            OnMoneyChangedAction = Buy_ActiveControl;
             Buy_ActiveControl();
 
             //아이템 텍스트 초기화
             for (int i = 0 ; i < GameManager.InGameData.MyInventory.Count; i++)
                 GetText(i).text = GameManager.InGameData.MyInventory[i].Name;
+
+            GameManager.InGameData.OnMoneyChanged += Buy_ActiveControl;
         }
 
         /// <summary> 비활성화 상태에서 다시 열 시 호출 </summary>
         public override void ReOpen()
         {
-            OnMoneyChangedAction = Buy_ActiveControl;
             Buy_ActiveControl();
         }
 
@@ -67,7 +64,6 @@ namespace Client
         /// <summary> 닫기 버튼 - 텍스트 업데이트 비활성화 </summary>
         void Btn_Close(PointerEventData evt)
         {
-            OnMoneyChangedAction = null;
             GameManager.UI.ClosePopUpUI(this);
         }
         

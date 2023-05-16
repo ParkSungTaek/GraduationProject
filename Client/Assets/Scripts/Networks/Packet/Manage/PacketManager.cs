@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.09
-최근 수정 내용 : 로비 관련 Handler 추가
+최근 수정 일자 : 23.05.16
+최근 수정 내용 : 플레이어 애니메이션 동기화, 프리스트 버프, 아이템 동기화 추가
  ******/
 
 using ServerCore;
@@ -58,13 +58,19 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_SelectClass, MakePacket<STC_SelectClass>);
             _makeFunc.Add((ushort)PacketID_Ingame.STC_StartGame, MakePacket<STC_StartGame>);
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_PlayerMove, MakePacket<STC_PlayerMove>);
-            _makeFunc.Add((ushort)PacketID_Ingame.STC_MosterCreate, MakePacket<STC_MosterCreate>);
-
+            _makeFunc.Add((ushort)PacketID_Ingame.STC_PlayerAttack, MakePacket<STC_PlayerAttack>);
+			_makeFunc.Add((ushort)PacketID_Ingame.STC_PriestBuff, MakePacket<STC_PriestBuff>);
+			_makeFunc.Add((ushort)PacketID_Ingame.STC_ItemUpdate, MakePacket<STC_ItemUpdate>);
+			_makeFunc.Add((ushort)PacketID_Ingame.STC_MosterCreate, MakePacket<STC_MosterCreate>);
+			
 
             _handler.Add((ushort)PacketID_Ingame.STC_SelectClass, PacketHandler.STC_SelectClassHandler);
 			_handler.Add((ushort)PacketID_Ingame.STC_StartGame, PacketHandler.STC_StartGameHandler);
             _handler.Add((ushort)PacketID_Ingame.STC_PlayerMove, PacketHandler.STC_PlayerMoveHandler);
-            _handler.Add((ushort)PacketID_Ingame.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
+			_handler.Add((ushort)PacketID_Ingame.STC_PlayerAttack, PacketHandler.STC_PlayerAttackHandler);
+			_handler.Add((ushort)PacketID_Ingame.STC_PriestBuff, PacketHandler.STC_PriestBuffHandler);
+			_handler.Add((ushort)PacketID_Ingame.STC_ItemUpdate, PacketHandler.STC_ItemUpdateHandler);
+			_handler.Add((ushort)PacketID_Ingame.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
 
             #endregion Ingame
         }
@@ -104,6 +110,10 @@ namespace Client
         {
             T pkt = new T();
             pkt.Read(segment);
+
+			if(typeof(T) == typeof(STC_ItemUpdate))
+				Console.WriteLine(1);
+
             return pkt;
         }
     }

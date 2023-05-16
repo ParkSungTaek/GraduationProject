@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.29
-최근 수정 내용 : LeaveRoom Register 추가
+최근 수정 일자 : 23.05.16
+최근 수정 내용 : CTS_PlayerAttack, CTS_PriestBuff 추가
  ******/
 
 using ServerCore;
@@ -41,9 +41,15 @@ namespace Server
             #region Ingame
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_SelectClass, MakePacket<CTS_SelectClass>);
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerMove, MakePacket<CTS_PlayerMove>);
+            _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerAttack, MakePacket<CTS_PlayerAttack>);
+            _makeFunc.Add((ushort)PacketID_Ingame.CTS_PriestBuff, MakePacket<CTS_PriestBuff>);
+            _makeFunc.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, MakePacket<CTS_ItemUpdate>);
 
             _handler.Add((ushort)PacketID_Ingame.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PlayerMove, PacketHandler.CTS_PlayerMoveHandler);
+            _handler.Add((ushort)PacketID_Ingame.CTS_PlayerAttack, PacketHandler.CTS_PlayerAttackHandler);
+            _handler.Add((ushort)PacketID_Ingame.CTS_PriestBuff, PacketHandler.CTS_PriestBuffHandler);
+            _handler.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, PacketHandler.CTS_ItemUpdateHandler);
             #endregion Ingame
         }
 

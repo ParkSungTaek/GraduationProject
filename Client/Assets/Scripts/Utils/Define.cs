@@ -39,6 +39,11 @@ namespace Client
         }
         public enum SFX
         {
+            WarriorAttack,
+            RiflemanAttack,
+            WizzardAttack,
+            PriestAttack,
+            PriestSkill,
             MaxCount
         }
         public enum State

@@ -16,7 +16,7 @@ namespace Client
         public TMP_InputField tMP;
         private void Start()
         {
-            GameManager.Sound.Play(Define.SFX.MaxCount);
+
         }
         public void TmpTmp()
         {

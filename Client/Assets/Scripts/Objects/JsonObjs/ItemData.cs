@@ -1,4 +1,4 @@
-﻿/******
+/******
 공동 작성
 작성 일자 : 23.04.05
 
@@ -42,6 +42,8 @@ namespace Client
     [Serializable]
     public class ItemData
     {
+        /// <summary> 아이템 인덱스 </summary>
+        public int Idx;
         /// <summary> 아이템 이름 </summary>
         public string Name;
         /// <summary> 아이템 종류 </summary>

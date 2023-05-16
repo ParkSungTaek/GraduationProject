@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.29
-최근 수정 내용 : LeaveRoom 패킷 처리 추가
+최근 수정 일자 : 23.05.16
+최근 수정 내용 : 플레이어 공격 애니메이션 동기화 패킷 추가
  ******/
 
 using System;
@@ -99,6 +99,54 @@ namespace Server
 
             Room room = clientSession.Room;
             room.Push(() => room.Move(clientSession, movePacket));
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 클 -> 서 플레이어 공격 애니메이션 패킷 처리
+        /// </summary>
+        public static void CTS_PlayerAttackHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_PlayerAttack attackPacket = packet as CTS_PlayerAttack;
+
+            if (clientSession.Room == null)
+                return;
+
+            Room room = clientSession.Room;
+            room.Push(() => room.Attack(clientSession, attackPacket));
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 사제 버프 처리
+        /// </summary>
+        public static void CTS_PriestBuffHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_PriestBuff buffPacket = packet as CTS_PriestBuff;
+
+            if (clientSession.Room == null)
+                return;
+
+            Room room = clientSession.Room;
+            room.Push(() => room.Buff(buffPacket));
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 아이템 동기화 처리
+        /// </summary>
+        public static void CTS_ItemUpdateHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_ItemUpdate itemPacket = packet as CTS_ItemUpdate;
+
+            if (clientSession.Room == null)
+                return;
+
+            Room room = clientSession.Room;
+            room.Push(() => room.ItemUpdate(clientSession, itemPacket));
         }
         #endregion Ingame
     }
