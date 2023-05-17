@@ -225,13 +225,27 @@ namespace Client
             STC_MosterCreate pkt = packet as STC_MosterCreate;
             ServerSession serverSession = session as ServerSession;
 
-            Debug.Log($"pkt.ID: {pkt.ID}, pkt.createIDX: {pkt.createIDX}, pkt.typeNum: {pkt.typeNum}");
-
             
             GameManager.Network.Push(() =>
             {
                 GameManager.InGameData.MonsterSpawn.CreateMonster(pkt.createIDX, pkt.typeNum, pkt.ID);
 				
+            });
+        }
+        /// <summary>
+        /// 작성자 : 박성택 <br/>
+        /// 몬스터 HP 동기화
+        /// </summary>
+        public static void STC_MonsterHPUpdate(PacketSession session, IPacket packet)
+        {
+            STC_MonsterHPUpdate pkt = packet as STC_MonsterHPUpdate;
+            ServerSession serverSession = session as ServerSession;
+
+
+            GameManager.Network.Push(() =>
+            {
+				GameManager.InGameData.MonsterSpawn.Monsters[pkt.ID].BeAttacked((int)pkt.updateHP);
+
             });
         }
 

@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.HeroEditor4D.Common.Scripts.CharacterScripts;
 using Assets.HeroEditor4D.Common.Scripts.Enums;
+using System.Linq;
 
 namespace Client
 {
@@ -128,8 +129,8 @@ namespace Client
         protected MonsterController NearMoster()
         {
             //현재 맵에 존재하는 맵들 받아옴
-            List<MonsterController> monsters = GameManager.InGameData.MonsterSpawn.Monsters;
-
+            List<MonsterController> monsters = GameManager.InGameData.MonsterSpawn.Monsters.OrderBy(pair => pair.Key).Select(pair => pair.Value).ToList(); ;
+            Debug.Log(GameManager.InGameData.MonsterSpawn.Monsters.Count);
             if (monsters.Count <= 0)
                 return null;
 

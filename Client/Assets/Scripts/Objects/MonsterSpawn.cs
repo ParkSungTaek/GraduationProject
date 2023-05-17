@@ -49,9 +49,9 @@ namespace Client
         #endregion
 
         /// <summary> 소환된 몬스터 관리 </summary>
-        List<MonsterController> _monsters = new List<MonsterController>();
+        Dictionary<ushort,MonsterController> _monsters = new Dictionary<ushort, MonsterController>();
         /// <summary> 소환된 몬스터 관리 </summary>
-        public List<MonsterController> Monsters { get { return _monsters; } }
+        public Dictionary<ushort, MonsterController> Monsters { get { return _monsters; } }
         //InstantiateMonster을 내부적으로 더 쉽게 재정의 효과 (Enum을 활용하여 Monster의 이름을 외울 필요를 제거, 다음Wave를 ++식으로 편하게)
         GameObject InstantiateMonster(Define.MonsterName monster,Transform SpawnPoint)
         {
@@ -93,53 +93,17 @@ namespace Client
 
         public void CreateMonster(ushort createIDX, ushort typeNum, ushort ID)
         {
-            Debug.Log($"typeNum : {typeNum}");
             
-            
-            // 이게 빠지면 왜 버그가 나지??? 이해하기 어려운 버그
-            if (SpawnPoint[createIDX].transform == null) { Debug.Log(">???");  }
-
             GameObject _mon = InstantiateMonster((Define.MonsterName)(typeNum), SpawnPoint[createIDX].transform);
-            if (_mon == null) { Debug.Log("GameObject: NU;;");  }
             MonsterController mon = _mon.GetComponent<MonsterController>();
-            if (mon == null) { Debug.Log("MonsterController: NU;;"); }
+            mon.MonsterID = ID;
 
-
-            _monsters.Add(mon);
+            Monsters.Add(mon.MonsterID,mon);
             _count += 1;
 
         }
 
-        IEnumerator StartCreateMonster()
-        {
-            while (GameManager.InGameData.CurrState == Define.State.Play)
-            {   
-                //몬스터 생성
-                if (_count < _wavenum)
-                {
-                    MonsterController mon = InstantiateMonster((Define.MonsterName)(GameManager.InGameData.Wave), SpawnPoint[UnityEngine.Random.Range(0, SpawnPointNum)].transform).GetComponent<MonsterController>();
-                    _monsters.Add(mon);
-                    yield return new WaitForSeconds(_monsterToMonster *0.1f);
-                    
-
-                }
-                //다음 Wave
-                else
-                {
-                    _count = 0;
-                    GameManager.InGameData.Wave += 1;
-
-                    if (_nowMonster == Define.MonsterName.MaxCount)
-                    {
-                        break;
-                    }
-                    yield return new WaitForSeconds(_waveToWave);
-
-                }
-            }
-        }
-
-
+        
 
     }
 }

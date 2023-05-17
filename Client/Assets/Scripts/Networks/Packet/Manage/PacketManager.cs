@@ -62,7 +62,9 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_PriestBuff, MakePacket<STC_PriestBuff>);
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_ItemUpdate, MakePacket<STC_ItemUpdate>);
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_MosterCreate, MakePacket<STC_MosterCreate>);
-			
+            _makeFunc.Add((ushort)PacketID_Ingame.STC_MonsterHPUpdate, MakePacket<STC_MonsterHPUpdate>);
+
+
 
             _handler.Add((ushort)PacketID_Ingame.STC_SelectClass, PacketHandler.STC_SelectClassHandler);
 			_handler.Add((ushort)PacketID_Ingame.STC_StartGame, PacketHandler.STC_StartGameHandler);
@@ -71,6 +73,7 @@ namespace Client
 			_handler.Add((ushort)PacketID_Ingame.STC_PriestBuff, PacketHandler.STC_PriestBuffHandler);
 			_handler.Add((ushort)PacketID_Ingame.STC_ItemUpdate, PacketHandler.STC_ItemUpdateHandler);
 			_handler.Add((ushort)PacketID_Ingame.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
+            _handler.Add((ushort)PacketID_Ingame.STC_MonsterHPUpdate, PacketHandler.STC_MonsterHPUpdate);
 
             #endregion Ingame
         }

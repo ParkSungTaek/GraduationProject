@@ -2,8 +2,8 @@
 작성자 : 박성택
 작성 일자 : 23.04.29
 
-최근 수정 일자 : 23.04.29
-최근 수정 내용 : 클래스 생성
+최근 수정 일자 : 23.05.18
+최근 수정 내용 : AttackCnt도입
  ******/
 
 namespace Server
@@ -11,14 +11,17 @@ namespace Server
     public struct MonsterInfo
     {
         
-        public int MonsterId;
+        public ushort MonsterId;
 
         public int CurrHp;
 
-        public MonsterInfo(int monsterId, int currHp)
+        public ushort AttackCnt;
+
+        public MonsterInfo(ushort monsterId, int currHp)
         {
             MonsterId = monsterId;
             CurrHp = currHp;
+            AttackCnt = 0;
         }
 
 

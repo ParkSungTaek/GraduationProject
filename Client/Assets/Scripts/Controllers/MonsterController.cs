@@ -16,18 +16,22 @@ namespace Client
 {
     public class MonsterController : Entity
     {
+        #region 몬스터 특성 정보
         [SerializeField]
         Define.MonsterName _monsterName;
 
         GameObject _monsterHpBar;
         Coroutine _attack;
-        
         Define.MonsterState _monsterState;
-
-
         Animator _animator;
         Vector3 _offsetCorrection;
         Vector3 _monsterHpBarOffset;
+        #endregion 몬스터 특성 정보
+
+        #region 몬스터 서버 동기화용 정보
+        public ushort MonsterID { get; set; }
+        public ushort AttackCnt { get; set; }
+        #endregion 몬스터 서버 동기화용 정보
 
         public Vector3 CorrectPosition { get => transform.position + _offsetCorrection; }
 
@@ -84,7 +88,7 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
             {
                 StopCoroutine(_attack);
             }
-            GameManager.InGameData.MonsterSpawn.Monsters.Remove(this);
+            GameManager.InGameData.MonsterSpawn.Monsters.Remove(this.MonsterID);
             if(GameManager.InGameData.MonsterSpawn.Monsters.Count == 0 && GameManager.InGameData.MonsterSpawn.WaveEnd())
             {
                 GameManager.GameOver(Define.State.Win);
