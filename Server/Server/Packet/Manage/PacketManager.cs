@@ -45,11 +45,19 @@ namespace Server
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_PriestBuff, MakePacket<CTS_PriestBuff>);
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, MakePacket<CTS_ItemUpdate>);
 
+
+
+
             _handler.Add((ushort)PacketID_Ingame.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PlayerMove, PacketHandler.CTS_PlayerMoveHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PlayerAttack, PacketHandler.CTS_PlayerAttackHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PriestBuff, PacketHandler.CTS_PriestBuffHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, PacketHandler.CTS_ItemUpdateHandler);
+
+
+
+
+
             #endregion Ingame
         }
 

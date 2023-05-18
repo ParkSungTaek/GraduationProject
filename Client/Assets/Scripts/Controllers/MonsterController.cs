@@ -131,7 +131,14 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
             }
         }
 
+        public override void BeAttacked(int DMG)
+        {
+            STC_MonsterHPUpdate hpUpdatePacket = new STC_MonsterHPUpdate();
+            hpUpdatePacket.ID = MonsterID;
+            hpUpdatePacket.updateHP = (short)DMG;
 
+            GameManager.Network.Send(hpUpdatePacket.Write());
+        }
 
 
         IEnumerator Attack()

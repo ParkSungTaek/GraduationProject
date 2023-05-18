@@ -244,7 +244,7 @@ namespace Client
 
             GameManager.Network.Push(() =>
             {
-				GameManager.InGameData.MonsterSpawn.Monsters[pkt.ID].BeAttacked((int)pkt.updateHP);
+				GameManager.InGameData.MonsterSpawn.Monsters[pkt.ID].HPUpdate((int)pkt.updateHP);
 
             });
         }

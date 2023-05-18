@@ -43,6 +43,9 @@ namespace Server
         CTS_PriestBuff,
         CTS_ItemUpdate,
         CTS_TowerDamage,
+        CTS_MonsterDamage,
+        CTS_MonsterAttack,
+
 
         STC_SelectClass,
         STC_StartGame,

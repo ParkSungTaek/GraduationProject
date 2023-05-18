@@ -56,6 +56,24 @@ namespace Client
             }
         }
 
+
+        public virtual void HPUpdate(int DMG)
+        {
+            _nowhp -= DMG;
+            if (_nowhp <= 0)
+            {
+                Dead();
+            }
+            if (_hpBarSlider != null)
+            {
+                _hpBarSlider.value = (float)Nowhp / (float)MaxHP;
+            }
+            else
+            {
+                Debug.Log($"{name} Don't have HpBar!");
+            }
+        }
+
         public virtual void Move(Vector3 _destPos)
         {            
             transform.position = Vector3.MoveTowards(transform.position, _destPos, _moveSpeed * Time.deltaTime);

@@ -295,4 +295,99 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
+
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 몬스터 HP 업데이트 패킷 (Monster ID 기반 식별)
+    /// </summary>
+    public class CTS_MonsterDamage : IPacket
+    {
+        /// <summary> 새로운 아이템 </summary>
+        public ushort ID;
+        /// <summary> 해당 아이템의 위치 </summary>
+        public ushort updateHP;
+
+
+        public ushort Protocol => (ushort)PacketID_Ingame.CTS_MonsterDamage;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            updateHP = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(updateHP), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 몬스터 행동 애니메이션 동기화를 위한 패킷
+    /// </summary>
+    public class CTS_MonsterAttack : IPacket
+    {
+        //몬스터 공격 ID로 사용
+        public ushort AttackCnt;
+        public ushort Protocol => (ushort)PacketID_Ingame.CTS_MonsterAttack;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            AttackCnt = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(AttackCnt), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+
 }
