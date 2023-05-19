@@ -45,7 +45,7 @@ namespace Server
         CTS_TowerDamage,
         CTS_MonsterDamage,
         CTS_MonsterAttack,
-
+        CTS_MonsterHPUpdate,
 
         STC_SelectClass,
         STC_StartGame,

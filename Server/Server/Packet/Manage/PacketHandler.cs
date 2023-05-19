@@ -148,7 +148,18 @@ namespace Server
             Room room = clientSession.Room;
             room.Push(() => room.ItemUpdate(clientSession, itemPacket));
         }
+        
+        public static void CTS_MonsterHPUpdateHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_MonsterHPUpdate monsterHPPacket = packet as CTS_MonsterHPUpdate;
 
+            if (clientSession.Room == null)
+                return;
+
+            Room room = clientSession.Room;
+            room.Push(() => room.MonsterHPUpdate(monsterHPPacket));
+        }
 
 
 

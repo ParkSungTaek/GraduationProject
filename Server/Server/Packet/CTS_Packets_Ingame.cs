@@ -389,5 +389,52 @@ namespace Server
         }
     }
 
+    public class CTS_MonsterHPUpdate : IPacket
+    {
+        /// <summary> 몬스터의 ID</summary>
+        public ushort ID;
 
+        /// <summary> 몬스터의 HP 0 이하의 음수라면 죽음 -가능 할수도</summary>
+        public short updateHP;
+
+        public ushort Protocol => (ushort)PacketID_Ingame.CTS_MonsterHPUpdate;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            updateHP = BitConverter.ToInt16(segment.Array, segment.Offset + count);
+            count += sizeof(short);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(updateHP), 0, segment.Array, segment.Offset + count, sizeof(short));
+            count += sizeof(short);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 }

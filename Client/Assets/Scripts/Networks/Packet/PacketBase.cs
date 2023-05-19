@@ -37,12 +37,36 @@ namespace Client
     /// <summary> 인게임 상 패킷 종류 enum </summary>
     public enum PacketID_Ingame
     {
+        /*
         CTS_SelectClass = PacketID.MaxCount,
         CTS_PlayerMove,
         CTS_PlayerAttack,
         CTS_PriestBuff,
         CTS_ItemUpdate,
         CTS_TowerDamage,
+        CTS_MonsterAttack,
+        CTS_MonsterHPUpdate,
+
+        STC_SelectClass,
+        STC_StartGame,
+        STC_PlayerMove,
+        STC_PlayerAttack,
+        STC_PriestBuff,
+        STC_ItemUpdate,
+        STC_MosterCreate,
+        STC_MonsterHPUpdate,
+        STC_TowerUpdate,
+        STC_GameOver,
+        */
+        CTS_SelectClass = PacketID.MaxCount,
+        CTS_PlayerMove,
+        CTS_PlayerAttack,
+        CTS_PriestBuff,
+        CTS_ItemUpdate,
+        CTS_TowerDamage,
+        CTS_MonsterDamage,
+        CTS_MonsterAttack,
+        CTS_MonsterHPUpdate,
 
         STC_SelectClass,
         STC_StartGame,

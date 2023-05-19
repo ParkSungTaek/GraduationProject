@@ -133,13 +133,30 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
 
         public override void BeAttacked(int DMG)
         {
-            STC_MonsterHPUpdate hpUpdatePacket = new STC_MonsterHPUpdate();
+            CTS_MonsterHPUpdate hpUpdatePacket = new CTS_MonsterHPUpdate();
             hpUpdatePacket.ID = MonsterID;
             hpUpdatePacket.updateHP = (short)DMG;
 
             GameManager.Network.Send(hpUpdatePacket.Write());
         }
 
+        public override void HPUpdate(int DMG)
+        {
+            Nowhp -= DMG;
+            Debug.Log($"ID: {MonsterID} _ {Nowhp}");
+            if (Nowhp <= 0)
+            {
+                Dead();
+            }
+            if (HpBarSlider != null)
+            {
+                HpBarSlider.value = (float)Nowhp / (float)MaxHP;
+            }
+            else
+            {
+                Debug.Log($"{name} Don't have HpBar!");
+            }
+        }
 
         IEnumerator Attack()
         {

@@ -186,7 +186,16 @@ namespace Server
 
             Broadcast(updatePacket.Write());
         }
+        /// <summary> 몬스터 HP 동기화 </summary>
+        public void MonsterHPUpdate(CTS_MonsterHPUpdate monsterHPPacket)
+        {
+            STC_MonsterHPUpdate updatePacket = new STC_MonsterHPUpdate();
+            
+            updatePacket.ID = monsterHPPacket.ID;
+            updatePacket.updateHP = monsterHPPacket.updateHP;
 
+            Broadcast(updatePacket.Write());
+        }
         /// <summary> Monster 생성 </summary>
         public void CreateMonster()
         {

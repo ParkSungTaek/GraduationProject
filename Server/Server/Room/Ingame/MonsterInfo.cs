@@ -17,6 +17,7 @@ namespace Server
 
         public ushort AttackCnt;
 
+
         public MonsterInfo(ushort monsterId, int currHp)
         {
             MonsterId = monsterId;

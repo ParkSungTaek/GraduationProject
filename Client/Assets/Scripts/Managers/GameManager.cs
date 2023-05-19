@@ -54,7 +54,7 @@ namespace Client
         }
         /// <summary> 게임 시작, 상태 변경, 인게임 정보 초기화 </summary>
         public static void GameStart(Dictionary<int, Define.Charcter> players)
-        {
+        {   
             UI.CloseAllPopUpUI();
 
             Time.timeScale = 1;
@@ -85,7 +85,10 @@ namespace Client
         {
             _instance._networkManager.Flush();
         }
-
-        
+        ///
+        public static void TmpDebug()
+        {
+            Debug.Log("????????????");
+        }
     }
 }

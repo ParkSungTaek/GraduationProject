@@ -8,6 +8,7 @@
 
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 
 namespace Client
 {
@@ -88,6 +89,7 @@ namespace Client
         /// </summary>
         public void GameStart()
         {
+            GameManager.TmpDebug();
             GameManager.GameStart(_roomInfo.PlayerClasses);
         }
 
