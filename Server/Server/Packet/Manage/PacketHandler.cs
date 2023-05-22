@@ -15,7 +15,7 @@ namespace Server
     {
         /// <summary>
         /// 작성자 : 이우열<br/>
-        /// 방 입장 패킷 처리
+        /// 방 생성 패킷 처리
         /// </summary>
         public static void CTS_CreateRoomHandler(PacketSession session, IPacket packet)
         {

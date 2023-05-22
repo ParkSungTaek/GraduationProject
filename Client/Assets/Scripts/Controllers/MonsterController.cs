@@ -56,7 +56,7 @@ namespace Client
             AttackDMG = mystat.AttackDMG;
             MoveSpeed = mystat.MoveSpeed;
             AttackSpeed = mystat.AttackSpeed;
-            _offsetCorrection = new Vector3 (0, GetComponent<BoxCollider2D>().offset.y / transform.localScale.y, 0);
+            _offsetCorrection = new Vector3 (0, GetComponent<BoxCollider2D>().offset.y * transform.localScale.y, 0);
             _monsterHpBarOffset = new Vector3 (0, mystat._monsterHpBarOffset, 0);
 
 
@@ -105,7 +105,7 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
         {
             if (_monsterState != Define.MonsterState.Death)
             {
-                Move(GameManager.InGameData.Tower.transform.position + _offsetCorrection * transform.localScale.y);
+                Move(GameManager.InGameData.Tower.transform.position - _offsetCorrection);
                 _monsterHpBar.transform.position = Camera.main.WorldToScreenPoint(transform.position + _monsterHpBarOffset);
             }
         }
