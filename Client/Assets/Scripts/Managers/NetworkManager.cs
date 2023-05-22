@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using ServerCore;
+using UnityEngine;
 
 namespace Client
 {
@@ -31,9 +32,20 @@ namespace Client
         /// </summary>
         IPEndPoint GetServerEndPoint()
         {
-            string host = Dns.GetHostName();
-            IPHostEntry ipHost = Dns.GetHostEntry(host);
+            IPHostEntry ipHost;
+
+            if (Application.platform == RuntimePlatform.Android)
+            {
+                ipHost = Dns.GetHostEntry("www.teamphotongp.o-r.kr");
+            }
+            else
+            {
+                string host = Dns.GetHostName();
+                ipHost = Dns.GetHostEntry(host);
+            }
+
             IPAddress ipAddr = ipHost.AddressList[0];
+
             return new IPEndPoint(ipAddr, PORT);
         }
 

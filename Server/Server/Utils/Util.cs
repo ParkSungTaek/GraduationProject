@@ -32,7 +32,7 @@ namespace Server
             string currentPath = Assembly.GetExecutingAssembly().Location;
 
             // 상대 경로를 사용하여 json 데이터 위치를 설정합니다.
-            string jsonPath = Path.Combine(Path.GetDirectoryName(currentPath), @$"..\..\..\Json\Datas\{relativePath}.json");
+            string jsonPath = Path.Combine(Path.GetDirectoryName(currentPath), @$"../../../Json/Datas/{relativePath}.json");
 
             // json 파일의 내용을 읽어옵니다.
             string jsonData = File.ReadAllText(jsonPath);
