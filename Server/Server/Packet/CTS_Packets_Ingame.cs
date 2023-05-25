@@ -389,6 +389,10 @@ namespace Server
         }
     }
 
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 몬스터 체력 동기화를 위한 패킷
+    /// </summary>
     public class CTS_MonsterHPUpdate : IPacket
     {
         /// <summary> 몬스터의 ID</summary>
