@@ -2,8 +2,8 @@
 공동 작성
 작성일 : 23.03.31
 
-최근 수정 일자 : 23.04.13
-최근 수정 내용 : 아이템 종류 enum 추가
+최근 수정 일자 : 23.05.27
+최근 수정 내용 : 아이템 등급 enum 추가
  ******/
 
 using System.Collections;
@@ -65,6 +65,16 @@ namespace Client
             Speed,
             Slow,
             MaxCount
+        }
+
+        /// <summary> 아이템 등급 </summary>
+        public enum ItemRank
+        {
+            Normal,
+            Rare,
+            Unique,
+            Epic,
+            Legendary
         }
 
         public enum Tag

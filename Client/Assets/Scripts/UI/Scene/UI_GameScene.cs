@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.04.01
 
-최근 수정 일자 : 23.05.16
-최근 수정 사항 : 아이템 정보 표기 UI 시작
+최근 수정 일자 : 23.05.27
+최근 수정 사항 : 아이템 뽑기 버튼 숨기기 추가
 ******/
 
 using UnityEngine;
@@ -99,13 +99,13 @@ namespace Client
         }
         
         /// <summary> 해당 플레이어의 아이템 정보 업데이트 </summary>
-        void ItemInfoUpdate(int playerId, int idx, int itemIdx)
+        void ItemInfoUpdate(int playerId, int idx, ItemData item)
         {
             UI_ItemPanel panel;
 
             if(_panelMap.TryGetValue(playerId, out panel))
             {
-                panel.TextUpdate(idx, itemIdx);
+                panel.ImageUpdate(idx, item);
             }
         }
         #endregion ItemInfo
@@ -209,7 +209,14 @@ namespace Client
         /// </summary>
         void Btn_GetItem(PointerEventData evt)
         {
-            GameManager.UI.ShowPopUpUI<UI_GetItem>();
+            GetButton((int)Buttons.ItemBtn).gameObject.SetActive(false);
+            GameManager.UI.ShowPopUpUI<UI_GetItem>().OnClose = OnCloseGetItem;
+        }
+
+        /// <summary> 아이템 뽑기 버튼 다시 보이기 </summary>
+        void OnCloseGetItem()
+        {
+            GetButton((int)Buttons.ItemBtn).gameObject.SetActive(true);
         }
         #endregion Buttons
 

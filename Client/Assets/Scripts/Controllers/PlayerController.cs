@@ -297,6 +297,48 @@ namespace Client
 
             Debug.Log($"stat update : {_itemStat}");
         }
+        
+        /// <summary> 패킷으로 받은 아이템 정보 스텟 계산 </summary>
+        public void StatUpdate(List<ItemData> items)
+        {
+            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0, 0 };
+
+            foreach (ItemData item in items)
+            {
+                switch (item.Kind)
+                {
+                    case Define.ItemKind.Cooldown:
+                        pivots[(int)item.Kind] = Mathf.Max(0, pivots[(int)item.Kind] - item.Stat);
+                        break;
+                    case Define.ItemKind.Slow:
+                        pivots[(int)item.Kind] = Mathf.Max(pivots[(int)item.Kind], item.Stat);
+                        break;
+                    default:
+                        pivots[(int)item.Kind] += item.Stat;
+                        break;
+                }
+            }
+
+            //버프 효과 추가
+            pivots[(int)Define.ItemKind.Damage] *= GameManager.InGameData.Buff.GetBuffRate();
+
+            PlayerStat basicStat = GameManager.InGameData.PlayerStats[MyClass];
+
+            _itemStat.AttackRatio = basicStat.AttackRatio * pivots[(int)Define.ItemKind.Damage];
+            _itemStat.SkillRatio = basicStat.SkillRatio * pivots[(int)Define.ItemKind.Damage];
+
+            _itemStat.AttackRange = basicStat.AttackRange * pivots[(int)Define.ItemKind.Range];
+            _itemStat.SkillRange = basicStat.SkillRange * pivots[(int)Define.ItemKind.Range];
+
+            _itemStat.AttackCool = basicStat.AttackCool * pivots[(int)Define.ItemKind.Cooldown];
+            _itemStat.SkillCool = basicStat.SkillCool * pivots[(int)Define.ItemKind.Cooldown];
+
+            gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
+            _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
+            _itemStat.Slow = basicStat.Slow + pivots[(int)Define.ItemKind.Slow];
+
+            Debug.Log($"stat update : {_itemStat}");
+        }
         #endregion StatUpdate
     }
 }

@@ -6,38 +6,48 @@
 최근 수정 내용 : 아이템 정보 표기를 위한 UI 클래스 생성
  ******/
 
-using Assets.HeroEditor4D.InventorySystem.Scripts.Elements;
-using System.Collections.Generic;
-using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace Client
 {
     public class UI_ItemPanel : UI_Base
     {
-        enum Texts
+        enum Images
         {
-            Item1,
-            Item2,
-            Item3,
-            Item4,
-            Item5,
-            Item6,
-            Item7,
-            Item8
+            ItemGrid0,
+            ItemGrid1,
+            ItemGrid2,
+            ItemGrid3,
+            ItemGrid4,
+            ItemGrid5,
+            ItemGrid6,
+            ItemGrid7,
+
+            ItemIcon0,
+            ItemIcon1,
+            ItemIcon2,
+            ItemIcon3,
+            ItemIcon4,
+            ItemIcon5,
+            ItemIcon6,
+            ItemIcon7,
         }
 
         public override void Init()
         {
-            Bind<TMP_Text>(typeof(Texts));
+            Bind<Image>(typeof(Images));
 
             for (int i = 0; i < 8; i++)
-                GetText(i).text = string.Empty;
+                GetImage(i).gameObject.SetActive(false);
         }
 
         /// <summary> 아이템 정보 텍스트 업데이트 </summary>
-        public void TextUpdate(int idx, int itemIdx)
+        public void ImageUpdate(int idx, ItemData item)
         {
-            GetText(idx).text = itemIdx.ToString();
+            GetImage((int)Images.ItemGrid0 + idx).sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/Grid_{(int)item.Rank}");
+            GetImage((int)Images.ItemIcon0 + idx).sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/{item.Kind}");
+            GetImage(idx).gameObject.SetActive(true);
         }
     }
 }

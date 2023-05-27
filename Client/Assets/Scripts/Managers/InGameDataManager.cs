@@ -2,8 +2,8 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.05.16
-최근 수정 사항 : 플레이어 애니메이션 동기화 구현
+최근 수정 일자 : 23.05.27
+최근 수정 사항 : 아이템 UI update 시 ItemData 자체를 전달하도록 변경
 ******/
 
 using System;
@@ -77,44 +77,36 @@ namespace Client
         /// <summary> 아이템 구매 가능 여부 반환 </summary>
         public bool CanBuyItem { get => _money >= ItemCost; }
 
-        /// <summary> 현재 보유 중인 아이템 정보 </summary>
-        List<ItemData> _myInventory = new List<ItemData>();
-        /// <summary> 현재 보유 중인 아이템 정보 </summary>
-        public List<ItemData> MyInventory { get => _myInventory; }
-        /// <summary> 내 아이템 정보 인덱스 배열로 변환 </summary>
-        List<int> InventoryToInt()
-        {
-            List<int> list = new List<int>();
-            foreach (ItemData data in _myInventory)
-                list.Add(data.Idx);
 
-            return list;
-        }
+        /// <summary> 플레이어들의 아이템 정보 </summary>
+        Dictionary<int, List<ItemData>> _inventorys = new Dictionary<int, List<ItemData>>();
+        /// <summary> 내 플레이어 아이템 정보 </summary>
+        public List<ItemData> MyInventory { get => _inventorys[GameManager.Network.PlayerId]; }
 
-        public Action<int, int, int> ItemInfoUpdate { get; set; } = null;
+        public Action<int, int, ItemData> ItemInfoUpdate { get; set; } = null;
 
         /// <summary> 작성자 : 이우열 <br/>
         /// 새로운 아이템 구매
         /// </summary>
-        public void AddRandomItem(Action<int> textUpdate) 
+        public void AddRandomItem(Action<int> uiImageUpdate) 
         {
             Money -= ItemCost;
 
             //빈 자리 있음 -> 새로운 아이템 만들어 채우기
-            if (_myInventory.Count < MAXITEMCOUNT)
+            if (MyInventory.Count < MAXITEMCOUNT)
             {
-                _myInventory.Add(_itemData.GetRandomItem());
+                MyInventory.Add(_itemData.GetRandomItem());
                 GameManager.InGameData.MyPlayer.StatUpdate();
-                textUpdate.Invoke(_myInventory.Count - 1);
+                uiImageUpdate.Invoke(MyInventory.Count - 1);
 
-                SendItemInfo(_myInventory.Count - 1, _myInventory[_myInventory.Count - 1].Idx);
-                ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, _myInventory.Count - 1, _myInventory[_myInventory.Count - 1].Idx);
+                SendItemInfo(MyInventory.Count - 1, MyInventory[MyInventory.Count - 1].Idx);
+                ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, MyInventory.Count - 1, MyInventory[MyInventory.Count - 1]);
             }
             //빈 자리 없음 -> 버리기 UI 띄우기
             else
             {
                 UI_DropItem ui_DropItem = GameManager.UI.ShowPopUpUI<UI_DropItem>();
-                ui_DropItem.ItemUpdate(_itemData.GetRandomItem(), textUpdate);
+                ui_DropItem.ItemUpdate(_itemData.GetRandomItem(), uiImageUpdate);
             }
         }
         /// <summary> 작성자 : 이우열 <br/>
@@ -122,11 +114,11 @@ namespace Client
         /// </summary>
         public void ReplaceItem(int position, ItemData newItem)
         {
-            _myInventory[position] = newItem;
+            MyInventory[position] = newItem;
             MyPlayer.StatUpdate();
 
             SendItemInfo(position, newItem.Idx);
-            ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, position, newItem.Idx);
+            ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, position, newItem);
         }
 
         /// <summary> 아이템 정보 동기화 전송 </summary>
@@ -140,7 +132,25 @@ namespace Client
         }
 
         /// <summary> 패킷으로 받은 아이템 정보 동기화 </summary>
-        public void SyncItemInfo(int playerId, int position, int itemIdx) => ItemInfoUpdate?.Invoke(playerId, position, itemIdx);
+        public void SyncItemInfo(int playerId, int position, int itemIdx)
+        {
+            ItemInfoUpdate?.Invoke(playerId, position, _itemData[itemIdx]);
+
+            List<ItemData> inventory;
+
+            if(_inventorys.TryGetValue(playerId, out inventory))
+            {
+                if(inventory.Count <= position)
+                    inventory.Add(_itemData[itemIdx]);
+                else
+                    inventory[position] = _itemData[itemIdx];
+
+                PlayerController player;
+
+                if (_playerControllers.TryGetValue(playerId, out player))
+                    player.StatUpdate(inventory);
+            }
+        }
         #endregion
 
         #region Player
@@ -277,6 +287,7 @@ namespace Client
         void GeneratePlayer(Dictionary<int, Define.Charcter> players)
         {
             _playerControllers.Clear();
+            _inventorys.Clear();
 
             int xPos = -3;
 
@@ -309,6 +320,8 @@ namespace Client
                 xPos += 2;
 
                 _playerControllers.Add(player.Key, playerController);
+                _inventorys.Add(player.Key, new List<ItemData>());
+
                 playerController.MyPlayer = player.Key == GameManager.Network.PlayerId;
 
                 if(playerController.MyPlayer)
@@ -381,7 +394,7 @@ namespace Client
 
             _playerControllers.Clear();
             Cooldown.Clear();
-            _myInventory.Clear();
+            _inventorys.Clear();
         }
     }
 

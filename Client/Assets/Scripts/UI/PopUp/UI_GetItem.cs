@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.04.27
-최근 수정 사항 : 아이템 가득 찬 경우 추가
+최근 수정 일자 : 23.05.27
+최근 수정 사항 : 아이템 뽑기 버튼 다시 보이기 추가
 ******/
 
 using System;
@@ -31,6 +31,8 @@ namespace Client
             Item6,
             Item7,
         }
+
+        public Action OnClose { get; set; }
 
         /// <summary> UI 최초 생성 - bind, 텍스트 초기화 진행 </summary>
         public override void Init()
@@ -64,6 +66,7 @@ namespace Client
         /// <summary> 닫기 버튼 - 텍스트 업데이트 비활성화 </summary>
         void Btn_Close(PointerEventData evt)
         {
+            OnClose?.Invoke();
             GameManager.UI.ClosePopUpUI(this);
         }
         

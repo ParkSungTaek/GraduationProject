@@ -2,13 +2,12 @@
 공동 작성
 작성 일자 : 23.04.05
 
-최근 수정 일자 : 23.04.13
-최근 수정 내용 : 확률 계산 함수 버그 수정
+최근 수정 일자 : 23.05.27
+최근 수정 내용 : 아이템 등급 정보 추가
  ******/
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace Client
 {
@@ -37,6 +36,11 @@ namespace Client
 
             return itemdatas[idx];
         }
+
+        public ItemData this[int idx]
+        {
+            get => itemdatas[idx];
+        }
     }
 
     [Serializable]
@@ -48,6 +52,8 @@ namespace Client
         public string Name;
         /// <summary> 아이템 종류 </summary>
         public Define.ItemKind Kind;
+        /// <summary> 아이템 등급 </summary>
+        public Define.ItemRank Rank;
         /// <summary> 아이템으로 상승하는 수치 </summary>
         public float Stat;
         /// <summary> 아이템 등장 확률 </summary>
