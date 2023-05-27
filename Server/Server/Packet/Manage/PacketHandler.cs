@@ -13,6 +13,7 @@ namespace Server
 {
     class PacketHandler
     {
+        #region Loby
         /// <summary>
         /// 작성자 : 이우열<br/>
         /// 방 생성 패킷 처리
@@ -59,8 +60,6 @@ namespace Server
         /// 작성자 : 이우열 <br/>
         /// 로비 -> 클래스 선택 전환 패킷 처리
         /// </summary>
-        /// <param name="session"></param>
-        /// <param name="packet"></param>
         public static void CTS_ReadyGameHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
@@ -69,8 +68,9 @@ namespace Server
 
             room.Push(() => { room.Ready(clientSession); });
         }
+        #endregion Loby
 
-        #region Ingame
+        #region Playable
         /// <summary>
         /// 작성자 : 이우열<br/>
         /// 클래스 선택 패킷 처리
@@ -148,7 +148,13 @@ namespace Server
             Room room = clientSession.Room;
             room.Push(() => room.ItemUpdate(clientSession, itemPacket));
         }
-        
+        #endregion Playable
+
+        #region Non-Playable
+        /// <summary>
+        /// 작성자 : 박성택 <br/>
+        /// 몬스터 체력 동기화 처리
+        /// </summary>
         public static void CTS_MonsterHPUpdateHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
@@ -160,9 +166,6 @@ namespace Server
             Room room = clientSession.Room;
             room.Push(() => room.MonsterHPUpdate(monsterHPPacket));
         }
-
-
-
-        #endregion Ingame
+        #endregion Non-Playable
     }
 }

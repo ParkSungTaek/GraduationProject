@@ -22,9 +22,9 @@ namespace Client
             EnterBtn,
         }
 
-        enum Texts
+        enum InputFields
         {
-            RoomNameTxt,
+            RoomInput,
         }
 
         /// <summary> 바인드 </summary>
@@ -32,7 +32,7 @@ namespace Client
         {
             base.Init();
             Bind<Button>(typeof(Buttons));
-            Bind<TMP_Text>(typeof(Texts));
+            Bind<TMP_InputField>(typeof(InputFields));
 
             BindEvent(GetButton((int)Buttons.CreateBtn).gameObject, CreateRoomBtn);
             BindEvent(GetButton((int)Buttons.EnterBtn).gameObject, EnterRoomBtn);
@@ -41,11 +41,11 @@ namespace Client
         /// <summary> 방 생성 버튼 </summary>
         void CreateRoomBtn(PointerEventData evt)
         {
-            string roomName = GetText((int)Texts.RoomNameTxt).text;
+            string roomName = Get<TMP_InputField>((int)InputFields.RoomInput).text;
 
             if(string.IsNullOrEmpty(roomName))
             {
-                Debug.Log("빈 방 이름");
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("방 이름을 입력하세요.");
                 return;
             }
 
@@ -59,11 +59,11 @@ namespace Client
         /// <summary> 방 입장 버튼 </summary>
         void EnterRoomBtn(PointerEventData evt)
         {
-            string roomName = GetText((int)Texts.RoomNameTxt).text;
+            string roomName = Get<TMP_InputField>((int)InputFields.RoomInput).text;
 
             if (string.IsNullOrEmpty(roomName))
             {
-                Debug.Log("빈 방 이름");
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("방 이름을 입력하세요.");
                 return;
             }
 

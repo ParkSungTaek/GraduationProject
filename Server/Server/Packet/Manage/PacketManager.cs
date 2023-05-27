@@ -47,20 +47,12 @@ namespace Server
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_MonsterHPUpdate, MakePacket<CTS_MonsterHPUpdate>);
 
 
-
-
             _handler.Add((ushort)PacketID_Ingame.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PlayerMove, PacketHandler.CTS_PlayerMoveHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PlayerAttack, PacketHandler.CTS_PlayerAttackHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_PriestBuff, PacketHandler.CTS_PriestBuffHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, PacketHandler.CTS_ItemUpdateHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_MonsterHPUpdate, PacketHandler.CTS_MonsterHPUpdateHandler);
-
-            
-
-
-
-
             #endregion Ingame
         }
 
