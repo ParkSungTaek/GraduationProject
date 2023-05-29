@@ -27,7 +27,7 @@ namespace Server
         JobQueue _jobQueue = new JobQueue();
         /// <summary> broadcasting 대기 중인 데이터들 </summary>
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
-    
+
 
         /// <summary> 새로운 작업 수행 예약 </summary>
         public void Push(Action job) => _jobQueue.Push(job);
@@ -59,7 +59,7 @@ namespace Server
         public void Enter(ClientSession session)
         {
             //풀방 -> 입장 불가
-            if(_sessions.Count >= RoomManager.MAX_PLAYER_COUNT)
+            if (_sessions.Count >= RoomManager.MAX_PLAYER_COUNT)
             {
                 STC_RejectEnter_Full fullPacket = new STC_RejectEnter_Full();
                 session.Send(fullPacket.Write());
@@ -95,7 +95,7 @@ namespace Server
             }
 
             //방장이 나갈 경우, 방장 변경
-            if(_sessions.IndexOf(session) <= 0)
+            if (_sessions.IndexOf(session) <= 0)
             {
                 STC_SetSuper superPacket = new STC_SetSuper();
                 _sessions[1].Send(superPacket.Write());
@@ -131,7 +131,7 @@ namespace Server
             Broadcast(selectPacket.Write());
 
             //모두 선택 시, 게임 시작
-            if(allSelected)
+            if (allSelected)
             {
                 STC_StartGame startPacket = new STC_StartGame();
                 Broadcast(startPacket.Write());
@@ -157,9 +157,9 @@ namespace Server
         /// <summary> 플레이어 공격 애니메이션 동기화 </summary>
         public void Attack(ClientSession session, CTS_PlayerAttack attackPacket)
         {
-            STC_PlayerAttack packet =  new STC_PlayerAttack();
+            STC_PlayerAttack packet = new STC_PlayerAttack();
             packet.playerId = session.SessionId;
-            packet.skillType= attackPacket.skillType;
+            packet.skillType = attackPacket.skillType;
             packet.direction = attackPacket.direction;
 
             Broadcast(packet.Write());
@@ -191,7 +191,7 @@ namespace Server
         public void MonsterHPUpdate(CTS_MonsterHPUpdate monsterHPPacket)
         {
             STC_MonsterHPUpdate updatePacket = new STC_MonsterHPUpdate();
-            
+
             updatePacket.ID = monsterHPPacket.ID;
             updatePacket.updateHP = monsterHPPacket.updateHP;
 
@@ -205,13 +205,12 @@ namespace Server
 
 
             STC_MosterCreate packet = new STC_MosterCreate();
-            packet.createIDX = (ushort)random.Next(0,12);
+            packet.createIDX = (ushort)random.Next(0, 12);
             packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
             packet.typeNum = _ingameData.MonsterControlInfo.MonsterTypeNum;
-            _ingameData.MontersDic[packet.ID] = new MonsterInfo(packet.ID, _ingameData.monsterStatHandler.monsterstats[packet.typeNum].MaxHP);
-            
-            //Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");
-            
+            _ingameData.MontersDic[packet.ID] = new MonsterInfo(packet.ID, IngameData.monsterStatHandler.monsterstats[packet.typeNum].MaxHP);
+
+
             _ingameData.MonsterControlInfo.NextMosterID++;
             _ingameData.MonsterControlInfo.ThistypeCount++;
             _ingameData.MonsterControlInfo.MonsterTypePlus();
@@ -234,7 +233,6 @@ namespace Server
 
                 //몬스터 생성
                 CreateMonster();
-                //Console.WriteLine("_ingameData.MonsterControlInfo.MonsterToMonster: " + _ingameData.MonsterControlInfo.MonsterToMonster);
                 await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.MonsterToMonster));
 
                 if (_ingameData == null)
@@ -243,11 +241,8 @@ namespace Server
                 //다음 Wave
                 if (_ingameData.MonsterControlInfo.NextWave)
                 {
-                    //Console.WriteLine("------------------");
-                    //Console.WriteLine("_ingameData.MonsterControlInfo.WaveToWave; " + _ingameData.MonsterControlInfo.WaveToWave);
                     await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.WaveToWave));
                     _ingameData.MonsterControlInfo.NextWave = false;
-                    Console.WriteLine("------------------");
                 }
             }
         }
