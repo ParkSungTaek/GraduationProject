@@ -40,7 +40,6 @@ namespace Client
         void Start()
         {
             Init();
-
         }
 
         protected override void Init()
@@ -76,6 +75,7 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
             _monsterHpBar.transform.SetParent(GameManager.InGameData.MonsterSpawn.MonsterHPCanvas);
             HpBarSlider = _monsterHpBar.GetComponent<Slider>();
             _monsterState = Define.MonsterState.Idle;
+            AttackCnt = 1;
         }
 
         protected override void Dead()
@@ -163,6 +163,14 @@ _monsterHpBarOffset = new Vector3 (0, {mystat._monsterHpBarOffset}, 0);
             while (true)
             {
                 GameManager.InGameData.Tower.BeAttacked(AttackDMG);
+
+                CTS_TowerDamage towerDamage = new CTS_TowerDamage();
+                towerDamage.DMG = (ushort)AttackDMG;
+                towerDamage.MonsterID = MonsterID;
+                towerDamage.AttackCnt = AttackCnt;
+                GameManager.Network.Send(towerDamage.Write());
+                AttackCnt++;
+
 
                 _monsterState = Define.MonsterState.Attack;
                 _animator.SetBool("Attack", true);

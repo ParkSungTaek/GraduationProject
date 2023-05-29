@@ -10,7 +10,7 @@ namespace Server
 {
     public struct TowerInfo
     {
-        public const int START_HP = 100;
+        public const int START_HP = 3000;
         public int CurrHp;
     }
 }

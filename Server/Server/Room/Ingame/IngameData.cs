@@ -23,6 +23,7 @@ namespace Server
         }
         /// <summary> 중앙 타워 체력 정보 </summary>
         TowerInfo _towerInfo;
+        public TowerInfo TowerInfo { get {  return _towerInfo; } set { _towerInfo = value; } }
         /// <summary> 몬스터 정보 </summary>
         Dictionary<int, MonsterInfo> _monters = new Dictionary<int, MonsterInfo>();
         public Dictionary<int, MonsterInfo> MontersDic { get { return _monters; } }

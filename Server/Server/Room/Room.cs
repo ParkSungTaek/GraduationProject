@@ -10,6 +10,7 @@ using ServerCore;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Server
@@ -207,9 +208,13 @@ namespace Server
             packet.createIDX = (ushort)random.Next(0,12);
             packet.ID = _ingameData.MonsterControlInfo.NextMosterID;
             packet.typeNum = _ingameData.MonsterControlInfo.MonsterTypeNum;
-            _ingameData.MontersDic[_ingameData.MonsterControlInfo.NextMosterID] = new MonsterInfo(packet.ID, _ingameData.monsterStatHandler.monsterstats[packet.typeNum].MaxHP);
+            _ingameData.MontersDic[packet.ID] = new MonsterInfo(packet.ID, _ingameData.monsterStatHandler.monsterstats[packet.typeNum].MaxHP);
+            
+            //Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");
+            
+            _ingameData.MonsterControlInfo.NextMosterID++;
+            _ingameData.MonsterControlInfo.ThistypeCount++;
             _ingameData.MonsterControlInfo.MonsterTypePlus();
-            Console.WriteLine($"위치: {packet.createIDX} \t 몬스터 ID: {packet.ID} \t 몬스터 type: {packet.typeNum}");
 
             Broadcast(packet.Write());
             if (_ingameData.MonsterControlInfo.MonsterTypeNum >= 59)
@@ -229,7 +234,7 @@ namespace Server
 
                 //몬스터 생성
                 CreateMonster();
-                Console.WriteLine("_ingameData.MonsterControlInfo.MonsterToMonster: " + _ingameData.MonsterControlInfo.MonsterToMonster);
+                //Console.WriteLine("_ingameData.MonsterControlInfo.MonsterToMonster: " + _ingameData.MonsterControlInfo.MonsterToMonster);
                 await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.MonsterToMonster));
 
                 if (_ingameData == null)
@@ -238,14 +243,48 @@ namespace Server
                 //다음 Wave
                 if (_ingameData.MonsterControlInfo.NextWave)
                 {
-                    Console.WriteLine("------------------");
-                    Console.WriteLine("_ingameData.MonsterControlInfo.WaveToWave; " + _ingameData.MonsterControlInfo.WaveToWave);
+                    //Console.WriteLine("------------------");
+                    //Console.WriteLine("_ingameData.MonsterControlInfo.WaveToWave; " + _ingameData.MonsterControlInfo.WaveToWave);
                     await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.WaveToWave));
                     _ingameData.MonsterControlInfo.NextWave = false;
                     Console.WriteLine("------------------");
                 }
             }
         }
+
+        public void TowerHPUpdate(CTS_TowerDamage towerDamage)
+        {
+            Console.WriteLine($"ID {towerDamage.MonsterID}, DMG {towerDamage.DMG} towerDamage.AttackCnt {towerDamage.AttackCnt}");
+            Console.WriteLine($"ingame.MonsterID.Cnt{_ingameData.MontersDic.Count}");
+            //Clinet 몬스터 시작 시 AttackCnt == 1
+            if (_ingameData.MontersDic.ContainsKey(towerDamage.MonsterID) && towerDamage.AttackCnt > _ingameData.MontersDic[towerDamage.MonsterID].AttackCnt)
+            {
+                STC_TowerUpdate updatePacket = new STC_TowerUpdate();
+
+                //MonsterInfo Cnt올리기
+                MonsterInfo tempMonsterInfo = _ingameData.MontersDic[towerDamage.MonsterID];
+                tempMonsterInfo.AttackCnt = towerDamage.AttackCnt;
+                _ingameData.MontersDic[towerDamage.MonsterID] = tempMonsterInfo;
+                updatePacket.updateHP = towerDamage.DMG;
+
+                TowerInfo towerInfo = _ingameData.TowerInfo;
+                towerInfo.CurrHp -= towerDamage.DMG;
+                _ingameData.TowerInfo = towerInfo;
+
+
+                Console.WriteLine($"Monster ID {towerDamage.MonsterID}   AttackCount{towerDamage.AttackCnt}   DMG{towerDamage.DMG}");
+
+                //만약 몬스터 key에 값이 존재한다면
+                Broadcast(updatePacket.Write());
+            }
+            else
+            {
+                Console.WriteLine("동일 타격은 무시");
+            }
+
+        }
+
+
         #endregion Ingame
         #endregion Jobs
     }

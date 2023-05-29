@@ -41,6 +41,7 @@ namespace Client
 
         public virtual void BeAttacked(int DMG)
         {
+            /*
             _nowhp -= DMG;
             if (_nowhp <= 0)
             {
@@ -54,11 +55,13 @@ namespace Client
             {
                 Debug.Log($"{name} Don't have HpBar!");
             }
+            */
         }
 
 
         public virtual void HPUpdate(int DMG)
         {
+
             _nowhp -= DMG;
             if (_nowhp <= 0)
             {

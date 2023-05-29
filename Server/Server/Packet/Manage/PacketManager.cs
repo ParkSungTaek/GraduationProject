@@ -45,6 +45,7 @@ namespace Server
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_PriestBuff, MakePacket<CTS_PriestBuff>);
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, MakePacket<CTS_ItemUpdate>);
             _makeFunc.Add((ushort)PacketID_Ingame.CTS_MonsterHPUpdate, MakePacket<CTS_MonsterHPUpdate>);
+            _makeFunc.Add((ushort)PacketID_Ingame.CTS_TowerDamage, MakePacket<CTS_TowerDamage>);
 
 
             _handler.Add((ushort)PacketID_Ingame.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
@@ -53,6 +54,8 @@ namespace Server
             _handler.Add((ushort)PacketID_Ingame.CTS_PriestBuff, PacketHandler.CTS_PriestBuffHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, PacketHandler.CTS_ItemUpdateHandler);
             _handler.Add((ushort)PacketID_Ingame.CTS_MonsterHPUpdate, PacketHandler.CTS_MonsterHPUpdateHandler);
+            _handler.Add((ushort)PacketID_Ingame.CTS_TowerDamage, PacketHandler.CTS_TowerDamageHandler);
+
             #endregion Ingame
         }
 

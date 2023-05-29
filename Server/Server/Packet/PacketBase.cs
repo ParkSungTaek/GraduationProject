@@ -37,6 +37,7 @@ namespace Server
     /// <summary> 인게임 상 패킷 종류 enum </summary>
     public enum PacketID_Ingame
     {
+
         CTS_SelectClass = PacketID.MaxCount,
         CTS_PlayerMove,
         CTS_PlayerAttack,

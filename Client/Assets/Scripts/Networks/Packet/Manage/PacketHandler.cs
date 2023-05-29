@@ -247,7 +247,17 @@ namespace Client
 				GameManager.InGameData.MonsterSpawn.Monsters[pkt.ID].HPUpdate((int)pkt.updateHP);
             });
         }
+        public static void STC_TowerUpdateHandler(PacketSession session, IPacket packet)
+        {
+            STC_TowerUpdate pkt = packet as STC_TowerUpdate;
+            ServerSession serverSession = session as ServerSession;
 
+
+            GameManager.Network.Push(() =>
+            {
+                GameManager.InGameData.Tower.HPUpdate((int)pkt.updateHP);
+            });
+        }
         #endregion Ingame
     }
 }

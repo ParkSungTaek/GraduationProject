@@ -61,7 +61,9 @@ namespace Server
     {
         /// <summary> 몬스터 데미지</summary>
         public ushort DMG;
-        
+        public ushort MonsterID;
+        public ushort AttackCnt;
+
         public ushort Protocol => (ushort)PacketID_Ingame.CTS_TowerDamage;
 
 
@@ -76,6 +78,11 @@ namespace Server
 
             DMG = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
             count += sizeof(ushort);
+            MonsterID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            AttackCnt = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+
         }
 
         public ArraySegment<byte> Write()
@@ -90,6 +97,11 @@ namespace Server
             count += sizeof(ushort);
             Array.Copy(BitConverter.GetBytes(DMG), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(MonsterID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(AttackCnt), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

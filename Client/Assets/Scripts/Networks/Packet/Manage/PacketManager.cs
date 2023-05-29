@@ -63,6 +63,7 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_ItemUpdate, MakePacket<STC_ItemUpdate>);
 			_makeFunc.Add((ushort)PacketID_Ingame.STC_MosterCreate, MakePacket<STC_MosterCreate>);
             _makeFunc.Add((ushort)PacketID_Ingame.STC_MonsterHPUpdate, MakePacket<STC_MonsterHPUpdate>);
+            _makeFunc.Add((ushort)PacketID_Ingame.STC_TowerUpdate, MakePacket<STC_TowerUpdate>);
 
 
 
@@ -74,6 +75,7 @@ namespace Client
 			_handler.Add((ushort)PacketID_Ingame.STC_ItemUpdate, PacketHandler.STC_ItemUpdateHandler);
 			_handler.Add((ushort)PacketID_Ingame.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
             _handler.Add((ushort)PacketID_Ingame.STC_MonsterHPUpdate, PacketHandler.STC_MonsterHPUpdate);
+            _handler.Add((ushort)PacketID_Ingame.STC_TowerUpdate, PacketHandler.STC_TowerUpdateHandler);
 
             #endregion Ingame
         }

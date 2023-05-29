@@ -18,7 +18,7 @@ namespace Server
         /// <summary> 몬스터 Type </summary>
         ushort _monsterTypeNum;
 
-        public ushort NextMosterID { get { ThistypeCount++; return _nextMosterID++; } /*set { _nextMosterID = value; }*/ }
+        public ushort NextMosterID { get { return _nextMosterID; }  set { _nextMosterID = value; } }
         public ushort MonsterTypeNum { get { return _monsterTypeNum; } set { _monsterTypeNum = value; } }
         public float MonsterToMonster { get { return (26.0f / (16.0f + _monsterTypeNum)); } }
         public float WaveToWave { get { return 8f; } }
@@ -40,7 +40,7 @@ namespace Server
         }
 
         /// <summary> 이번 라운드 몬스터 나온 숫자 </summary>
-        ushort ThistypeCount { 
+        public ushort ThistypeCount { 
             get { return _thistypeCount; }
             set { 
                 _thistypeCount = value;

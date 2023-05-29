@@ -166,6 +166,20 @@ namespace Server
             Room room = clientSession.Room;
             room.Push(() => room.MonsterHPUpdate(monsterHPPacket));
         }
+
+       
+        public static void CTS_TowerDamageHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_TowerDamage towerDamage = packet as CTS_TowerDamage;
+
+            if (clientSession.Room == null)
+                return;
+
+            Room room = clientSession.Room;
+            room.Push(() => room.TowerHPUpdate(towerDamage));
+        }
+
         #endregion Non-Playable
     }
 }
