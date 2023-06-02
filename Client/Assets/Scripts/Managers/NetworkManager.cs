@@ -6,6 +6,8 @@
 최근 수정 내용 : 방 정보 관리 기능 추가
  ******/
 
+#define AWS
+
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -40,8 +42,12 @@ namespace Client
             }
             else
             {
+#if AWS
+                ipHost = Dns.GetHostEntry("www.teamphotongp.o-r.kr");
+#else
                 string host = Dns.GetHostName();
                 ipHost = Dns.GetHostEntry(host);
+#endif
             }
 
             IPAddress ipAddr = ipHost.AddressList[0];
