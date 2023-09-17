@@ -110,6 +110,22 @@ namespace Client
                 GameManager.Room.SetExistPlayers(pkt.Players);
 			});
 		}
+
+        /// <summary>
+        /// 작성자 : 박성택 <br/>
+        /// 최초 입장 시, 이미 존재하는 방 이름 목록 받음
+        /// </summary>
+        public static void STC_ExistRoomsHandler(PacketSession session, IPacket packet)
+        {
+            STC_ExistRooms pkt = packet as STC_ExistRooms;
+
+            GameManager.Network.Push(() =>
+            {
+				GameManager.UI.ShowSceneUI<UI_TitleScene>().SetExistRoomsName(pkt.Rooms);
+            });
+        }
+        
+
         #endregion Create/Enter Room
 
         #region Loby

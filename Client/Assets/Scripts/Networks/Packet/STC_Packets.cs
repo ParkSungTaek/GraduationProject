@@ -270,6 +270,76 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
+
+    public class STC_ExistRooms : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID.STC_ExistRooms;
+        public List<string> Rooms = new List<string>();
+        ushort StringLength = 0;
+        ushort sizeofUshort = sizeof(ushort);
+        public void Read(ArraySegment<byte> segment)
+        {
+            ushort count = 0;
+
+            //packet size
+            count += sizeofUshort;
+            //protocol
+            count += sizeofUshort;
+
+            ushort listLength = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeofUshort;
+
+            for (ushort i = 0; i < listLength; i++)
+            {
+                //string 의 Byte길이 우선 저장
+                StringLength = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+                count += sizeofUshort;
+
+                // Convert the bytes into a string and add it to the Rooms list.
+                string roomName = System.Text.Encoding.UTF8.GetString(segment.Array, segment.Offset + count, StringLength);
+                Rooms.Add(roomName);
+
+                // Move past the string data.
+                count += StringLength;
+
+            }
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+            //packet size
+
+            count += sizeofUshort;
+            //protocol
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeofUshort);
+            count += sizeofUshort;
+
+            Array.Copy(BitConverter.GetBytes((ushort)Rooms.Count), 0, segment.Array, segment.Offset + count, sizeofUshort);
+            count += sizeofUshort;
+            ushort StringLength;
+            for (int i = 0; i < Rooms.Count; i++)
+            {
+                //문자열 변환 & Length저장
+                byte[] utf8Bytes = System.Text.Encoding.UTF8.GetBytes(Rooms[i]);
+                StringLength = (ushort)utf8Bytes.Length;
+
+                //Length 우선 저장
+                Array.Copy(BitConverter.GetBytes(StringLength), 0, segment.Array, segment.Offset + count, sizeofUshort);
+                count += sizeofUshort;
+
+                //string 저장
+                Array.Copy(utf8Bytes, 0, segment.Array, segment.Offset + count, StringLength);
+                count += StringLength;
+            }
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
     #endregion Create/Enter Room
 
     #region Loby

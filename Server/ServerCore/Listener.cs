@@ -17,6 +17,7 @@ namespace ServerCore
     {
         Socket _listenSocket;
         Func<Session> _sessionFactory;
+
         /// <summary>
         /// Listening Socket 생성 & register 개의 delegate를 이용하여 Client의 연결을 대기 
         /// Async하게 구현

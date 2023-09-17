@@ -23,6 +23,12 @@ namespace Server
             STC_OnConnect onConnectPacket = new STC_OnConnect();
             onConnectPacket.playerId = SessionId;
             Send(onConnectPacket.Write());
+
+            STC_ExistRooms ExistRoomsPacket = new STC_ExistRooms();
+            ExistRoomsPacket.Rooms = RoomManager.Instance.RoomNames();
+            Send(ExistRoomsPacket.Write());
+
+
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)

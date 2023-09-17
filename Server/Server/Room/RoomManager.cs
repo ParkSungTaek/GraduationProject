@@ -23,6 +23,12 @@ namespace Server
 
         /// <summary> 싱글톤 </summary>
         public static RoomManager Instance { get; } = new RoomManager();
+        RoomManager() { }
+
+        public List<string> RoomNames() 
+        {
+            return new List<string>(_rooms.Keys);
+        }
 
         public void Push(Action job) => _jobQueue.Push(job);
 

@@ -36,6 +36,7 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID.STC_PlayerEnter,MakePacket<STC_PlayerEnter>);
 			_makeFunc.Add((ushort)PacketID.STC_PlayerLeave, MakePacket<STC_PlayerLeave>);
 			_makeFunc.Add((ushort)PacketID.STC_ExistPlayers, MakePacket<STC_ExistPlayers>);
+			_makeFunc.Add((ushort)PacketID.STC_ExistRooms, MakePacket<STC_ExistRooms>);
 
             _handler.Add((ushort)PacketID.STC_OnConnect, PacketHandler.STC_OnConnectHandler);
             _handler.Add((ushort)PacketID.STC_RejectRoom, PacketHandler.STC_RejectRoomHandler);
@@ -44,6 +45,8 @@ namespace Client
             _handler.Add((ushort)PacketID.STC_PlayerEnter, PacketHandler.STC_PlayerEnterHandler);
             _handler.Add((ushort)PacketID.STC_PlayerLeave, PacketHandler.STC_PlayerLeaveHandler);
 			_handler.Add((ushort)PacketID.STC_ExistPlayers, PacketHandler.STC_ExistPlayersHandler);
+			_handler.Add((ushort)PacketID.STC_ExistRooms, PacketHandler.STC_ExistRoomsHandler);
+
             #endregion Create/Enter Room
 
             #region Loby

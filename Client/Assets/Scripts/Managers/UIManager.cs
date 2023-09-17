@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.03.29
 
-최근 수정 일자 : 23.04.27
-최근 수정 사항 : UI 인스턴스 Init 호출 Show 함수에서 하도록 변경
+최근 수정 일자 : 23.09.18
+최근 수정 사항 : <박성택> ShowSceneUI 함수가 단순히 UI를 생성하는 것이 아니라 만약 UI가 이미 Scene에 존재한다면 그 UI를 찾아서 반환하는것으로 바꿈 
 ******/
 
 using System.Collections;
@@ -74,14 +74,22 @@ namespace Client
         {
             if(string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
+            T sceneUI = Root.GetComponentInChildren<T>();
+            if (sceneUI)
+            {
+                return sceneUI;
+            }
+            else
+            {
+                GameObject go = GameManager.Resource.Instantiate($"UI/Scene/{name}");
+                sceneUI = Util.GetOrAddComponent<T>(go);
 
-            GameObject go = GameManager.Resource.Instantiate($"UI/Scene/{name}");
-            T sceneUI = Util.GetOrAddComponent<T>(go);
+                go.transform.SetParent(Root.transform);
+                sceneUI.Init();
 
-            go.transform.SetParent(Root.transform);
-            sceneUI.Init();
-
-            return sceneUI;
+                return sceneUI;
+            }
+            
         }
 
         /// <summary>

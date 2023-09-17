@@ -25,6 +25,7 @@ namespace ServerCore
                     break;
 
                 ushort dataSize = BitConverter.ToUInt16(buffer.Array, buffer.Offset);
+                
                 if (buffer.Count < dataSize)
                     break;
 

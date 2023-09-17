@@ -26,6 +26,7 @@ namespace Server
 
         STC_PlayerEnter,
         STC_ExistPlayers,
+        STC_ExistRooms,
         STC_PlayerLeave,
 
         STC_SetSuper,

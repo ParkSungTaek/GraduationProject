@@ -12,6 +12,7 @@ namespace Server
     { 
         /// <summary> 싱글톤 </summary>
         public static SessionManager Instance { get; } = new SessionManager();
+        SessionManager() { }
 
         int _sessionId = 0;
         object _lock = new object();
