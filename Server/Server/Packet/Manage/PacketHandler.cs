@@ -38,6 +38,42 @@ namespace Server
             RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, enterPacket.roomName));
         }
 
+
+        /// <summary>
+        /// 작성자 : 박성택<br/>
+        /// 빠른입장 혀용 또는 불가
+        /// </summary>
+        public static void CTS_AllowQuickEntryRoomHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_AllowQuickEntryRoom allowPacket = packet as CTS_AllowQuickEntryRoom;
+
+            
+            RoomManager.Instance.Push(() => RoomManager.Instance.AllowQuickEnter(allowPacket.roomName, allowPacket.AllowQuickEntry));
+        }
+        /// <summary>
+        /// 작성자 : 박성택<br/>
+        /// 빠른입장
+        /// </summary>
+        public static void CTS_QuickEnterRoomHandler(PacketSession session, IPacket packet)
+        {
+            ClientSession clientSession = session as ClientSession;
+            CTS_QuickEnterRoom enterPacket = packet as CTS_QuickEnterRoom;
+            string roomName = "aaa";///RoomManager.Instance.RandomQuickEnterRoomName();
+            if (roomName != null)
+            {
+                RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, roomName));
+            }
+            ///빠른참가 방이 없음
+            else
+            {
+                // 추가적인 행동 필요?
+            }
+
+        }
+
+
+
         /// <summary>
         /// 작성자 : 이우열<br/>
         /// 방 퇴장 패킷 처리

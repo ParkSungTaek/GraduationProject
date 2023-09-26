@@ -79,6 +79,7 @@ namespace Client
 			//다른 플레이어 입장
 			if (pkt.playerId != GameManager.Network.PlayerId)
 				GameManager.Network.Push(() => GameManager.Room.EnterPlayer(pkt.playerId));
+
         }
 
 		/// <summary>

@@ -10,6 +10,9 @@ using System.Collections.Generic;
 using System;
 using System.Diagnostics;
 
+#if UNITY_EDITOR
+using UnityEngine;
+#endif
 namespace Client
 {
     public class RoomManager
@@ -22,6 +25,26 @@ namespace Client
 
         public Action<RoomInfo> LobyUpdate { get; set; }
 
+        /// <summary>
+        /// Lobby에서 빠른 입장을 토글할 수 있게 방 번호를 기억해둠
+        /// </summary>
+        /// <returns></returns>
+        public void SetRoomName(string roomName)
+        {
+            _roomInfo.RoomName = roomName;
+        }
+
+        /// <summary>
+        /// Lobby에서 빠른 입장을 토글할 수 있게 방 번호를 기억해둠
+        /// </summary>
+        /// <returns></returns>
+        public string GetRoomName()
+        {
+#if UNITY_EDITOR
+            UnityEngine.Debug.Log($"_roomInfo.RoomName{_roomInfo.RoomName}");
+#endif
+            return _roomInfo.RoomName;
+        }
         /// <summary> 
         /// 작성자 : 이우열 <br/>
         /// 나를 호스트로 설정 

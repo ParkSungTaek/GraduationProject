@@ -22,6 +22,7 @@ namespace Client
         /// <summary> 버튼 목록 </summary>
         enum Buttons
         {
+            QuickEnter,
             CreateBtn,
             EnterBtn,
             Room1Btn,
@@ -83,7 +84,7 @@ namespace Client
         #region Btn
         void BindButton()
         {
-
+            BindEvent(GetButton((int)Buttons.QuickEnter).gameObject, QuickEnterBtn);
             BindEvent(GetButton((int)Buttons.CreateBtn).gameObject, CreateRoomBtn);
             BindEvent(GetButton((int)Buttons.EnterBtn).gameObject, EnterRoomBtn);
             BindEvent(GetButton((int)Buttons.Room1Btn).gameObject, ExistRoomEnterBtn);
@@ -104,7 +105,7 @@ namespace Client
 
             CTS_CreateRoom pkt = new CTS_CreateRoom();
             pkt.roomName = roomName;
-
+            GameManager.Room.SetRoomName(roomName);
             GameManager.Network.Send(pkt.Write());
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 생성 중");
         }
@@ -122,9 +123,12 @@ namespace Client
 
             CTS_EnterRoom pkt = new CTS_EnterRoom();
             pkt.roomName = roomName;
+            GameManager.Room.SetRoomName(roomName);
 
             GameManager.Network.Send(pkt.Write());
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 입장 중");
+
+
         }
         /// <summary>
         /// 방 빠른 입장
@@ -154,7 +158,13 @@ namespace Client
             GameManager.Network.Send(pkt.Write());
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 입장 중");
         }
+        void QuickEnterBtn(PointerEventData evt)
+        {
 
+            CTS_QuickEnterRoom pkt = new CTS_QuickEnterRoom();
+            Debug.Log("Enter");
+            GameManager.Network.Send(pkt.Write());
+        }
         #endregion Btn
     }
 }

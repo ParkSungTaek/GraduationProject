@@ -28,7 +28,7 @@ namespace Server
         /// <summary> broadcasting 대기 중인 데이터들 </summary>
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
 
-
+        public bool AllowQuickEntry { get; set; } = false;
         /// <summary> 새로운 작업 수행 예약 </summary>
         public void Push(Action job) => _jobQueue.Push(job);
 
@@ -55,6 +55,20 @@ namespace Server
         }
 
         #region ReadyToPlay
+        /// <summary>
+        /// 빠른 방 입장을 위해 해당 방을 사용할 수 있는지 확인
+        /// </summary>
+        /// <returns></returns>
+        public bool CanEnter()
+        {
+            if (_sessions.Count >= RoomManager.MAX_PLAYER_COUNT)
+            {
+                return false;
+            }
+            return true;
+        }
+
+
         /// <summary> 새로운 클라이언트 입장 </summary>
         public void Enter(ClientSession session)
         {

@@ -15,10 +15,12 @@ namespace Client
 {
     public class UI_LobyScene : UI_Scene
     {
+        bool AllowQuickEnter { get; set; } = false;
         enum Buttons
         {
             StartBtn,
             LeaveBtn,
+            QuickBtn,
         }
 
         enum Texts
@@ -27,6 +29,7 @@ namespace Client
             PlayerTxt2,
             PlayerTxt3,
             PlayerTxt4,
+            QuickBtnTxt,
         }
 
         public override void Init()
@@ -34,7 +37,8 @@ namespace Client
             base.Init();
             Bind<Button>(typeof(Buttons));
             Bind<TMP_Text>(typeof(Texts));
-            
+
+            GetText((int)Texts.QuickBtnTxt).text = "Allow Quick OFF";
             ButtonBind();
 
             GameManager.Room.LobyUpdate = LobyUpdate;
@@ -45,6 +49,8 @@ namespace Client
         {
             BindEvent(Get<Button>((int)Buttons.StartBtn).gameObject, StartGame);
             BindEvent(Get<Button>((int)Buttons.LeaveBtn).gameObject, LeaveGame);
+            BindEvent(Get<Button>((int)Buttons.QuickBtn).gameObject, QuickEnterAllow);
+
         }
 
         /// <summary> 게임 시작 버튼 </summary>
@@ -80,6 +86,25 @@ namespace Client
             }
             for (; i < 4; i++)
                 GetText(i).text = "empty";
+        }
+        void QuickEnterAllow(PointerEventData evt)
+        {
+            CTS_AllowQuickEntryRoom pkt = new CTS_AllowQuickEntryRoom();
+            pkt.roomName = GameManager.Room.GetRoomName();
+
+            if (AllowQuickEnter)
+            {
+                AllowQuickEnter = false;
+                GetText((int)Texts.QuickBtnTxt).text = "Allow Quick OFF";
+            }
+            else
+            {
+                AllowQuickEnter = true;
+                GetText((int)Texts.QuickBtnTxt).text = "Allow Quick ON";
+            }
+            pkt.AllowQuickEntry = AllowQuickEnter;
+            GameManager.Network.Send(pkt.Write());
+
         }
         #endregion Button
 

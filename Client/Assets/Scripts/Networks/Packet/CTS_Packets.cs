@@ -61,6 +61,95 @@ namespace Client
     }
 
     /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 방의 빠른 입장을 허용/불허 
+    /// </summary>
+    public class CTS_AllowQuickEntryRoom : IPacket
+    {
+        public string roomName;
+        public bool AllowQuickEntry;
+        public ushort Protocol => (ushort)PacketID.CTS_AllowQuickEntryRoom;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            AllowQuickEntry = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+            count += sizeof(bool);
+            ushort nameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            roomName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, nameLen);
+            count += nameLen;
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(AllowQuickEntry), 0, segment.Array, segment.Offset + count, sizeof(bool));
+            count += sizeof(bool);
+
+            ushort nameLen = (ushort)Encoding.Unicode.GetBytes(roomName, 0, roomName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(nameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += nameLen;
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+
+    /// <summary>
+    /// 작성자 : 박성택<br/>
+    /// 방 입장 패킷
+    /// </summary>
+    public class CTS_QuickEnterRoom : IPacket
+    {
+        //public string roomName;
+
+        public ushort Protocol => (ushort)PacketID.CTS_QuickEnterRoom;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+            return SendBufferHelper.Close(count);
+        }
+    }
+    /// <summary>
     /// 작성자 : 이우열<br/>
     /// 방 입장 패킷
     /// </summary>
