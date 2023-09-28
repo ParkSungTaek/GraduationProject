@@ -6,12 +6,11 @@
 최근 수정 사항 : 리눅스 환경 설정 추가
 ******/
 
-//#define AWS
-
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Newtonsoft.Json;
 
 namespace Server
@@ -34,15 +33,19 @@ namespace Server
             // 현재 실행 중인 Assembly(프로그램)의 위치를 얻어옵니다.
             string currentPath = Assembly.GetExecutingAssembly().Location;
 
-#if AWS
-            int idx = currentPath.IndexOf("Server.dll");
-            currentPath = currentPath.Substring(0, idx);
-            string jsonPath = Path.Combine(currentPath, $@"Json/Datas/{relativePath}.json");
-            Console.WriteLine(jsonPath);
-#else
-            // 상대 경로를 사용하여 json 데이터 위치를 설정합니다.
-            string jsonPath = Path.Combine(Path.GetDirectoryName(currentPath), @$"../../../Json/Datas/{relativePath}.json");
-#endif
+            string jsonPath;
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+            {
+                int idx = currentPath.IndexOf("Server.dll");
+                currentPath = currentPath.Substring(0, idx);
+                jsonPath = Path.Combine(currentPath, $@"Json/Datas/{relativePath}.json");
+                Console.WriteLine(jsonPath);
+            }
+            else
+            {
+                // 상대 경로를 사용하여 json 데이터 위치를 설정합니다.
+                jsonPath = Path.Combine(Path.GetDirectoryName(currentPath), @$"../../../Json/Datas/{relativePath}.json");
+            }
 
             // json 파일의 내용을 읽어옵니다.
             string jsonData = File.ReadAllText(jsonPath);
