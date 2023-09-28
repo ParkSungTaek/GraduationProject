@@ -257,7 +257,7 @@ namespace Client
         /// <summary> 아이템 및 버프 상태에 따른 스텟 계산 </summary>
         public void StatUpdate()
         {
-            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0, 0 };
+            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0 };
 
             //아이템 효과 추가
             List<ItemData> items = GameManager.InGameData.MyInventory;
@@ -268,9 +268,6 @@ namespace Client
                     case Define.ItemKind.Cooldown:
                         pivots[(int)item.Kind] = Mathf.Max(0, pivots[(int)item.Kind] - item.Stat);
                         break;
-                    case Define.ItemKind.Slow:
-                        pivots[(int)item.Kind] = Mathf.Max(pivots[(int)item.Kind], item.Stat);
-                        break;
                     default:
                         pivots[(int)item.Kind] += item.Stat;
                         break;
@@ -292,8 +289,6 @@ namespace Client
             _itemStat.SkillCool = basicStat.SkillCool * pivots[(int)Define.ItemKind.Cooldown];
 
             gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
-            _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
-            _itemStat.Slow = basicStat.Slow + pivots[(int)Define.ItemKind.Slow];
 
             Debug.Log($"stat update : {_itemStat}");
         }
@@ -301,7 +296,7 @@ namespace Client
         /// <summary> 패킷으로 받은 아이템 정보 스텟 계산 </summary>
         public void StatUpdate(List<ItemData> items)
         {
-            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0, 0 };
+            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0 };
 
             foreach (ItemData item in items)
             {
@@ -310,9 +305,6 @@ namespace Client
                     case Define.ItemKind.Cooldown:
                         pivots[(int)item.Kind] = Mathf.Max(0, pivots[(int)item.Kind] - item.Stat);
                         break;
-                    case Define.ItemKind.Slow:
-                        pivots[(int)item.Kind] = Mathf.Max(pivots[(int)item.Kind], item.Stat);
-                        break;
                     default:
                         pivots[(int)item.Kind] += item.Stat;
                         break;
@@ -335,7 +327,6 @@ namespace Client
 
             gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
             _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
-            _itemStat.Slow = basicStat.Slow + pivots[(int)Define.ItemKind.Slow];
 
             Debug.Log($"stat update : {_itemStat}");
         }

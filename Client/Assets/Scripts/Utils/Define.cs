@@ -63,7 +63,6 @@ namespace Client
             Cooldown,
             Weight,
             Speed,
-            Slow,
             MaxCount
         }
 

@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 이우열
 작성일 : 23.04.05
 
@@ -36,11 +36,10 @@ namespace Client
 
         public float Weight;
         public float Speed;
-        public float Slow;
 
         public override string ToString()
         {
-            return $"Attack : {AttackRatio}, {AttackRange}, {AttackCool} / Skill : {SkillRatio}, {SkillRange}, {SkillCool} / W : {Weight} / S : {Speed} / Slow : {Slow}";
+            return $"Attack : {AttackRatio}, {AttackRange}, {AttackCool} / Skill : {SkillRatio}, {SkillRange}, {SkillCool} / W : {Weight} / S : {Speed}";
         }
     }
 }
