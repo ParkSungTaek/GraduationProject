@@ -38,13 +38,13 @@ namespace Client
 
             if (Application.platform == RuntimePlatform.Android)
             {
-                ipHost = Dns.GetHostEntry("www.teamphotongp.o-r.kr");
+                ipHost = Dns.GetHostEntry("3.35.30.92");
             }
             else
             {
 #if AWS 
                 Debug.Log("Is AWS");
-                ipHost = Dns.GetHostEntry("www.teamphotongp.o-r.kr");
+                ipHost = Dns.GetHostEntry("3.35.30.92");
 #else
                 Debug.Log("Is Local");
 
