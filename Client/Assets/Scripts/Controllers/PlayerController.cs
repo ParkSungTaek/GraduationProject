@@ -289,6 +289,7 @@ namespace Client
             _itemStat.SkillCool = basicStat.SkillCool * pivots[(int)Define.ItemKind.Cooldown];
 
             gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
+            _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
 
             Debug.Log($"stat update : {_itemStat}");
         }
