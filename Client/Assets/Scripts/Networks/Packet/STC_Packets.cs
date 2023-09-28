@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.09
-최근 수정 내용 : 방에 이미 존재하는 플레이어 정보 공유(ExistPlayers) 패킷, ReadyGame 추가
+최근 수정 일자 : 23.09.28
+최근 수정 내용 : 연결 여부 확인 패킷 추가
  ******/
 
 using ServerCore;
@@ -54,6 +54,40 @@ namespace Client
         }
     }
 
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 주기적으로 연결 검사
+    /// </summary>
+    public class STC_CheckAlive : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID.STC_CheckAlive;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 
     #region Create/Enter Room
     /// <summary>

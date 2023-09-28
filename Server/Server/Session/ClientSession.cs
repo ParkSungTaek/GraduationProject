@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : 클래스 생성
+최근 수정 일자 : 23.09.28
+최근 수정 내용 : 연결 종료 시 세션 매니저에 알림
  ******/
 
 using ServerCore;
@@ -27,8 +27,6 @@ namespace Server
             STC_ExistRooms ExistRoomsPacket = new STC_ExistRooms();
             ExistRoomsPacket.Rooms = RoomManager.Instance.RoomNames();
             Send(ExistRoomsPacket.Write());
-
-
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
@@ -50,6 +48,7 @@ namespace Server
                 Room = null;
             }
 
+            SessionManager.Instance.OnDisconnect(this);
             Console.WriteLine($"OnDisconnected : {endPoint}");
         }
     }

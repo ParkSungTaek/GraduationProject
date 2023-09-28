@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.05
 
-최근 수정 일자 : 23.04.26
-최근 수정 내용 : Server Listener 추가
+최근 수정 일자 : 23.09.28
+최근 수정 내용 : 주기적으로 연결 검사
  ******/
 
 using ServerCore;
@@ -40,6 +40,7 @@ namespace Server
             Console.WriteLine("Listening...");
 
             JobTimer.Instance.Push(FlushRoom, 0);
+            JobTimer.Instance.Push(SessionManager.Instance.CheckAlive, 10000);
 
             //계속 예약된 작업 수행 시도
             while(true)

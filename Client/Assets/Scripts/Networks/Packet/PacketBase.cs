@@ -2,7 +2,7 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.09
+최근 수정 일자 : 23.09.28
 최근 수정 내용 : PacketId 수정
  ******/
 
@@ -21,6 +21,7 @@ namespace Client
         CTS_ReadyGame,
 
         STC_OnConnect,
+        STC_CheckAlive,
 
         STC_RejectRoom,
         STC_RejectEnter_Exist,
