@@ -1,5 +1,6 @@
 @echo off
 
+cd Server
 dotnet publish -r linux-x64
 
 if exist Server\ (

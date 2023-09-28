@@ -1,5 +1,6 @@
 @echo off
 
+cd Server
 if exist psftp.txt (
     del psftp.txt
 )
