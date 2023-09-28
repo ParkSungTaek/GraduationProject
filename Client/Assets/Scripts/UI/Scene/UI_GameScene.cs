@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.04.01
 
-최근 수정 일자 : 23.05.27
-최근 수정 사항 : 아이템 뽑기 버튼 숨기기 추가
+최근 수정 일자 : 23.09.28
+최근 수정 사항 : 퇴장 시 아이템 UI 숨기기
 ******/
 
 using UnityEngine;
@@ -96,6 +96,7 @@ namespace Client
                 _itemPanelList[(int)panel].SetActive(false);
 
             GameManager.InGameData.ItemInfoUpdate += ItemInfoUpdate;
+            GameManager.InGameData.PlayerUpdate += OnLeavePlayer;
         }
         
         /// <summary> 해당 플레이어의 아이템 정보 업데이트 </summary>
@@ -106,6 +107,15 @@ namespace Client
             if(_panelMap.TryGetValue(playerId, out panel))
             {
                 panel.ImageUpdate(idx, item);
+            }
+        }
+
+        void OnLeavePlayer(int playerId)
+        {
+            UI_ItemPanel panel = null;
+            if (true == _panelMap.TryGetValue(playerId, out panel))
+            {
+                panel.gameObject.SetActive(false);
             }
         }
         #endregion ItemInfo

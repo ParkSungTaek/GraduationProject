@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.09
-최근 수정 내용 : 방 정보 관리 기능 추가
+최근 수정 일자 : 23.09.28
+최근 수정 내용 : 서버와 연결 끊기 추가
  ******/
 
 //#define AWS
@@ -71,8 +71,21 @@ namespace Client
                 () => { return Generate(); });
         }
 
+        /// <summary> 서버와 연결 끊기 </summary>
+        public void Disconnect()
+        {
+            Debug.Log("Disconnect");
+            _session.Disconnect();
+        }
+
         /// <summary> 연결 성공 시 세션 생성 함수 </summary>
-        ServerSession Generate() => (_session = new ServerSession());
+        ServerSession Generate()
+        {
+            Application.quitting -= Disconnect;
+            Application.quitting += Disconnect;
+
+            return _session = new ServerSession();
+        }
 
         public void Send(ArraySegment<byte> segment) => _session?.Send(segment);
         public void Send(List<ArraySegment<byte>> segmentList) => _session?.Send(segmentList);

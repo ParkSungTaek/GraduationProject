@@ -2,8 +2,8 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.05.27
-최근 수정 사항 : 아이템 UI update 시 ItemData 자체를 전달하도록 변경
+최근 수정 일자 : 23.09.28
+최근 수정 사항 : 플레이어 퇴장 처리
 ******/
 
 using System;
@@ -84,6 +84,8 @@ namespace Client
         public List<ItemData> MyInventory { get => _inventorys[GameManager.Network.PlayerId]; }
 
         public Action<int, int, ItemData> ItemInfoUpdate { get; set; } = null;
+
+        public Action<int> PlayerUpdate { get; set; } = null;
 
         /// <summary> 작성자 : 이우열 <br/>
         /// 새로운 아이템 구매
@@ -334,6 +336,20 @@ namespace Client
         }
         #endregion GameStart_Generate
 
+        /// <summary>
+        /// 플레이어 퇴장 처리
+        /// </summary>
+        public void OnLeavePlayer(int playerId)
+        {
+            PlayerController leavePlayer = null;
+
+            if (true == _playerControllers.TryGetValue(playerId, out leavePlayer))
+            {
+                GameObject.Destroy(leavePlayer.gameObject);
+                PlayerUpdate?.Invoke(playerId);
+            }
+        }
+
         /// <summary> 
         /// 작성자 : 이우열 <br/>
         /// 내가 아닌 플레이어의 이동 동기화 
@@ -391,6 +407,7 @@ namespace Client
             OnMoneyChanged = null;
             OnScoreChanged = null;
             ItemInfoUpdate = null;
+            PlayerUpdate = null;
 
             _playerControllers.Clear();
             Cooldown.Clear();

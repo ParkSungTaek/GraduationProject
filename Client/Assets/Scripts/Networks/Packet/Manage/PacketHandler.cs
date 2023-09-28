@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.09
-최근 수정 사항 : Enter, Leave, ExistPlayer Handler 수정
+최근 수정 일자 : 23.09.28
+최근 수정 사항 : 플레이어 퇴장 처리 핸들러 수정
  ******/
 
 using ServerCore;
@@ -94,6 +94,7 @@ namespace Client
 				GameManager.Network.Push(() =>
 				{
 					GameManager.Room.LeavePlayer(pkt.playerId);
+					GameManager.InGameData.OnLeavePlayer(pkt.playerId);
 				});
 		}
 
