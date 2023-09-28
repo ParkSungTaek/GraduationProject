@@ -12,4 +12,5 @@ psftp 3.35.30.92 -i E:\hongik_SE.ppk -l ubuntu -b psftp.txt
 
 del Server.zip
 del psftp.txt
-pause
+
+timeout /t 2

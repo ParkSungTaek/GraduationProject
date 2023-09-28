@@ -1,2 +1,3 @@
-CALL z01.zipToLinux.bat
+CALL z01.buildAndZip.bat
+cd ..
 CALL z02.sendToLinux.bat
