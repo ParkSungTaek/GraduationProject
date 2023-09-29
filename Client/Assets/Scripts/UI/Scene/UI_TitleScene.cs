@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.05.08
 
-최근 수정 일자 : 23.05.08
-최근 수정 내용 : UI_RobyScene 클래스 생성
+최근 수정 일자 : 23.09.29
+최근 수정 내용 : 게임 종료 버튼 추가
  ******/
 
 using System.Collections.Generic;
@@ -25,6 +25,7 @@ namespace Client
             QuickEnter,
             CreateBtn,
             EnterBtn,
+            QuitBtn,
             Room1Btn,
             Room2Btn,
             Room3Btn,
@@ -87,6 +88,8 @@ namespace Client
             BindEvent(GetButton((int)Buttons.QuickEnter).gameObject, QuickEnterBtn);
             BindEvent(GetButton((int)Buttons.CreateBtn).gameObject, CreateRoomBtn);
             BindEvent(GetButton((int)Buttons.EnterBtn).gameObject, EnterRoomBtn);
+            BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, QuitBtn);
+
             BindEvent(GetButton((int)Buttons.Room1Btn).gameObject, ExistRoomEnterBtn);
             BindEvent(GetButton((int)Buttons.Room2Btn).gameObject, ExistRoomEnterBtn);
             BindEvent(GetButton((int)Buttons.Room3Btn).gameObject, ExistRoomEnterBtn);
@@ -165,6 +168,19 @@ namespace Client
             Debug.Log("Enter");
             GameManager.Network.Send(pkt.Write());
         }
-        #endregion Btn
+        void QuitBtn(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 종료하시겠습니까?", AcceptQuitBtn);
+        }
+
+        void AcceptQuitBtn()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode();
+#else
+            Application.Quit();
+#endif
+        }
+#endregion Btn
     }
 }
