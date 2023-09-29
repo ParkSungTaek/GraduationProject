@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.03.31
 
-최근 수정 일자 : 23.04.27
-최근 수정 사항 : UI_IdxEventHandler Bind 추가, Init UIManager에서 호출하도록 변경
+최근 수정 일자 : 23.09.29
+최근 수정 사항 : 이벤트 초기화 추가
 ******/
 using System;
 using System.Collections.Generic;
@@ -106,6 +106,19 @@ namespace Client
                     evt.OnClickHandler -= action;
                     evt.OnClickHandler += action;
                     break;
+            }
+        }
+
+        /// <summary> 할당된 이벤트 초기화 </summary>
+        public static void ClearEvent(GameObject go)
+        {
+            UI_EventHandler evt = go.GetComponent<UI_EventHandler>();
+
+            if (evt != null)
+            {
+                evt.OnClickHandler = null;
+                evt.OnDragHandler = null;
+                evt.OnDragEndHandler = null;
             }
         }
     }

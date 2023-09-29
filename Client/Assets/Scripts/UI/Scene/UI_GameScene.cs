@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.04.01
 
-최근 수정 일자 : 23.09.28
-최근 수정 사항 : 퇴장 시 아이템 UI 숨기기
+최근 수정 일자 : 23.09.29
+최근 수정 사항 : 퇴장 버튼 추가
 ******/
 
 using UnityEngine;
@@ -28,6 +28,7 @@ namespace Client
             AttackBtn,
             SkillBtn,
             ItemBtn,
+            QuitBtn,
         }
         enum Texts 
         { 
@@ -196,6 +197,7 @@ namespace Client
             BindEvent(GetButton((int)Buttons.AttackBtn).gameObject, Btn_Attack);
             BindEvent(GetButton((int)Buttons.SkillBtn).gameObject, Btn_Skill);
             BindEvent(GetButton((int)Buttons.ItemBtn).gameObject, Btn_GetItem);
+            BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, Btn_Quit);
         }
 
         /// <summary>
@@ -221,6 +223,19 @@ namespace Client
         {
             GetButton((int)Buttons.ItemBtn).gameObject.SetActive(false);
             GameManager.UI.ShowPopUpUI<UI_GetItem>().OnClose = OnCloseGetItem;
+        }
+
+        void Btn_Quit(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 나가시겠습니까?", Btn_AcceptQuit);
+        }
+
+        void Btn_AcceptQuit()
+        {
+            CTS_LeaveRoom leavePacket = new CTS_LeaveRoom();
+            GameManager.Network.Send(leavePacket.Write());
+
+            SceneManager.LoadScene(Define.Scenes.Title);
         }
 
         /// <summary> 아이템 뽑기 버튼 다시 보이기 </summary>
