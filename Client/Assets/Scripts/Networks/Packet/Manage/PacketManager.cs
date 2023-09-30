@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.16
-최근 수정 내용 : 플레이어 애니메이션 동기화, 프리스트 버프, 아이템 동기화 추가
+최근 수정 일자 : 23.09.29
+최근 수정 내용 : 시작한 방 입장 실패 추가
  ******/
 
 using ServerCore;
@@ -33,6 +33,7 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID.STC_RejectRoom, MakePacket<STC_RejectRoom>);
 			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Full, MakePacket<STC_RejectEnter_Full>);
 			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Exist, MakePacket<STC_RejectEnter_Exist>);
+			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Start, MakePacket<STC_RejectEnter_Start>);
 			_makeFunc.Add((ushort)PacketID.STC_PlayerEnter,MakePacket<STC_PlayerEnter>);
 			_makeFunc.Add((ushort)PacketID.STC_PlayerLeave, MakePacket<STC_PlayerLeave>);
 			_makeFunc.Add((ushort)PacketID.STC_ExistPlayers, MakePacket<STC_ExistPlayers>);
@@ -42,6 +43,7 @@ namespace Client
             _handler.Add((ushort)PacketID.STC_RejectRoom, PacketHandler.STC_RejectRoomHandler);
             _handler.Add((ushort)PacketID.STC_RejectEnter_Full, PacketHandler.STC_RejectEnter_FullHandler);
             _handler.Add((ushort)PacketID.STC_RejectEnter_Exist, PacketHandler.STC_RejectEnter_ExistHandler);
+			_handler.Add((ushort)PacketID.STC_RejectEnter_Start, PacketHandler.STC_RejectEnter_StartHandler);
             _handler.Add((ushort)PacketID.STC_PlayerEnter, PacketHandler.STC_PlayerEnterHandler);
             _handler.Add((ushort)PacketID.STC_PlayerLeave, PacketHandler.STC_PlayerLeaveHandler);
 			_handler.Add((ushort)PacketID.STC_ExistPlayers, PacketHandler.STC_ExistPlayersHandler);

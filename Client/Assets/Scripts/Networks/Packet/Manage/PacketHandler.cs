@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.09.28
-최근 수정 사항 : 플레이어 퇴장 처리 핸들러 수정
+최근 수정 일자 : 23.09.29
+최근 수정 사항 : 시작한 방 입장 실패
  ******/
 
 using ServerCore;
@@ -65,13 +65,26 @@ namespace Client
 				GameManager.UI.CloseAllPopUpUI();
 				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("존재하지 않는 방입니다.");
 			});
-		}
-
+        }
+        
 		/// <summary>
-		/// 작성자 : 이우열 <br/>
-		/// 플레이어 입장 성공 패킷 처리
-		/// </summary>
-		public static void STC_PlayerEnterHandler(PacketSession session, IPacket packet)
+        /// 작성자 : 이우열 <br/>
+        /// 없는 방이라 입장 실패 패킷 처리
+        /// </summary>
+        public static void STC_RejectEnter_StartHandler(PacketSession session, IPacket packet)
+        {
+            GameManager.Network.Push(() =>
+            {
+                GameManager.UI.CloseAllPopUpUI();
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("이미 시작한 방입니다.");
+            });
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 플레이어 입장 성공 패킷 처리
+        /// </summary>
+        public static void STC_PlayerEnterHandler(PacketSession session, IPacket packet)
 		{
 			STC_PlayerEnter pkt = packet as STC_PlayerEnter;
 			ServerSession serverSession = session as ServerSession;

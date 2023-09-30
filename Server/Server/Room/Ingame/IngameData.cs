@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.06
-최근 수정 내용 : MonsterControlInfo추가
+최근 수정 일자 : 23.09.29
+최근 수정 내용 : 시작한 방 입장 실패
  ******/
 
 using System.Collections.Generic;
@@ -15,7 +15,8 @@ namespace Server
     {
         public enum state
         {
-            Pause,
+            Lobby,
+            CharacterSelect,
             Play,
             Win,
             Lose,
@@ -37,7 +38,7 @@ namespace Server
 
         public IngameData()
         {
-            State = state.Pause;
+            State = state.Lobby;
             if (monsterStatHandler == null)
             {
                 monsterStatHandler = Util.ParseJson<MonsterStatHandler>("Monsterstats");
@@ -53,7 +54,7 @@ namespace Server
         {
             _players.Clear();
             _monters.Clear();
-            State = state.Pause;
+            State = state.CharacterSelect;
 
             foreach (var client in clients)
                 _players.Add(client.SessionId, new PlayerInfo());

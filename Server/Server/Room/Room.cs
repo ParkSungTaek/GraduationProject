@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.16
-최근 수정 내용 : 공격 애니메이션 동기화, 사제 버프, 아이템 동기화 구현
+최근 수정 일자 : 23.09.29
+최근 수정 내용 : 시작한 방 입장 실패
  ******/
 
 using ServerCore;
@@ -77,6 +77,13 @@ namespace Server
             {
                 STC_RejectEnter_Full fullPacket = new STC_RejectEnter_Full();
                 session.Send(fullPacket.Write());
+                return;
+            }
+
+            if (_ingameData.State != IngameData.state.Lobby)
+            {
+                STC_RejectEnter_Start alreadyStartPacket = new STC_RejectEnter_Start();
+                session.Send(alreadyStartPacket.Write());
                 return;
             }
 

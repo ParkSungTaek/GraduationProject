@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.09.28
-최근 수정 내용 : 연결 여부 확인 패킷 추가
+최근 수정 일자 : 23.09.29
+최근 수정 내용 : 시작한 방 입장 실패 패킷 추가
  ******/
 
 using ServerCore;
@@ -149,6 +149,33 @@ namespace Client
     public class STC_RejectEnter_Full : IPacket
     {
         public ushort Protocol => (ushort)PacketID.STC_RejectEnter_Full;
+
+        public void Read(ArraySegment<byte> segment) { }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+    
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 서버 -> 클라 방 입장 불가 : 이미 시작한 방
+    /// </summary>
+    public class STC_RejectEnter_Start : IPacket
+    {
+        public ushort Protocol => (ushort)PacketID.STC_RejectEnter_Start;
 
         public void Read(ArraySegment<byte> segment) { }
 
