@@ -57,29 +57,9 @@ namespace Client
     /// 작성자 : 이우열 <br/>
     /// 모든 클라이언트가 캐릭터 선택 완료 -> 게임 시작 브로드캐스팅
     /// </summary>
-    public class STC_StartGame : IPacket
+    public class STC_StartGame : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_StartGame;
-        public void Read(ArraySegment<byte> segment)
-        {
-
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID_Ingame.STC_StartGame;
     }
 
     #region Non-Playable

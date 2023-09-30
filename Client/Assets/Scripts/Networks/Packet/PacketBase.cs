@@ -6,6 +6,7 @@
 최근 수정 내용 : PacketId 수정
  ******/
 
+using ServerCore;
 using System;
 
 namespace Client
@@ -73,5 +74,28 @@ namespace Client
         void Read(ArraySegment<byte> segment);
         /// <summary> 패킷 -> 보낼 데이터로 전환 </summary>
         ArraySegment<byte> Write();
+    }
+
+    public abstract class SimplePacket : IPacket
+    {
+        public abstract ushort Protocol { get; }
+
+        public void Read(ArraySegment<byte> segment) { }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
     }
 }

@@ -58,35 +58,9 @@ namespace Client
     /// 작성자 : 이우열 <br/>
     /// 주기적으로 연결 검사
     /// </summary>
-    public class STC_CheckAlive : IPacket
+    public class STC_CheckAlive : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_CheckAlive;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            int count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-            //protocol
-            count += sizeof(ushort);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_CheckAlive;
     }
 
     #region Create/Enter Room
@@ -94,106 +68,35 @@ namespace Client
     /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 방 생성 불가
     /// </summary>
-    public class STC_RejectRoom : IPacket
+    public class STC_RejectRoom : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_RejectRoom;
-
-        public void Read(ArraySegment<byte> segment) { }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_RejectRoom;
     }
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 방 입장 불가 : 방 없음
     /// </summary>
-    public class STC_RejectEnter_Exist : IPacket
+    public class STC_RejectEnter_Exist : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_RejectEnter_Exist;
-
-        public void Read(ArraySegment<byte> segment) { }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_RejectEnter_Exist;
     }
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 방 입장 불가 : 가득찬 방
     /// </summary>
-    public class STC_RejectEnter_Full : IPacket
+    public class STC_RejectEnter_Full : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_RejectEnter_Full;
-
-        public void Read(ArraySegment<byte> segment) { }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_RejectEnter_Full;
     }
-    
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 서버 -> 클라 방 입장 불가 : 이미 시작한 방
     /// </summary>
-    public class STC_RejectEnter_Start : IPacket
+    public class STC_RejectEnter_Start : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_RejectEnter_Start;
-
-        public void Read(ArraySegment<byte> segment) { }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_RejectEnter_Start;
     }
 
     /// <summary>
@@ -237,6 +140,9 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
+
+
+
 
     /// <summary>
     /// 작성자 : 이우열 <br/>
@@ -332,6 +238,10 @@ namespace Client
         }
     }
 
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 새로 입장한 클라이언트에게 기존 존재 방 정보 알림
+    /// </summary>
     public class STC_ExistRooms : IPacket
     {
         public ushort Protocol => (ushort)PacketID.STC_ExistRooms;
@@ -401,6 +311,9 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
+
+
+
     #endregion Create/Enter Room
 
     #region Loby
@@ -408,56 +321,18 @@ namespace Client
     /// 작성자 : 이우열 <br/>
     /// Host 퇴장 시, Host 변경 패킷
     /// </summary>
-    public class STC_SetSuper : IPacket
+    public class STC_SetSuper : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_SetSuper;
-
-        public void Read(ArraySegment<byte> segment) { }
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_SetSuper;
     }
 
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 방장의 로비 -> 캐릭터 선택 씬 전환 요구 브로드캐스팅
     /// </summary>
-    public class STC_ReadyGame : IPacket
+    public class STC_ReadyGame : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.STC_ReadyGame;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.STC_ReadyGame;
     }
     #endregion Loby
 }

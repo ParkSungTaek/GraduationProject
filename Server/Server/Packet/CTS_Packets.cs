@@ -106,32 +106,9 @@ namespace Server
     /// 작성자 : 박성택<br/>
     /// 방 입장 패킷
     /// </summary>
-    public class CTS_QuickEnterRoom : IPacket
+    public class CTS_QuickEnterRoom : SimplePacket
     {
-        //public string roomName;
-
-        public ushort Protocol => (ushort)PacketID.CTS_QuickEnterRoom;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-           
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.CTS_QuickEnterRoom;
     }
 
 
@@ -184,62 +161,17 @@ namespace Server
     /// 작성자 : 이우열<br/>
     /// 방 퇴장 패킷
     /// </summary>
-    public class CTS_LeaveRoom : IPacket
+    public class CTS_LeaveRoom : SimplePacket
     {
-        public ushort Protocol => (ushort)PacketID.CTS_LeaveRoom;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            int count = 0;
-            //packet size
-            count += sizeof(ushort);
-            //protocol
-            count += sizeof(ushort);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol => (ushort)PacketID.CTS_LeaveRoom;
     }
 
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 로비 -> 클래스 선택 전환 패킷, 방장만 보낼 수 있음
     /// </summary>
-    public class CTS_ReadyGame : IPacket
+    public class CTS_ReadyGame : SimplePacket
     {
-        public ushort Protocol { get => (ushort)PacketID.CTS_ReadyGame; }
-
-        public void Read(ArraySegment<byte> segment)
-        {
-
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
+        public override ushort Protocol { get => (ushort)PacketID.CTS_ReadyGame; }
     }
 }

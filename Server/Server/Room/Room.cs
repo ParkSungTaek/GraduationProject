@@ -263,6 +263,10 @@ namespace Server
                 if (_ingameData.MonsterControlInfo.NextWave)
                 {
                     await Task.Delay(TimeSpan.FromSeconds(_ingameData.MonsterControlInfo.WaveToWave));
+
+                    if (_ingameData == null)
+                        break;
+
                     _ingameData.MonsterControlInfo.NextWave = false;
                 }
             }
