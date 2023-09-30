@@ -99,30 +99,25 @@ namespace Server
         /// 빠른 입장 허용 || 비허용
         /// </summary>
         /// <param name="RoomName"></param>
-        public void AllowQuickEnter(string roomName,bool allowQuickEnter)
+        public void AllowQuickEnter(Room room, bool allowQuickEnter)
         {
-            Room room;
-            if(_rooms.TryGetValue(roomName,out room))
+            if (allowQuickEnter)
             {
-                if (allowQuickEnter)
+                room.AllowQuickEntry = true;
+                if (!_quickEnterRooms.Contains(room))
                 {
-                    room.AllowQuickEntry = true;
-                    if (!_quickEnterRooms.Contains(room))
-                    {
-                        Console.WriteLine($"ADD {room.RoomName}");
-                        _quickEnterRooms.AddLast(room);
-                    }
-
+                    Console.WriteLine($"ADD {room.RoomName}");
+                    _quickEnterRooms.AddLast(room);
                 }
-                else
-                {
-                    room.AllowQuickEntry = false;
-                    if (_quickEnterRooms.Contains(room))
-                    {
-                        Console.WriteLine($"Delete {room.RoomName}");
-                        _quickEnterRooms.Remove(room);
-                    }
 
+            }
+            else
+            {
+                room.AllowQuickEntry = false;
+                if (_quickEnterRooms.Contains(room))
+                {
+                    Console.WriteLine($"Delete {room.RoomName}");
+                    _quickEnterRooms.Remove(room);
                 }
             }
         }

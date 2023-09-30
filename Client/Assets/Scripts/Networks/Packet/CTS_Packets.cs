@@ -66,7 +66,6 @@ namespace Client
     /// </summary>
     public class CTS_AllowQuickEntryRoom : IPacket
     {
-        public string roomName;
         public bool AllowQuickEntry;
         public ushort Protocol => (ushort)PacketID.CTS_AllowQuickEntryRoom;
 
@@ -80,10 +79,6 @@ namespace Client
 
             AllowQuickEntry = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
             count += sizeof(bool);
-            ushort nameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-            count += sizeof(ushort);
-            roomName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, nameLen);
-            count += nameLen;
         }
 
         public ArraySegment<byte> Write()
@@ -99,11 +94,6 @@ namespace Client
 
             Array.Copy(BitConverter.GetBytes(AllowQuickEntry), 0, segment.Array, segment.Offset + count, sizeof(bool));
             count += sizeof(bool);
-
-            ushort nameLen = (ushort)Encoding.Unicode.GetBytes(roomName, 0, roomName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
-            Array.Copy(BitConverter.GetBytes(nameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            count += nameLen;
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

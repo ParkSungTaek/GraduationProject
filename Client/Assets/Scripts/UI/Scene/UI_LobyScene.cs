@@ -90,7 +90,6 @@ namespace Client
         void QuickEnterAllow(PointerEventData evt)
         {
             CTS_AllowQuickEntryRoom pkt = new CTS_AllowQuickEntryRoom();
-            pkt.roomName = GameManager.Room.GetRoomName();
 
             if (AllowQuickEnter)
             {

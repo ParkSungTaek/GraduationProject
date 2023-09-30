@@ -48,8 +48,14 @@ namespace Server
             ClientSession clientSession = session as ClientSession;
             CTS_AllowQuickEntryRoom allowPacket = packet as CTS_AllowQuickEntryRoom;
 
+            Room room = clientSession.Room;
+
+            if (room != null)
+            {
+                RoomManager.Instance.Push(() => RoomManager.Instance.AllowQuickEnter(room, allowPacket.AllowQuickEntry));
+            }
             
-            RoomManager.Instance.Push(() => RoomManager.Instance.AllowQuickEnter(allowPacket.roomName, allowPacket.AllowQuickEntry));
+            //RoomManager.Instance.Push(() => RoomManager.Instance.AllowQuickEnter(allowPacket.roomName, allowPacket.AllowQuickEntry));
         }
         /// <summary>
         /// 작성자 : 박성택<br/>
