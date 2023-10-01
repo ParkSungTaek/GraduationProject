@@ -2,7 +2,7 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.09.29
+최근 수정 일자 : 23.10.01
 최근 수정 내용 : PacketId 수정
  ******/
 
@@ -14,6 +14,9 @@ namespace Client
     /// <summary> 패킷 종류 enum </summary>
     public enum PacketID
     {
+        CTS_RegistUser,
+        CTS_Login,
+
         CTS_CreateRoom,
         CTS_AllowQuickEntryRoom,
         CTS_QuickEnterRoom,
@@ -22,6 +25,8 @@ namespace Client
         CTS_ReadyGame,
 
         STC_OnConnect,
+        STC_RegistAck,
+        STC_LoginAck,
         STC_CheckAlive,
 
         STC_RejectRoom,

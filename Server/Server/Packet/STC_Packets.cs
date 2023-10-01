@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.09.29
-최근 수정 내용 : 시작한 방 입장 실패 패킷 추가
+최근 수정 일자 : 23.10.01
+최근 수정 내용 : 로그인/회원가입 결과 반환 패킷 추가
  ******/
 
 using ServerCore;
@@ -53,6 +53,93 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 회원가입 결과 반환
+    /// </summary>
+    public class STC_RegistAck : IPacket
+    {
+        public bool isSuccess;
+        public ushort Protocol => (ushort)PacketID.STC_RegistAck;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            //protocol
+            count += sizeof(ushort);
+
+            isSuccess = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+            count += sizeof(bool);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(isSuccess), 0, segment.Array, segment.Offset + count, sizeof(bool));
+            count += sizeof(bool);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 로그인 결과 반환
+    /// </summary>
+    public class STC_LoginAck : IPacket
+    {
+        public bool isSuccess;
+        public ushort Protocol => (ushort)PacketID.STC_LoginAck;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            //protocol
+            count += sizeof(ushort);
+
+            isSuccess = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+            count += sizeof(bool);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(isSuccess), 0, segment.Array, segment.Offset + count, sizeof(bool));
+            count += sizeof(bool);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
 
     /// <summary>
     /// 작성자 : 이우열 <br/>

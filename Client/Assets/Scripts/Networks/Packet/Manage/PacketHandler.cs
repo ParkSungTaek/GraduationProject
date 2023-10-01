@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.09.29
-최근 수정 사항 : 시작한 방 입장 실패
+최근 수정 일자 : 23.10.01
+최근 수정 사항 : 회원가입/로그인
  ******/
 
 using ServerCore;
@@ -26,6 +26,44 @@ namespace Client
 
 			GameManager.Network.Push(() => { GameManager.UI.CloseAllPopUpUI(); });
 		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 회원가입 성공 여부 처리 패킷
+		/// </summary>
+		public static void STC_RegistAckHandler(PacketSession session, IPacket packet)
+		{
+            STC_RegistAck pkt = packet as STC_RegistAck;
+            ServerSession serverSession = session as ServerSession;
+
+			if (pkt.isSuccess)
+            {
+                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("회원가입 성공"); });
+            }
+			else
+            {
+                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복 이메일"); });
+            }
+        }
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 로그인 성공 여부 패킷 처리
+		/// </summary>
+		public static void STC_LoginAckHandler(PacketSession session, IPacket packet)
+        {
+            STC_LoginAck pkt = packet as STC_LoginAck;
+            ServerSession serverSession = session as ServerSession;
+
+            if (pkt.isSuccess)
+            {
+                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("로그인 성공"); });
+            }
+            else
+            {
+                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("로그인 실패"); });
+            }
+        }
 
         #region Create/Enter Room
         /// <summary> 
@@ -136,7 +174,7 @@ namespace Client
 
             GameManager.Network.Push(() =>
             {
-				GameManager.UI.ShowSceneUI<UI_TitleScene>().SetExistRoomsName(pkt.Rooms);
+				//GameManager.UI.ShowSceneUI<UI_TitleScene>().SetExistRoomsName(pkt.Rooms);
             });
         }
         

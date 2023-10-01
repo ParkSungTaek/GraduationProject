@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.09.29
-최근 수정 내용 : 시작한 방 입장 실패 추가
+최근 수정 일자 : 23.10.01
+최근 수정 내용 : 회원가입/로그인
  ******/
 
 using ServerCore;
@@ -28,6 +28,14 @@ namespace Client
 
         public void Register()
 		{
+			#region Login
+			_makeFunc.Add((ushort)PacketID.STC_RegistAck, MakePacket<STC_RegistAck>);
+			_makeFunc.Add((ushort)PacketID.STC_LoginAck, MakePacket<STC_LoginAck>);
+
+			_handler.Add((ushort)PacketID.STC_RegistAck, PacketHandler.STC_RegistAckHandler);
+			_handler.Add((ushort)PacketID.STC_LoginAck, PacketHandler.STC_LoginAckHandler);
+            #endregion
+
             #region Create/Enter Room
             _makeFunc.Add((ushort)PacketID.STC_OnConnect, MakePacket<STC_OnConnect>);
 			_makeFunc.Add((ushort)PacketID.STC_RejectRoom, MakePacket<STC_RejectRoom>);

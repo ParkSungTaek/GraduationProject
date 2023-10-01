@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.16
-최근 수정 내용 : CTS_PlayerAttack, CTS_PriestBuff 추가
+최근 수정 일자 : 23.10.01
+최근 수정 내용 : 로그인/회원가입 추가
  ******/
 
 using ServerCore;
@@ -28,12 +28,18 @@ namespace Server
         
         public void Register()
         {
+            _makeFunc.Add((ushort)PacketID.CTS_RegistUser, MakePacket<CTS_RegistUser>);
+            _makeFunc.Add((ushort)PacketID.CTS_Login, MakePacket<CTS_Login>);
+
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, MakePacket<CTS_AllowQuickEntryRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_QuickEnterRoom, MakePacket<CTS_QuickEnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_ReadyGame, MakePacket<CTS_ReadyGame>);
+
+            _handler.Add((ushort)PacketID.CTS_RegistUser, PacketHandler.CTS_RegistUserHandler);
+            _handler.Add((ushort)PacketID.CTS_Login, PacketHandler.CTS_LoginHandler);
             
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
             _handler.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, PacketHandler.CTS_AllowQuickEntryRoomHandler);

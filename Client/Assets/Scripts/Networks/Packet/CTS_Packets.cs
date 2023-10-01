@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.09
-최근 수정 내용 : 로비 -> 캐릭터 선택 전환(ReadyGame) 패킷 추가
+최근 수정 일자 : 23.10.01
+최근 수정 내용 : 회원가입/로그인 패킷 추가
  ******/
 
 using ServerCore;
@@ -12,7 +12,121 @@ using System.Text;
 
 namespace Client
 {
-    //TODO : CTS_Login
+    /// <summary>
+ /// 작성자 : 이우열 <br/>
+ /// 회원 가입 패킷
+ /// </summary>
+    public class CTS_RegistUser : IPacket
+    {
+        public string email;
+        public string password;
+        public ushort Protocol => (ushort)PacketID.CTS_RegistUser;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ushort strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            email = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+            count += strLen;
+
+            strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            password = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+            count += strLen;
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            //email
+            ushort strLen = (ushort)Encoding.Unicode.GetBytes(email, 0, email.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += strLen;
+
+            //password
+            strLen = (ushort)Encoding.Unicode.GetBytes(password, 0, password.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += strLen;
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 로그인 패킷
+    /// </summary>
+    public class CTS_Login : IPacket
+    {
+        public string email;
+        public string password;
+        public ushort Protocol => (ushort)PacketID.CTS_Login;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ushort strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            email = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+            count += strLen;
+
+            strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            password = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+            count += strLen;
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            //email
+            ushort strLen = (ushort)Encoding.Unicode.GetBytes(email, 0, email.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += strLen;
+
+            //password
+            strLen = (ushort)Encoding.Unicode.GetBytes(password, 0, password.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += strLen;
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 
     /// <summary>
     /// 작성자 : 이우열<br/>
