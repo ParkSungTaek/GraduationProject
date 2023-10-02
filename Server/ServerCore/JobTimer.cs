@@ -7,9 +7,8 @@
  ******/
 
 using System;
-using ServerCore;
 
-namespace Server
+namespace ServerCore
 {
     /// <summary> 일정 시간 후 수행할 작업 </summary>
     struct JobTimerElem : IComparable<JobTimerElem>

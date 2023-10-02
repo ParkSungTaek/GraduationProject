@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.10.01
-최근 수정 내용 : 회원가입/로그인
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그인 서버, 인증
  ******/
 
 using ServerCore;
@@ -29,15 +29,20 @@ namespace Client
         public void Register()
 		{
 			#region Login
-			_makeFunc.Add((ushort)PacketID.STC_RegistAck, MakePacket<STC_RegistAck>);
-			_makeFunc.Add((ushort)PacketID.STC_LoginAck, MakePacket<STC_LoginAck>);
+			_makeFunc.Add((ushort)PacketID.LTC_RegistAck, MakePacket<LTC_RegistAck>);
+			_makeFunc.Add((ushort)PacketID.LTC_LoginAck, MakePacket<LTC_LoginAck>);
 
-			_handler.Add((ushort)PacketID.STC_RegistAck, PacketHandler.STC_RegistAckHandler);
-			_handler.Add((ushort)PacketID.STC_LoginAck, PacketHandler.STC_LoginAckHandler);
+			_handler.Add((ushort)PacketID.LTC_RegistAck, PacketHandler.LTC_RegistAckHandler);
+			_handler.Add((ushort)PacketID.LTC_LoginAck, PacketHandler.LTC_LoginAckHandler);
+
+			_makeFunc.Add((ushort)PacketID.STC_AuthAck, MakePacket<STC_AuthAck>);
+			_handler.Add((ushort)PacketID.STC_AuthAck, PacketHandler.STC_AuthAckHandler);
+
+			_makeFunc.Add((ushort)PacketID.STC_DuplicatedLogin, MakePacket<STC_DuplicatedLogin>);
+			_handler.Add((ushort)PacketID.STC_DuplicatedLogin, PacketHandler.STC_DuplicatedLoginHandler);
             #endregion
 
             #region Create/Enter Room
-            _makeFunc.Add((ushort)PacketID.STC_OnConnect, MakePacket<STC_OnConnect>);
 			_makeFunc.Add((ushort)PacketID.STC_RejectRoom, MakePacket<STC_RejectRoom>);
 			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Full, MakePacket<STC_RejectEnter_Full>);
 			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Exist, MakePacket<STC_RejectEnter_Exist>);
@@ -47,7 +52,6 @@ namespace Client
 			_makeFunc.Add((ushort)PacketID.STC_ExistPlayers, MakePacket<STC_ExistPlayers>);
 			_makeFunc.Add((ushort)PacketID.STC_ExistRooms, MakePacket<STC_ExistRooms>);
 
-            _handler.Add((ushort)PacketID.STC_OnConnect, PacketHandler.STC_OnConnectHandler);
             _handler.Add((ushort)PacketID.STC_RejectRoom, PacketHandler.STC_RejectRoomHandler);
             _handler.Add((ushort)PacketID.STC_RejectEnter_Full, PacketHandler.STC_RejectEnter_FullHandler);
             _handler.Add((ushort)PacketID.STC_RejectEnter_Exist, PacketHandler.STC_RejectEnter_ExistHandler);
@@ -59,36 +63,36 @@ namespace Client
 
             #endregion Create/Enter Room
 
-            #region Loby
+            #region Lobby
             _makeFunc.Add((ushort)PacketID.STC_SetSuper, MakePacket<STC_SetSuper>);
 			_makeFunc.Add((ushort)PacketID.STC_ReadyGame, MakePacket<STC_ReadyGame>);
 
 			_handler.Add((ushort)PacketID.STC_SetSuper, PacketHandler.STC_SetSuperHandler);
 			_handler.Add((ushort)PacketID.STC_ReadyGame, PacketHandler.STC_ReadyGameHandler);
-            #endregion Loby
+            #endregion Lobby
 
             #region Ingame
-			_makeFunc.Add((ushort)PacketID_Ingame.STC_SelectClass, MakePacket<STC_SelectClass>);
-            _makeFunc.Add((ushort)PacketID_Ingame.STC_StartGame, MakePacket<STC_StartGame>);
-			_makeFunc.Add((ushort)PacketID_Ingame.STC_PlayerMove, MakePacket<STC_PlayerMove>);
-            _makeFunc.Add((ushort)PacketID_Ingame.STC_PlayerAttack, MakePacket<STC_PlayerAttack>);
-			_makeFunc.Add((ushort)PacketID_Ingame.STC_PriestBuff, MakePacket<STC_PriestBuff>);
-			_makeFunc.Add((ushort)PacketID_Ingame.STC_ItemUpdate, MakePacket<STC_ItemUpdate>);
-			_makeFunc.Add((ushort)PacketID_Ingame.STC_MosterCreate, MakePacket<STC_MosterCreate>);
-            _makeFunc.Add((ushort)PacketID_Ingame.STC_MonsterHPUpdate, MakePacket<STC_MonsterHPUpdate>);
-            _makeFunc.Add((ushort)PacketID_Ingame.STC_TowerUpdate, MakePacket<STC_TowerUpdate>);
+			_makeFunc.Add((ushort)PacketID.STC_SelectClass, MakePacket<STC_SelectClass>);
+            _makeFunc.Add((ushort)PacketID.STC_StartGame, MakePacket<STC_StartGame>);
+			_makeFunc.Add((ushort)PacketID.STC_PlayerMove, MakePacket<STC_PlayerMove>);
+            _makeFunc.Add((ushort)PacketID.STC_PlayerAttack, MakePacket<STC_PlayerAttack>);
+			_makeFunc.Add((ushort)PacketID.STC_PriestBuff, MakePacket<STC_PriestBuff>);
+			_makeFunc.Add((ushort)PacketID.STC_ItemUpdate, MakePacket<STC_ItemUpdate>);
+			_makeFunc.Add((ushort)PacketID.STC_MosterCreate, MakePacket<STC_MosterCreate>);
+            _makeFunc.Add((ushort)PacketID.STC_MonsterHPUpdate, MakePacket<STC_MonsterHPUpdate>);
+            _makeFunc.Add((ushort)PacketID.STC_TowerUpdate, MakePacket<STC_TowerUpdate>);
 
 
 
-            _handler.Add((ushort)PacketID_Ingame.STC_SelectClass, PacketHandler.STC_SelectClassHandler);
-			_handler.Add((ushort)PacketID_Ingame.STC_StartGame, PacketHandler.STC_StartGameHandler);
-            _handler.Add((ushort)PacketID_Ingame.STC_PlayerMove, PacketHandler.STC_PlayerMoveHandler);
-			_handler.Add((ushort)PacketID_Ingame.STC_PlayerAttack, PacketHandler.STC_PlayerAttackHandler);
-			_handler.Add((ushort)PacketID_Ingame.STC_PriestBuff, PacketHandler.STC_PriestBuffHandler);
-			_handler.Add((ushort)PacketID_Ingame.STC_ItemUpdate, PacketHandler.STC_ItemUpdateHandler);
-			_handler.Add((ushort)PacketID_Ingame.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
-            _handler.Add((ushort)PacketID_Ingame.STC_MonsterHPUpdate, PacketHandler.STC_MonsterHPUpdate);
-            _handler.Add((ushort)PacketID_Ingame.STC_TowerUpdate, PacketHandler.STC_TowerUpdateHandler);
+            _handler.Add((ushort)PacketID.STC_SelectClass, PacketHandler.STC_SelectClassHandler);
+			_handler.Add((ushort)PacketID.STC_StartGame, PacketHandler.STC_StartGameHandler);
+            _handler.Add((ushort)PacketID.STC_PlayerMove, PacketHandler.STC_PlayerMoveHandler);
+			_handler.Add((ushort)PacketID.STC_PlayerAttack, PacketHandler.STC_PlayerAttackHandler);
+			_handler.Add((ushort)PacketID.STC_PriestBuff, PacketHandler.STC_PriestBuffHandler);
+			_handler.Add((ushort)PacketID.STC_ItemUpdate, PacketHandler.STC_ItemUpdateHandler);
+			_handler.Add((ushort)PacketID.STC_MosterCreate, PacketHandler.STC_MosterCreateHandler);
+            _handler.Add((ushort)PacketID.STC_MonsterHPUpdate, PacketHandler.STC_MonsterHPUpdate);
+            _handler.Add((ushort)PacketID.STC_TowerUpdate, PacketHandler.STC_TowerUpdateHandler);
 
             #endregion Ingame
         }

@@ -162,7 +162,7 @@ namespace Server
             Room room;
 
             //방 존재하지 않음
-            if(_rooms.TryGetValue(roomName, out room) == false)
+            if(_rooms.TryGetValue(roomName, out room) == false || room.RoomName == string.Empty)
             {
                 STC_RejectEnter_Exist existPacket = new STC_RejectEnter_Exist();
                 session.Send(existPacket.Write());

@@ -7,7 +7,7 @@
  ******/
 using System;
 
-namespace Server
+namespace LoginServer.DB
 {
     public class DBManager
     {

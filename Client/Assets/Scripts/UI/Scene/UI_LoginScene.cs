@@ -1,11 +1,10 @@
 /******
-작성자 : 박성택
-작성 일자 : 23.09.17
+작성자 : 이우열
+작성 일자 : 23.10.01
 
-최근 수정 일자 : 23.10.01
-최근 수정 내용 : UI_LoginScene 클래스 생성
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그인 서버로 전환, 종료 버튼 추가
  ******/
-
 
 using System.Security.Cryptography;
 using System.Text;
@@ -22,6 +21,7 @@ namespace Client
         {
             RegistBtn,
             LoginBtn,
+            QuitBtn,
         }
 
         enum InputFields
@@ -44,6 +44,7 @@ namespace Client
         {
             BindEvent(GetButton((int)Buttons.RegistBtn).gameObject, Btn_Regist);
             BindEvent(GetButton((int)Buttons.LoginBtn).gameObject, Btn_Login);
+            BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, Btn_Quit);
         }
 
         void Btn_Regist(PointerEventData evt)
@@ -55,11 +56,11 @@ namespace Client
             {
                 string encryptedPW = Encoding.ASCII.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
 
-                CTS_RegistUser registPacket = new CTS_RegistUser();
+                CTL_Regist registPacket = new CTL_Regist();
                 registPacket.email = email;
                 registPacket.password = encryptedPW;
 
-                GameManager.Network.Send(registPacket.Write());
+                GameManager.Login.Post(registPacket);
             }
         }
 
@@ -72,12 +73,28 @@ namespace Client
             {
                 string encryptedPW = Encoding.ASCII.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
 
-                CTS_Login loginPacket = new CTS_Login();
-                loginPacket.email = email;
-                loginPacket.password = encryptedPW;
+                CTL_Login registPacket = new CTL_Login();
+                registPacket.email = email;
+                registPacket.password = encryptedPW;
 
-                GameManager.Network.Send(loginPacket.Write());
+                GameManager.Network.Email = email;
+
+                GameManager.Login.Post(registPacket);
             }
+        }
+
+        void Btn_Quit(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 종료하시겠습니까?", AcceptQuitBtn);
+        }
+
+        void AcceptQuitBtn()
+        {
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.ExitPlaymode();
+#else
+            Application.Quit();
+#endif
         }
         #endregion
     }

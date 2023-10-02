@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.04.01
 
-최근 수정 일자 : 23.09.29
-최근 수정 사항 : 퇴장 버튼 추가
+최근 수정 일자 : 23.10.02
+최근 수정 사항 : 퇴장 시 정보 초기화
 ******/
 
 using UnityEngine;
@@ -84,7 +84,7 @@ namespace Client
                 }
             }
 
-            Dictionary<int, Define.Charcter> playerInfos = GameManager.Room.GetPlayerInfo();
+            Dictionary<int, PlayerClassInfo> playerInfos = GameManager.Room.GetPlayerInfo();
             panel = ItemPanels.ItemPanel1;
 
             foreach (var info in playerInfos)
@@ -232,9 +232,7 @@ namespace Client
 
         void Btn_AcceptQuit()
         {
-            CTS_LeaveRoom leavePacket = new CTS_LeaveRoom();
-            GameManager.Network.Send(leavePacket.Write());
-
+            GameManager.Room.Leave();
             SceneManager.LoadScene(Define.Scenes.Title);
         }
 

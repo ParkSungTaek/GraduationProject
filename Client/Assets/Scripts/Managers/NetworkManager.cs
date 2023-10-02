@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.09.28
-최근 수정 내용 : 서버와 연결 끊기 추가
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 연결 끊김 시 로그인 화면으로 전환 추가
  ******/
 
 //#define AWS
@@ -21,7 +21,7 @@ namespace Client
     {
         ServerSession _session;
 
-        public int PlayerId { get => _session.SessionId; }
+        public string Email { get; set; } = string.Empty;
 
         object _lock = new object();
         Queue<Action> _jobQueue = new Queue<Action>();
@@ -59,13 +59,14 @@ namespace Client
         }
 
         /// <summary> connector를 사용하여 서버에 연결 </summary>
-        public void Connect()
+        public void Connect(CTS_Auth authPacket)
         {
-            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("서버와 연결 중");
+            GameManager.UI.CloseAllPopUpUI();
+            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("게임 서버와 연결 중");
 
             IPEndPoint endPoint = GetServerEndPoint();
 
-            Connector connector = new Connector();
+            Connector connector = new Connector(authPacket);
 
             connector.Connect(endPoint,
                 () => { return Generate(); });
@@ -74,8 +75,26 @@ namespace Client
         /// <summary> 서버와 연결 끊기 </summary>
         public void Disconnect()
         {
+            Email = string.Empty;
             Debug.Log("Disconnect");
-            _session.Disconnect();
+            _session?.Disconnect();
+        }
+
+        /// <summary> 서버 연결 끊김 시 로그인 화면으로 전환 </summary>
+        public void GoBackToLogin()
+        {
+            GameManager.Network.Push(() =>
+            {
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded -= ShowDisconnectAlert;
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded += ShowDisconnectAlert;
+                SceneManager.LoadScene(Define.Scenes.Login);
+            });
+
+            void ShowDisconnectAlert(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+            {
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("서버와의 연결이 끊어졌습니다.");
+                UnityEngine.SceneManagement.SceneManager.sceneLoaded -= ShowDisconnectAlert;
+            }
         }
 
         /// <summary> 연결 성공 시 세션 생성 함수 </summary>

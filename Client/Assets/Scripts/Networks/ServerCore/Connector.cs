@@ -1,9 +1,9 @@
 /******
-작성자 : 
+작성자 : 이우열
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.03
-최근 수정 사항 : 서버에 연결을 위한 클래스 생성
+최근 수정 일자 : 23.10.02
+최근 수정 사항 : 연결 성공 콜백 추가
  ******/
 
 using System;
@@ -19,6 +19,12 @@ namespace ServerCore
 	{
 		/// <summary> 연결 성공 시 세션 생성 함수 </summary>
 		Func<Session> _sessionFactory;
+		Client.IPacket _onConnect;
+
+		public Connector(Client.IPacket onConnect = null)
+		{
+			_onConnect = onConnect;
+		}
 
 		/// <summary> 서버에 연결 시도 </summary>
 		public void Connect(IPEndPoint endPoint, Func<Session> sessionFactory, int count = 1)
@@ -56,11 +62,21 @@ namespace ServerCore
 				Session session = _sessionFactory.Invoke();
 				session.Start(args.ConnectSocket);
 				session.OnConnected(args.RemoteEndPoint);
+				
+				if (_onConnect != null)
+				{
+					session.Send(_onConnect.Write());
+				}
 			}
 			else
 			{
 				Console.WriteLine($"OnConnectCompleted Fail: {args.SocketError}");
-				Client.GameManager.Network.Push(() => { Client.GameManager.UI.CloseAllPopUpUI(); Client.GameManager.UI.ShowPopUpUI<Client.UI_FailConnect>(); });
+				Client.GameManager.Network.Push(() => 
+				{ 
+					Client.GameManager.UI.CloseAllPopUpUI();
+					Client.GameManager.UI.ShowPopUpUI<Client.UI_ClosableLog>().SetLog("서버 연결에 실패했습니다.");
+				});
+				Client.GameManager.Login.RemoveTimer();
 			}
 		}
 	}

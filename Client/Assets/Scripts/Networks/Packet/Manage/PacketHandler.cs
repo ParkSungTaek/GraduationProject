@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.10.01
-최근 수정 사항 : 회원가입/로그인
+최근 수정 일자 : 23.10.02
+최근 수정 사항 : 로그인 서버, 인증
  ******/
 
 using ServerCore;
@@ -13,56 +13,101 @@ namespace Client
 {
 	class PacketHandler
 	{
-		/// <summary>
-		/// 작성자 : 이우열 <br/>
-		/// 서버에 연결 성공 시 서버에서 전송한 패킷, playerId 설정
-		/// </summary>
-		public static void STC_OnConnectHandler(PacketSession session, IPacket packet)
-		{
-			STC_OnConnect pkt = packet as STC_OnConnect;
-			ServerSession serverSession = session as ServerSession;
-		
-			serverSession.SessionId = pkt.playerId;
-
-			GameManager.Network.Push(() => { GameManager.UI.CloseAllPopUpUI(); });
-		}
 
 		/// <summary>
 		/// 작성자 : 이우열 <br/>
 		/// 회원가입 성공 여부 처리 패킷
 		/// </summary>
-		public static void STC_RegistAckHandler(PacketSession session, IPacket packet)
+		public static void LTC_RegistAckHandler(PacketSession session, IPacket packet)
 		{
-            STC_RegistAck pkt = packet as STC_RegistAck;
-            ServerSession serverSession = session as ServerSession;
+            LTC_RegistAck pkt = packet as LTC_RegistAck;
+            LoginSession loginSession = session as LoginSession;
 
 			if (pkt.isSuccess)
             {
-                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("회원가입 성공"); });
+                GameManager.Network.Push(() => { 
+					GameManager.UI.CloseAllPopUpUI();
+					GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("회원가입 성공"); 
+				});
             }
 			else
             {
-                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복 이메일"); });
+                GameManager.Network.Push(() => {
+					GameManager.UI.CloseAllPopUpUI();
+					GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복 이메일"); 
+				});
             }
+
+			GameManager.Login.RemoveTimer();
+
+			loginSession.Disconnect();
         }
 
 		/// <summary>
 		/// 작성자 : 이우열 <br/>
 		/// 로그인 성공 여부 패킷 처리
 		/// </summary>
-		public static void STC_LoginAckHandler(PacketSession session, IPacket packet)
+		public static void LTC_LoginAckHandler(PacketSession session, IPacket packet)
         {
-            STC_LoginAck pkt = packet as STC_LoginAck;
+            LTC_LoginAck pkt = packet as LTC_LoginAck;
+            LoginSession loginSession = session as LoginSession;
+
+            if (pkt.isSuccess)
+            {
+				GameManager.Network.Push(() => 
+				{ 
+					GameManager.UI.CloseAllPopUpUI();
+					CTS_Auth authPacket = new CTS_Auth { email = GameManager.Network.Email };
+					GameManager.Network.Connect(authPacket);
+				});
+            }
+            else
+            {
+                GameManager.Network.Push(() => {
+					GameManager.UI.CloseAllPopUpUI();
+					GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("로그인 실패"); 
+				});
+            }
+
+			GameManager.Login.RemoveTimer();
+
+			loginSession.Disconnect();
+        }
+
+		/// <summary>
+		/// 게임 서버의 인증 반환 패킷 처리
+		/// </summary>
+		public static void STC_AuthAckHandler(PacketSession session, IPacket packet)
+        {
+            STC_AuthAck pkt = packet as STC_AuthAck;
             ServerSession serverSession = session as ServerSession;
 
             if (pkt.isSuccess)
             {
-                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("로그인 성공"); });
+                GameManager.Network.Push(() =>
+                {
+					SceneManager.LoadScene(Define.Scenes.Title);
+                });
             }
             else
             {
-                GameManager.Network.Push(() => { GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("로그인 실패"); });
+                GameManager.Network.Push(() => {
+					GameManager.Network.Disconnect();
+                    GameManager.UI.CloseAllPopUpUI();
+                    GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("로그인 실패");
+                });
             }
+        }
+
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 중복 로그인 시 로그아웃 처리
+		/// </summary>
+		public static void STC_DuplicatedLoginHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Disconnect();
+			GameManager.Network.GoBackToLogin();
         }
 
         #region Create/Enter Room
@@ -128,8 +173,8 @@ namespace Client
 			ServerSession serverSession = session as ServerSession;
 
 			//다른 플레이어 입장
-			if (pkt.playerId != GameManager.Network.PlayerId)
-				GameManager.Network.Push(() => GameManager.Room.EnterPlayer(pkt.playerId));
+			if (pkt.email != GameManager.Network.Email)
+				GameManager.Network.Push(() => GameManager.Room.EnterPlayer(new STC_ExistPlayers.PlayerInfo { playerId = pkt.playerId, email = pkt.email }));
 
         }
 
@@ -141,7 +186,7 @@ namespace Client
 		{
 			STC_PlayerLeave pkt = packet as STC_PlayerLeave;
 
-			if (pkt.playerId != GameManager.Network.PlayerId)
+			if (pkt.playerId != GameManager.Room.MyId)
 				GameManager.Network.Push(() =>
 				{
 					GameManager.Room.LeavePlayer(pkt.playerId);
@@ -156,12 +201,20 @@ namespace Client
 		public static void STC_ExistPlayersHandler(PacketSession session, IPacket packet)
 		{
 			STC_ExistPlayers pkt = packet as STC_ExistPlayers;
+			var players = pkt.Players;
 
 			GameManager.Network.Push(() =>
             {
-                SceneManager.LoadScene(Define.Scenes.Loby);
-                GameManager.Room.SetExistPlayers(pkt.Players);
+				UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnLoadScene;
+				UnityEngine.SceneManagement.SceneManager.sceneLoaded += OnLoadScene;
+                SceneManager.LoadScene(Define.Scenes.Lobby);
 			});
+
+			void OnLoadScene(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
+			{
+				GameManager.Room.SetExistPlayers(players);
+				UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnLoadScene;
+			}
 		}
 
         /// <summary>
@@ -181,7 +234,7 @@ namespace Client
 
         #endregion Create/Enter Room
 
-        #region Loby
+        #region Lobby
         /// <summary>
         /// 작성자 : 이우열 <br/>
         /// 호스트 변경 패킷
@@ -202,7 +255,7 @@ namespace Client
 		{
 			GameManager.Network.Push(() => SceneManager.LoadScene(Define.Scenes.Game));
 		}
-        #endregion Loby
+        #endregion Lobby
 
         #region Ingame
 		/// <summary>
@@ -234,7 +287,7 @@ namespace Client
 			ServerSession serverSession = session as ServerSession;
 
 			//내가 보낸 패킷 -> 아무것도 안함
-            if (pkt.playerId == GameManager.Network.PlayerId)
+            if (pkt.playerId == GameManager.Room.MyId)
                 return;
 
             GameManager.Network.Push(() =>
@@ -251,7 +304,7 @@ namespace Client
 		{
 			STC_PlayerAttack pkt = packet as STC_PlayerAttack;
 
-			if (pkt.playerId == GameManager.Network.PlayerId)
+			if (pkt.playerId == GameManager.Room.MyId)
 				return;
 
 			GameManager.Network.Push(() =>
@@ -279,7 +332,7 @@ namespace Client
 		{
 			STC_ItemUpdate itemPacket = packet as STC_ItemUpdate;
 
-			if (itemPacket.playerId == GameManager.Network.PlayerId)
+			if (itemPacket.playerId == GameManager.Room.MyId)
 				return;
 
 			GameManager.Network.Push(() => GameManager.InGameData.SyncItemInfo(itemPacket.playerId, itemPacket.position, itemPacket.itemIdx));

@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성일 : 23.04.13
 
-최근 수정 일자 : 23.04.19
-최근 수정 내용 : Session 클래스 구현
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 에러 캐치 추가
  ******/
 
 using System;
@@ -83,24 +83,38 @@ namespace ServerCore
             if (sendBuffList.Count <= 0)
                 return;
 
-            lock (_lock)
+            try
             {
-                foreach (var sendBuff in sendBuffList)
-                    _sendQueue.Enqueue(sendBuff);
+                lock (_lock)
+                {
+                    foreach (var sendBuff in sendBuffList)
+                        _sendQueue.Enqueue(sendBuff);
 
-                if (_pendingList.Count == 0)
-                    RegisterSend();
+                    if (_pendingList.Count == 0)
+                        RegisterSend();
+                }
+            }
+            catch
+            {
+                Disconnect();
             }
         }
         /// <summary> 데이터 전송 큐에 넣기 </summary>
         /// <param name="data"> 보낼 데이터 </param>
         public void Send(ArraySegment<byte> data)
         {
-            lock (_lock)
+            try
             {
-                _sendQueue.Enqueue(data);
-                if (_pendingList.Count == 0)
-                    RegisterSend();
+                lock (_lock)
+                {
+                    _sendQueue.Enqueue(data);
+                    if (_pendingList.Count == 0)
+                        RegisterSend();
+                }
+            }
+            catch
+            {
+                Disconnect();
             }
         }
 
@@ -151,6 +165,10 @@ namespace ServerCore
                     {
                         Console.WriteLine($"Failed to OnSendCompleted : {e}");
                     }
+                }
+                else
+                {
+                    Disconnect();
                 }
             }
         }

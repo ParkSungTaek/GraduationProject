@@ -13,9 +13,8 @@ using System.Net;
 namespace Server
 {
 
-    internal class MainProgram
+    internal class ServerMain
     {
-
         static Listener _listener = new Listener();
 
         static void FlushRoom()
@@ -23,6 +22,14 @@ namespace Server
             RoomManager.Instance.Flush();
             JobTimer.Instance.Push(FlushRoom, 250);
         }
+        static void CheckAlive()
+        {
+            ClientSessionManager.Instance.CheckAlive();
+            LoginSessionManager.Instance.CheckAlive();
+
+            JobTimer.Instance.Push(CheckAlive, 10000);
+        }
+
         /// <summary>
         /// 박성택 : Server Listener 을 추가하고 Client 대기
         /// </summary>
@@ -36,11 +43,13 @@ namespace Server
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
             //TODO : Listener listen
-            _listener.Init(endPoint, () => { return SessionManager.Instance.Generate(); });
-            Console.WriteLine("Listening...");
+            _listener.Init(endPoint, () => { return ClientSessionManager.Instance.Generate(); });
+            Console.WriteLine("I'm Game Server");
+
+            LoginSessionManager.Instance.Connect();
 
             JobTimer.Instance.Push(FlushRoom, 0);
-            JobTimer.Instance.Push(SessionManager.Instance.CheckAlive, 10000);
+            JobTimer.Instance.Push(CheckAlive, 10000);
 
             //계속 예약된 작업 수행 시도
             while(true)

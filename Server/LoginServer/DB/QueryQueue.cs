@@ -10,7 +10,7 @@ using Npgsql;
 using System;
 using System.Collections.Generic;
 
-namespace Server
+namespace LoginServer.DB
 {
     public class Query
     {

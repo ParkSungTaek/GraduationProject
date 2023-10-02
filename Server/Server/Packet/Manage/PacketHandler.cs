@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.05.16
-최근 수정 내용 : 로그인/회원가입 추가
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그인 서버 추가, 인증 추가
  ******/
 
 using System;
@@ -16,40 +16,50 @@ namespace Server
         #region login
         /// <summary>
         /// 작성자 : 이우열 <br/>
-        /// 회원가입 패킷 처리
+        /// 인증 확인 패킷 처리
         /// </summary>
-        public static void CTS_RegistUserHandler(PacketSession session, IPacket packet)
+        public static void LTS_AuthHandler(PacketSession session, IPacket packet)
         {
-            ClientSession clientSession = session as ClientSession;
-            CTS_RegistUser registPacket = packet as CTS_RegistUser;
+            LoginServerSession loginServerSession = session as LoginServerSession;
+            LTS_Auth authPacket = packet as LTS_Auth;
 
-            DBManager.Instance.CreateUser(registPacket.email, registPacket.password, (isSuccess) =>
-            {
-                STC_RegistAck ackPacket = new STC_RegistAck();
-                ackPacket.isSuccess = isSuccess;
-                clientSession.Send(ackPacket.Write());
-            });
+            AuthManager.Instance.OnAuth(authPacket.email);
+            
+            STL_AuthAck authAck = new STL_AuthAck();
+            authAck.email = authPacket.email;
+            loginServerSession.Send(authAck.Write());
         }
 
         /// <summary>
         /// 작성자 : 이우열 <br/>
         /// 로그인 패킷 처리
         /// </summary>
-        public static void CTS_LoginHandler(PacketSession session, IPacket packet)
+        public static void CTS_AuthHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
-            CTS_Login loginPacket = packet as CTS_Login;
+            CTS_Auth authPacket = packet as CTS_Auth;
 
-            DBManager.Instance.LoginUser(loginPacket.email, loginPacket.password, (isSuccess) =>
+            bool isSuccess = AuthManager.Instance.TryAuth(authPacket.email);
+
+            if (isSuccess)
             {
-                STC_LoginAck ackPacket = new STC_LoginAck();
-                ackPacket.isSuccess = isSuccess;
-                clientSession.Send(ackPacket.Write());
-            });
+                clientSession.email = authPacket.email;
+                ClientSessionManager.Instance.OnLogin(clientSession);
+            }
+
+            STC_AuthAck authAck = new STC_AuthAck();
+            authAck.isSuccess = isSuccess;
+
+            clientSession.Send(authAck.Write());
+
+            if (isSuccess == false)
+            {
+                clientSession.Disconnect();
+            }
         }
         #endregion
 
-        #region Loby
+        #region Lobby
         /// <summary>
         /// 작성자 : 이우열<br/>
         /// 방 생성 패킷 처리
@@ -146,7 +156,7 @@ namespace Server
 
             room.Push(() => { room.Ready(clientSession); });
         }
-        #endregion Loby
+        #endregion Lobby
 
         #region Playable
         /// <summary>

@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.10.01
-최근 수정 내용 : 로그인/회원가입 추가
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그인 서버, 인증 추가
  ******/
 
 using ServerCore;
@@ -28,8 +28,13 @@ namespace Server
         
         public void Register()
         {
-            _makeFunc.Add((ushort)PacketID.CTS_RegistUser, MakePacket<CTS_RegistUser>);
-            _makeFunc.Add((ushort)PacketID.CTS_Login, MakePacket<CTS_Login>);
+            _makeFunc.Add((ushort)PacketID.LTS_Auth, MakePacket<LTS_Auth>);
+
+            _handler.Add((ushort)PacketID.LTS_Auth, PacketHandler.LTS_AuthHandler);
+
+            _makeFunc.Add((ushort)PacketID.CTS_Auth, MakePacket<CTS_Auth>);
+
+            _handler.Add((ushort)PacketID.CTS_Auth, PacketHandler.CTS_AuthHandler);
 
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, MakePacket<CTS_AllowQuickEntryRoom>);
@@ -37,9 +42,6 @@ namespace Server
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_ReadyGame, MakePacket<CTS_ReadyGame>);
-
-            _handler.Add((ushort)PacketID.CTS_RegistUser, PacketHandler.CTS_RegistUserHandler);
-            _handler.Add((ushort)PacketID.CTS_Login, PacketHandler.CTS_LoginHandler);
             
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
             _handler.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, PacketHandler.CTS_AllowQuickEntryRoomHandler);
@@ -50,22 +52,22 @@ namespace Server
 
 
             #region Ingame
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_SelectClass, MakePacket<CTS_SelectClass>);
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerMove, MakePacket<CTS_PlayerMove>);
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_PlayerAttack, MakePacket<CTS_PlayerAttack>);
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_PriestBuff, MakePacket<CTS_PriestBuff>);
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, MakePacket<CTS_ItemUpdate>);
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_MonsterHPUpdate, MakePacket<CTS_MonsterHPUpdate>);
-            _makeFunc.Add((ushort)PacketID_Ingame.CTS_TowerDamage, MakePacket<CTS_TowerDamage>);
+            _makeFunc.Add((ushort)PacketID.CTS_SelectClass, MakePacket<CTS_SelectClass>);
+            _makeFunc.Add((ushort)PacketID.CTS_PlayerMove, MakePacket<CTS_PlayerMove>);
+            _makeFunc.Add((ushort)PacketID.CTS_PlayerAttack, MakePacket<CTS_PlayerAttack>);
+            _makeFunc.Add((ushort)PacketID.CTS_PriestBuff, MakePacket<CTS_PriestBuff>);
+            _makeFunc.Add((ushort)PacketID.CTS_ItemUpdate, MakePacket<CTS_ItemUpdate>);
+            _makeFunc.Add((ushort)PacketID.CTS_MonsterHPUpdate, MakePacket<CTS_MonsterHPUpdate>);
+            _makeFunc.Add((ushort)PacketID.CTS_TowerDamage, MakePacket<CTS_TowerDamage>);
 
 
-            _handler.Add((ushort)PacketID_Ingame.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
-            _handler.Add((ushort)PacketID_Ingame.CTS_PlayerMove, PacketHandler.CTS_PlayerMoveHandler);
-            _handler.Add((ushort)PacketID_Ingame.CTS_PlayerAttack, PacketHandler.CTS_PlayerAttackHandler);
-            _handler.Add((ushort)PacketID_Ingame.CTS_PriestBuff, PacketHandler.CTS_PriestBuffHandler);
-            _handler.Add((ushort)PacketID_Ingame.CTS_ItemUpdate, PacketHandler.CTS_ItemUpdateHandler);
-            _handler.Add((ushort)PacketID_Ingame.CTS_MonsterHPUpdate, PacketHandler.CTS_MonsterHPUpdateHandler);
-            _handler.Add((ushort)PacketID_Ingame.CTS_TowerDamage, PacketHandler.CTS_TowerDamageHandler);
+            _handler.Add((ushort)PacketID.CTS_SelectClass, PacketHandler.CTS_SelectClassHandler);
+            _handler.Add((ushort)PacketID.CTS_PlayerMove, PacketHandler.CTS_PlayerMoveHandler);
+            _handler.Add((ushort)PacketID.CTS_PlayerAttack, PacketHandler.CTS_PlayerAttackHandler);
+            _handler.Add((ushort)PacketID.CTS_PriestBuff, PacketHandler.CTS_PriestBuffHandler);
+            _handler.Add((ushort)PacketID.CTS_ItemUpdate, PacketHandler.CTS_ItemUpdateHandler);
+            _handler.Add((ushort)PacketID.CTS_MonsterHPUpdate, PacketHandler.CTS_MonsterHPUpdateHandler);
+            _handler.Add((ushort)PacketID.CTS_TowerDamage, PacketHandler.CTS_TowerDamageHandler);
 
             #endregion Ingame
         }
@@ -80,10 +82,8 @@ namespace Server
             ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
             count += 2;
 
-            if (id < (ushort)PacketID.MaxCount)
+            if(id != (ushort)PacketID.CTS_PlayerMove)
                 Console.WriteLine($"Packet 수신 : {(PacketID)id}");
-            else if(id != (ushort)PacketID_Ingame.CTS_PlayerMove)
-                Console.WriteLine($"Packet 수신 : {(PacketID_Ingame)id}");
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
             if(_makeFunc.TryGetValue(id, out func))

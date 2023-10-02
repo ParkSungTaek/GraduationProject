@@ -2,18 +2,23 @@
 공동 작성
 작성일 : 23.03.31
 
-최근 수정 일자 : 23.05.27
-최근 수정 내용 : 아이템 등급 enum 추가
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그인 상태 추가
  ******/
-
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 namespace Client
 {
     public class Define
     {
+
+        public enum LoginState
+        {
+            //로그인 서버로 패킷 보내지 않은 상태
+            CleanLogin,
+            //로그인 서버로 패킷 보내고 대기 상태
+            SendLogin,
+            MaxCount
+        }
 
         public enum Charcter
         {
@@ -95,8 +100,9 @@ namespace Client
 
         public enum Scenes
         { 
+            Login,
             Title,
-            Loby,
+            Lobby,
             Game,
         }
 

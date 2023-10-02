@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.09.29
-최근 수정 내용 : 시작한 방 입장 실패
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 클라 아이디 방 별로 설정
  ******/
 
 using ServerCore;
@@ -17,6 +17,7 @@ namespace Server
 {
     public class Room
     {
+        private int id;
         public string RoomName;
         IngameData _ingameData = new IngameData();
         Random random = new Random();
@@ -87,17 +88,19 @@ namespace Server
                 return;
             }
 
+            session.SessionId = ++id;
             _sessions.Add(session);
             session.Room = this;
 
             STC_ExistPlayers existPacket = new STC_ExistPlayers();
             foreach (var s in _sessions)
-                existPacket.Players.Add(s.SessionId);
+                existPacket.Players.Add(new STC_ExistPlayers.PlayerInfo { playerId = s.SessionId, email = s.email });
 
             session.Send(existPacket.Write());
 
             STC_PlayerEnter enterPacket = new STC_PlayerEnter();
             enterPacket.playerId = session.SessionId;
+            enterPacket.email = session.email;
 
             Broadcast(enterPacket.Write());
         }

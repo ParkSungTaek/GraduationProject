@@ -3,7 +3,7 @@
 작성일 : 23.04.05
 
 최근 수정 일자 : 23.05.09
-최근 수정 사항 : 방 대기 Loby로 기능 변경
+최근 수정 사항 : 방 대기 Lobby로 기능 변경
 ******/
 
 using UnityEngine;
@@ -13,7 +13,7 @@ using TMPro;
 
 namespace Client
 {
-    public class UI_LobyScene : UI_Scene
+    public class UI_LobbyScene : UI_Scene
     {
         bool AllowQuickEnter { get; set; } = false;
         enum Buttons
@@ -41,7 +41,7 @@ namespace Client
             GetText((int)Texts.QuickBtnTxt).text = "Allow Quick OFF";
             ButtonBind();
 
-            GameManager.Room.LobyUpdate = LobyUpdate;
+            GameManager.Room.LobbyUpdate = LobbyUpdate;
         }
 
         #region Button
@@ -73,15 +73,15 @@ namespace Client
         }
 
         /// <summary> 사람 들어오거나 나갈 때 정보 업데이트 </summary>
-        void LobyUpdate(RoomInfo roomInfo)
+        void LobbyUpdate(RoomInfo roomInfo)
         {
             GetButton((int)Buttons.StartBtn).gameObject.SetActive(roomInfo.IsHost);
+            GetButton((int)Buttons.QuickBtn).gameObject.SetActive(roomInfo.IsHost);
 
             int i = 0;
-            foreach(int p in roomInfo.PlayerClasses.Keys)
+            foreach(var p in roomInfo.PlayerClasses)
             {
-                Debug.Log($"{p} : {roomInfo.PlayerClasses[p]}");
-                GetText(i).text = $"playerId : {p}";
+                GetText(i).text = $"{p.Key}, email : {p.Value.email}";
                 i++;
             }
             for (; i < 4; i++)

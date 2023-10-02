@@ -2,110 +2,25 @@
 작성자 : 공동 작성
 작성 일자 : 23.04.19
 
-최근 수정 일자 : 23.10.01
-최근 수정 내용 : 회원가입/로그인 결과 반환 패킷 추가
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그인 인증 결과 패킷 추가
  ******/
 
 using ServerCore;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Client
 {
     /// <summary>
     /// 작성자 : 이우열 <br/>
-    /// 클라이언트 최초 연결 시, playerId 설정
-    /// </summary>
-    public class STC_OnConnect : IPacket
-    {
-        public int playerId;
-        public ushort Protocol => (ushort)PacketID.STC_OnConnect;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            int count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            //protocol
-            count += sizeof(ushort);
-
-            playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
-            count += sizeof(int);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
-            count += sizeof(int);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
-    }
-
-    /// <summary>
-    /// 작성자 : 이우열 <br/>
-    /// 회원가입 결과 반환
-    /// </summary>
-    public class STC_RegistAck : IPacket
-    {
-        public bool isSuccess;
-        public ushort Protocol => (ushort)PacketID.STC_RegistAck;
-
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            int count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            //protocol
-            count += sizeof(ushort);
-
-            isSuccess = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
-            count += sizeof(bool);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(isSuccess), 0, segment.Array, segment.Offset + count, sizeof(bool));
-            count += sizeof(bool);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
-    }
-
-    /// <summary>
-    /// 작성자 : 이우열 <br/>
     /// 로그인 결과 반환
     /// </summary>
-    public class STC_LoginAck : IPacket
+    public class STC_AuthAck : IPacket
     {
         public bool isSuccess;
-        public ushort Protocol => (ushort)PacketID.STC_LoginAck;
-
+        public ushort Protocol => (ushort)PacketID.STC_AuthAck;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -138,6 +53,15 @@ namespace Client
 
             return SendBufferHelper.Close(count);
         }
+    }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 중복 로그인 알림
+    /// </summary>
+    public class STC_DuplicatedLogin : SimplePacket
+    {
+        public override ushort Protocol => (ushort)PacketID.STC_DuplicatedLogin;
     }
 
     /// <summary>
@@ -192,6 +116,7 @@ namespace Client
     public class STC_PlayerEnter : IPacket
     {
         public int playerId;
+        public string email;
         public ushort Protocol => (ushort)PacketID.STC_PlayerEnter;
 
         public void Read(ArraySegment<byte> segment)
@@ -206,6 +131,11 @@ namespace Client
 
             playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
             count += sizeof(int);
+
+            ushort strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            email = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+            count += strLen;
         }
 
         public ArraySegment<byte> Write()
@@ -221,14 +151,16 @@ namespace Client
             Array.Copy(BitConverter.GetBytes(playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
             count += sizeof(int);
 
+            ushort strLen = (ushort)Encoding.Unicode.GetBytes(email, 0, email.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += strLen;
+
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
             return SendBufferHelper.Close(count);
         }
     }
-
-
-
 
     /// <summary>
     /// 작성자 : 이우열 <br/>
@@ -278,8 +210,14 @@ namespace Client
     /// </summary>
     public class STC_ExistPlayers : IPacket
     {
+        public class PlayerInfo
+        {
+            public int playerId;
+            public string email;
+        }
+
         public ushort Protocol => (ushort)PacketID.STC_ExistPlayers;
-        public List<int> Players = new List<int>();
+        public List<PlayerInfo> Players = new List<PlayerInfo>();
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -295,8 +233,16 @@ namespace Client
 
             for (ushort i = 0; i < listLen; i++)
             {
-                Players.Add(BitConverter.ToInt32(segment.Array, segment.Offset + count));
+                PlayerInfo info = new PlayerInfo();
+                info.playerId = BitConverter.ToInt32(segment.Array, segment.Offset + count);
                 count += sizeof(int);
+
+                ushort strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+                count += sizeof(ushort);
+                info.email = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+                count += strLen;
+
+                Players.Add(info);
             }
         }
 
@@ -314,8 +260,13 @@ namespace Client
             count += sizeof(ushort);
             for (int i = 0; i < Players.Count; i++)
             {
-                Array.Copy(BitConverter.GetBytes(Players[i]), 0, segment.Array, segment.Offset + count, sizeof(int));
+                Array.Copy(BitConverter.GetBytes(Players[i].playerId), 0, segment.Array, segment.Offset + count, sizeof(int));
                 count += sizeof(int);
+
+                ushort strLen = (ushort)Encoding.Unicode.GetBytes(Players[i].email, 0, Players[i].email.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+                Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+                count += sizeof(ushort);
+                count += strLen;
             }
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
@@ -397,12 +348,9 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
-
-
-
     #endregion Create/Enter Room
 
-    #region Loby
+    #region Lobby
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// Host 퇴장 시, Host 변경 패킷
@@ -420,5 +368,5 @@ namespace Client
     {
         public override ushort Protocol => (ushort)PacketID.STC_ReadyGame;
     }
-    #endregion Loby
+    #endregion Lobby
 }

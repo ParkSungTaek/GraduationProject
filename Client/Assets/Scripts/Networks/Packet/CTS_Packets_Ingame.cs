@@ -18,7 +18,7 @@ namespace Client
     public class CTS_SelectClass : IPacket
     {
         public ushort PlayerClass;
-        public ushort Protocol { get => (ushort)PacketID_Ingame.CTS_SelectClass; }
+        public ushort Protocol { get => (ushort)PacketID.CTS_SelectClass; }
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -63,7 +63,7 @@ namespace Client
         public ushort DMG;
         public ushort MonsterID;
         public ushort AttackCnt;
-        public ushort Protocol => (ushort)PacketID_Ingame.CTS_TowerDamage;
+        public ushort Protocol => (ushort)PacketID.CTS_TowerDamage;
 
 
         public void Read(ArraySegment<byte> segment)
@@ -118,7 +118,7 @@ namespace Client
         /// <summary> y 좌표 </summary>
         public float posY;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.CTS_PlayerMove;
+        public ushort Protocol => (ushort)PacketID.CTS_PlayerMove;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -168,7 +168,7 @@ namespace Client
         /// <summary> 0 상, 1 우, 2 하, 3 좌 </summary>
         public ushort direction;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.CTS_PlayerAttack;
+        public ushort Protocol => (ushort)PacketID.CTS_PlayerAttack;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -217,7 +217,7 @@ namespace Client
         public int playerId;
         /// <summary> 버프 수치 </summary>
         public float buffRate;
-        public ushort Protocol => (ushort)PacketID_Ingame.CTS_PriestBuff;
+        public ushort Protocol => (ushort)PacketID.CTS_PriestBuff;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -267,7 +267,7 @@ namespace Client
         /// <summary> 해당 아이템의 위치 </summary>
         public ushort position;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.CTS_ItemUpdate;
+        public ushort Protocol => (ushort)PacketID.CTS_ItemUpdate;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -320,7 +320,7 @@ namespace Client
         /// <summary> 몬스터의 HP 0 이하의 음수라면 죽음 -가능 할수도</summary>
         public short updateHP;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.CTS_MonsterHPUpdate;
+        public ushort Protocol => (ushort)PacketID.CTS_MonsterHPUpdate;
 
 
         public void Read(ArraySegment<byte> segment)

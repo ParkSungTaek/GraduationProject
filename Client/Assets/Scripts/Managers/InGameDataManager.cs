@@ -81,7 +81,7 @@ namespace Client
         /// <summary> 플레이어들의 아이템 정보 </summary>
         Dictionary<int, List<ItemData>> _inventorys = new Dictionary<int, List<ItemData>>();
         /// <summary> 내 플레이어 아이템 정보 </summary>
-        public List<ItemData> MyInventory { get => _inventorys[GameManager.Network.PlayerId]; }
+        public List<ItemData> MyInventory { get => _inventorys[GameManager.Room.MyId]; }
 
         public Action<int, int, ItemData> ItemInfoUpdate { get; set; } = null;
 
@@ -102,7 +102,7 @@ namespace Client
                 uiImageUpdate.Invoke(MyInventory.Count - 1);
 
                 SendItemInfo(MyInventory.Count - 1, MyInventory[MyInventory.Count - 1].Idx);
-                ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, MyInventory.Count - 1, MyInventory[MyInventory.Count - 1]);
+                ItemInfoUpdate?.Invoke(GameManager.Room.MyId, MyInventory.Count - 1, MyInventory[MyInventory.Count - 1]);
             }
             //빈 자리 없음 -> 버리기 UI 띄우기
             else
@@ -120,7 +120,7 @@ namespace Client
             MyPlayer.StatUpdate();
 
             SendItemInfo(position, newItem.Idx);
-            ItemInfoUpdate?.Invoke(GameManager.Network.PlayerId, position, newItem);
+            ItemInfoUpdate?.Invoke(GameManager.Room.MyId, position, newItem);
         }
 
         /// <summary> 아이템 정보 동기화 전송 </summary>
@@ -170,7 +170,7 @@ namespace Client
             get
             {
                 PlayerController myPlayer;
-                if(_playerControllers.TryGetValue(GameManager.Network.PlayerId, out myPlayer))
+                if(_playerControllers.TryGetValue(GameManager.Room.MyId, out myPlayer))
                     return myPlayer;
 
                 return null;
@@ -254,7 +254,7 @@ namespace Client
         }
 
         /// <summary> 새로운 게임 시작 - 몬스터 스폰 위치와 중앙 타워 생성 </summary>
-        public void GameStart(Dictionary<int, Define.Charcter> players)
+        public void GameStart(Dictionary<int, PlayerClassInfo> players)
         {
             OnMoneyChanged?.Invoke();
             OnScoreChanged?.Invoke();
@@ -286,7 +286,7 @@ namespace Client
         /// <summary> 작성자 : 이우열 <br/>
         /// 플레이어 생성
         /// </summary>
-        void GeneratePlayer(Dictionary<int, Define.Charcter> players)
+        void GeneratePlayer(Dictionary<int, PlayerClassInfo> players)
         {
             _playerControllers.Clear();
             _inventorys.Clear();
@@ -298,7 +298,7 @@ namespace Client
                 GameObject playerGO;
                 PlayerController playerController = null;
 
-                switch (player.Value)
+                switch (player.Value.playerClass)
                 {
                     case Define.Charcter.Warrior:
                         playerGO = GameManager.Resource.Instantiate("Player/Warrior");
@@ -324,7 +324,7 @@ namespace Client
                 _playerControllers.Add(player.Key, playerController);
                 _inventorys.Add(player.Key, new List<ItemData>());
 
-                playerController.MyPlayer = player.Key == GameManager.Network.PlayerId;
+                playerController.MyPlayer = player.Key == GameManager.Room.MyId;
 
                 if(playerController.MyPlayer)
                 {

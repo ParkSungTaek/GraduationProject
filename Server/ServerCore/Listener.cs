@@ -2,8 +2,8 @@
 작성자 : 박성택
 작성 일자 : 23.04.26
 
-최근 수정 일자 : 23.04.26
-최근 수정 내용 : Session 클래스 구현
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 에러 처리 추가
  ******/
 
 
@@ -61,14 +61,21 @@ namespace ServerCore
         /// <param name="args"> Data를 받고 전달할 SocketAsyncEventArgs </param>
         void OnAcceptCompleted(object sender, SocketAsyncEventArgs args)
         {
-            if (args.SocketError == SocketError.Success)
+            try
             {
-                Session session = _sessionFactory.Invoke();
-                session.Start(args.AcceptSocket);
-                session.OnConnected(args.AcceptSocket.RemoteEndPoint);
+                if (args.SocketError == SocketError.Success && args.AcceptSocket.Connected)
+                {
+                    Session session = _sessionFactory.Invoke();
+                    session.Start(args.AcceptSocket);
+                    session.OnConnected(args.AcceptSocket.RemoteEndPoint);
+                }
+                else
+                    Console.WriteLine(args.SocketError.ToString());
             }
-            else
-                Console.WriteLine(args.SocketError.ToString());
+            catch(Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
 
             RegisterAccept(args);
         }

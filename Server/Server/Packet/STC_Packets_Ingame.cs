@@ -17,7 +17,7 @@ namespace Server
     /// </summary>
     public class STC_SelectClass : IPacket
     {
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_SelectClass;
+        public ushort Protocol => (ushort)PacketID.STC_SelectClass;
         public int PlayerId;
         public ushort PlayerClass;
 
@@ -59,7 +59,7 @@ namespace Server
     /// </summary>
     public class STC_StartGame : SimplePacket
     {
-        public override ushort Protocol => (ushort)PacketID_Ingame.STC_StartGame;
+        public override ushort Protocol => (ushort)PacketID.STC_StartGame;
     }
 
     #region Non-Playable
@@ -79,7 +79,7 @@ namespace Server
         /// <summary> Monster 식별 번호 </summary>
         public ushort ID;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_MosterCreate;
+        public ushort Protocol => (ushort)PacketID.STC_MosterCreate;
 
 
         public void Read(ArraySegment<byte> segment)
@@ -139,7 +139,7 @@ namespace Server
         /// <summary> 몬스터의 HP 0 이하의 음수라면 죽음 -가능 할수도</summary>
         public short updateHP;
         
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_MonsterHPUpdate;
+        public ushort Protocol => (ushort)PacketID.STC_MonsterHPUpdate;
 
 
         public void Read(ArraySegment<byte> segment)
@@ -191,7 +191,7 @@ namespace Server
         /// <summary> 몬스터가 받은 DMG</summary>
         public int updateHP;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_TowerUpdate;
+        public ushort Protocol => (ushort)PacketID.STC_TowerUpdate;
 
 
         public void Read(ArraySegment<byte> segment)
@@ -241,7 +241,7 @@ namespace Server
         /// <summary> 몬스터가 받은 DMG</summary>
         public bool win;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_TowerUpdate;
+        public ushort Protocol => (ushort)PacketID.STC_TowerUpdate;
 
 
         public void Read(ArraySegment<byte> segment)
@@ -298,7 +298,7 @@ namespace Server
         /// <summary> 0 상, 1 우, 2 하, 3 좌 </summary>
         public ushort direction;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_PlayerAttack;
+        public ushort Protocol => (ushort)PacketID.STC_PlayerAttack;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -356,7 +356,7 @@ namespace Server
         /// <summary> y 좌표 </summary>
         public float posY;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_PlayerMove;
+        public ushort Protocol => (ushort)PacketID.STC_PlayerMove;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -409,7 +409,7 @@ namespace Server
     {
         /// <summary> 버프 수치 </summary>
         public float buffRate;
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_PriestBuff;
+        public ushort Protocol => (ushort)PacketID.STC_PriestBuff;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -456,7 +456,7 @@ namespace Server
         /// <summary> 해당 아이템의 위치 </summary>
         public ushort position;
 
-        public ushort Protocol => (ushort)PacketID_Ingame.STC_ItemUpdate;
+        public ushort Protocol => (ushort)PacketID.STC_ItemUpdate;
 
         public void Read(ArraySegment<byte> segment)
         {

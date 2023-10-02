@@ -2,8 +2,8 @@
 공동 작성
 작성일 : 23.03.29
 
-최근 수정 일자 : 23.05.09
-최근 수정 사항 : 게임 시작 변경
+최근 수정 일자 : 23.10.01
+최근 수정 사항 : 로그인 매니저 추가
 ******/
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,6 +15,7 @@ namespace Client
         static GameManager _instance;
         static GameManager Instance { get { Init(); return _instance; } }
         #region Managers
+        LoginManager _loginManager = new LoginManager();
         NetworkManager _networkManager = new NetworkManager();
         PoolManager _poolManager = new PoolManager();
         ResourceManager _resourceManager = new ResourceManager();
@@ -22,6 +23,8 @@ namespace Client
         InGameDataManager _inGameDataManager = new InGameDataManager();
         UIManager _uiManager = new UIManager();
         RoomManager _roomManager = new RoomManager();
+
+        public static LoginManager Login { get { return Instance._loginManager; } }
         public static NetworkManager Network { get { return Instance._networkManager; } }
         public static PoolManager Pool { get { return Instance._poolManager; } }
         public static ResourceManager Resource { get { return Instance._resourceManager; } }
@@ -45,15 +48,13 @@ namespace Client
                 _instance = gm.GetComponent<GameManager>();
                 DontDestroyOnLoad(gm);
 
-                _instance._networkManager.Connect();
                 _instance._poolManager.Init();
                 _instance._soundManager.Init();
                 _instance._inGameDataManager.Init();
             }
-
         }
         /// <summary> 게임 시작, 상태 변경, 인게임 정보 초기화 </summary>
-        public static void GameStart(Dictionary<int, Define.Charcter> players)
+        public static void GameStart(Dictionary<int, PlayerClassInfo> players)
         {   
             UI.CloseAllPopUpUI();
 
@@ -90,5 +91,8 @@ namespace Client
         {
             Debug.Log("????????????");
         }
+
+        public static Coroutine SetCoroutine(System.Collections.IEnumerator enumerator) => Instance.StartCoroutine(enumerator);
+        public static void RemoveCoroutine(Coroutine coroutine) => Instance.StopCoroutine(coroutine);
     }
 }

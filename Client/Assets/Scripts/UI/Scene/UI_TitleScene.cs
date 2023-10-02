@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.05.08
 
-최근 수정 일자 : 23.09.29
-최근 수정 내용 : 게임 종료 버튼 추가
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : 로그아웃 버튼 추가
  ******/
 
 using System.Collections.Generic;
@@ -25,6 +25,7 @@ namespace Client
             QuickEnter,
             CreateBtn,
             EnterBtn,
+            LogoutBtn,
             QuitBtn,
             Room1Btn,
             Room2Btn,
@@ -88,6 +89,7 @@ namespace Client
             BindEvent(GetButton((int)Buttons.QuickEnter).gameObject, QuickEnterBtn);
             BindEvent(GetButton((int)Buttons.CreateBtn).gameObject, CreateRoomBtn);
             BindEvent(GetButton((int)Buttons.EnterBtn).gameObject, EnterRoomBtn);
+            BindEvent(GetButton((int)Buttons.LogoutBtn).gameObject, LogoutBtn);
             BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, QuitBtn);
 
             BindEvent(GetButton((int)Buttons.Room1Btn).gameObject, ExistRoomEnterBtn);
@@ -108,7 +110,6 @@ namespace Client
 
             CTS_CreateRoom pkt = new CTS_CreateRoom();
             pkt.roomName = roomName;
-            GameManager.Room.SetRoomName(roomName);
             GameManager.Network.Send(pkt.Write());
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 생성 중");
         }
@@ -126,7 +127,6 @@ namespace Client
 
             CTS_EnterRoom pkt = new CTS_EnterRoom();
             pkt.roomName = roomName;
-            GameManager.Room.SetRoomName(roomName);
 
             GameManager.Network.Send(pkt.Write());
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 입장 중");
@@ -168,11 +168,20 @@ namespace Client
             Debug.Log("Enter");
             GameManager.Network.Send(pkt.Write());
         }
+        void LogoutBtn(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("로그아웃 하시겠습니까?", AcceptLogoutBtn);
+        }
         void QuitBtn(PointerEventData evt)
         {
             GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 종료하시겠습니까?", AcceptQuitBtn);
         }
 
+        void AcceptLogoutBtn()
+        {
+            GameManager.Network.Disconnect();
+            SceneManager.LoadScene(Define.Scenes.Login);
+        }
         void AcceptQuitBtn()
         {
 #if UNITY_EDITOR

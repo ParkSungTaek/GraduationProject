@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.05.09
 
-최근 수정 일자 : 23.05.09
-최근 수정 내용 : 현재 참여 중인 방 관리를 위한 Room Manager 생성
+최근 수정 일자 : 23.10.02
+최근 수정 내용 : email 정보 추가
  ******/
 
 using System.Collections.Generic;
@@ -23,28 +23,22 @@ namespace Client
         /// </summary>
         RoomInfo _roomInfo = new RoomInfo();
 
-        public Action<RoomInfo> LobyUpdate { get; set; }
-
-        /// <summary>
-        /// Lobby에서 빠른 입장을 토글할 수 있게 방 번호를 기억해둠
-        /// </summary>
-        /// <returns></returns>
-        public void SetRoomName(string roomName)
+        public int MyId
         {
-            _roomInfo.RoomName = roomName;
+            get => _roomInfo.MyId;
+            set { _roomInfo.MyId = value; }
+        }
+        private Action<RoomInfo> _lobbyUpdate = null;
+        public Action<RoomInfo> LobbyUpdate
+        {
+            get => _lobbyUpdate;
+            set
+            {
+                _lobbyUpdate = value;
+                _lobbyUpdate?.Invoke(_roomInfo);
+            }
         }
 
-        /// <summary>
-        /// Lobby에서 빠른 입장을 토글할 수 있게 방 번호를 기억해둠
-        /// </summary>
-        /// <returns></returns>
-        public string GetRoomName()
-        {
-#if UNITY_EDITOR
-            UnityEngine.Debug.Log($"_roomInfo.RoomName{_roomInfo.RoomName}");
-#endif
-            return _roomInfo.RoomName;
-        }
         /// <summary> 
         /// 작성자 : 이우열 <br/>
         /// 나를 호스트로 설정 
@@ -52,17 +46,17 @@ namespace Client
         public void SetHost()
         {
             _roomInfo.IsHost = true;
-            LobyUpdate?.Invoke(_roomInfo);
+            LobbyUpdate?.Invoke(_roomInfo);
         }
 
         /// <summary> 
         /// 작성자 : 이우열 <br/>
         /// 새로운 플레이어 입장 
         /// </summary>
-        public void EnterPlayer(int playerId)
+        public void EnterPlayer(STC_ExistPlayers.PlayerInfo playerInfo)
         {
-            _roomInfo.AddPlayer(playerId);
-            LobyUpdate?.Invoke(_roomInfo);
+            _roomInfo.AddPlayer(playerInfo);
+            LobbyUpdate?.Invoke(_roomInfo);
         }
 
         /// <summary>
@@ -82,19 +76,19 @@ namespace Client
         public void LeavePlayer(int playerId)
         {
             _roomInfo.RemovePlayer(playerId);
-            LobyUpdate?.Invoke(_roomInfo);
+            LobbyUpdate?.Invoke(_roomInfo);
         }
 
         /// <summary>
         /// 작성자 : 이우열 <br/>
         /// 방 입장 시 존재하는 플레이어 목록 받음
         /// </summary>
-        public void SetExistPlayers(List<int> existPlayers)
+        public void SetExistPlayers(List<STC_ExistPlayers.PlayerInfo> existPlayers)
         {
             _roomInfo.AddPlayers(existPlayers);
             _roomInfo.IsHost = existPlayers.Count <= 1;
 
-            LobyUpdate?.Invoke(_roomInfo);
+            LobbyUpdate?.Invoke(_roomInfo);
         }
 
         /// <summary>
@@ -116,7 +110,7 @@ namespace Client
             GameManager.GameStart(_roomInfo.PlayerClasses);
         }
 
-        public Dictionary<int, Define.Charcter> GetPlayerInfo() => _roomInfo.PlayerClasses;
+        public Dictionary<int, PlayerClassInfo> GetPlayerInfo() => _roomInfo.PlayerClasses;
 
         public void Clear()
         {

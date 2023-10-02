@@ -2,8 +2,8 @@
 작성자 : 공동 작성
 작성 일자 : 23.05.03
 
-최근 수정 일자 : 23.05.03
-최근 수정 사항 : 클라이언트 -> 서버 연결 성공 시 생성할 세션 클래스 생성
+최근 수정 일자 : 23.10.02
+최근 수정 사항 : 연결 끊김 시 로그인 화면 전환
  ******/
 
 using System;
@@ -23,7 +23,11 @@ namespace Client
 
 		public override void OnDisconnected(EndPoint endPoint)
 		{
-			Console.WriteLine($"OnDisconnected : {endPoint}");
+			if(GameManager.Network.Email != string.Empty)
+            {
+                GameManager.Network.Email = string.Empty;
+				GameManager.Network.GoBackToLogin();
+			}
 		}
 
 		/// <summary> 받은 패킷 처리 </summary>
