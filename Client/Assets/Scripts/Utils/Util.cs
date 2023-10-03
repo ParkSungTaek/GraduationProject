@@ -102,13 +102,20 @@ namespace Client
             }
 
             TextAsset jsonTxt = Resources.Load<TextAsset>($"Jsons/{path}");
-            if(jsonTxt == null)
+            try
             {
-                Debug.LogError($"Can't load json : {path}");
-                return default(Handler);
+                if (jsonTxt == null)
+                {
+                    Debug.LogError($"Can't load json : {path}");
+                    return default(Handler);
+                }
+                return JsonUtility.FromJson<Handler>($"{{\"{handle}\" : {jsonTxt.text} }}");
+
             }
-            string json = jsonTxt.text;
-            return JsonUtility.FromJson<Handler>($"{{\"{handle}\" : {json} }}");
+            finally 
+            {
+                Resources.UnloadAsset( jsonTxt );
+            }
         }
     }
 }
