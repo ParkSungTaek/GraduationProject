@@ -23,25 +23,77 @@ namespace Client
             LTC_RegistAck pkt = packet as LTC_RegistAck;
             LoginSession loginSession = session as LoginSession;
 
-			if (pkt.isSuccess)
-            {
-                GameManager.Network.Push(() => { 
-					GameManager.UI.CloseAllPopUpUI();
-					GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("회원가입 성공"); 
-				});
-            }
-			else
-            {
-                GameManager.Network.Push(() => {
-					GameManager.UI.CloseAllPopUpUI();
-					GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복 이메일"); 
-				});
-            }
+			switch (pkt.errorCode)
+			{
+				case (ushort)LTC_RegistAck.ErrorCode.Success:
+                    GameManager.Network.Push(() => {
+                        GameManager.UI.CloseAllPopUpUI();
+                        GameManager.UI.ShowPopUpUI<UI_RegistAuth>();
+                    });
+                    break;
+                case (ushort)LTC_RegistAck.ErrorCode.Duplicate:
+                    GameManager.Network.Push(() => {
+                        GameManager.UI.CloseAllPopUpUI();
+                        GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복 이메일");
+                    });
+                    break;
+                case (ushort)LTC_RegistAck.ErrorCode.MailError:
+                    GameManager.Network.Push(() => {
+                        GameManager.UI.CloseAllPopUpUI();
+                        GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("잘못된 메일 형식");
+                    });
+                    break;
+			}
 
 			GameManager.Login.RemoveTimer();
 
 			loginSession.Disconnect();
         }
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 이메일 인증 처리 결과 패킷 처리
+		/// </summary>
+		public static void LTC_RegistAuthAckHandler(PacketSession session, IPacket packet)
+		{
+			LoginSession loginSession = session as LoginSession;
+			LTC_RegistAuthAck authPacket = packet as LTC_RegistAuthAck;
+
+			switch (authPacket.errorCode)
+			{
+				case (ushort)LTC_RegistAuthAck.ErrorCode.Success:
+                    GameManager.Network.Push(() =>
+                    {
+                        GameManager.UI.CloseAllPopUpUI();
+                        GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("회원가입 성공");
+                    });
+					break;
+                case (ushort)LTC_RegistAuthAck.ErrorCode.DBError:
+					GameManager.Network.Push(() =>
+					{
+						GameManager.UI.CloseAllPopUpUI();
+						GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복 이메일");
+					});
+					break;
+				case (ushort)LTC_RegistAuthAck.ErrorCode.WrongCode:
+                    GameManager.Network.Push(() =>
+                    {
+						GameManager.UI.ClosePopUpUI();
+                        GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("인증번호가 틀렸습니다.");
+                    });
+					break;
+                case (ushort)LTC_RegistAuthAck.ErrorCode.Expired:
+					GameManager.Network.Push(() =>
+					{
+						GameManager.UI.CloseAllPopUpUI();
+						GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("시간이 만료되었습니다.");
+					});
+					break;
+			}
+
+			GameManager.Login.RemoveTimer();
+			loginSession.Disconnect();
+		}
 
 		/// <summary>
 		/// 작성자 : 이우열 <br/>

@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.10.01
 
-최근 수정 일자 : 23.10.01
-최근 수정 내용 : 로그인 서버 <-> 클라 간 패킷
+최근 수정 일자 : 23.10.03
+최근 수정 내용 : 메일 인증 패킷 추가
  ******/
 
 using ServerCore;
@@ -64,6 +64,61 @@ namespace LoginServer.Packet
             Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
             count += strLen;
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 회원가입 메일 인증 패킷
+    /// </summary>
+    class CTL_RegistAuth : IPacket
+    {
+        public string email;
+        public int authNo;
+
+        public ushort Protocol => (ushort)PacketID.CTL_RegistAuth;
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            ushort strLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            email = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, strLen);
+            count += strLen;
+
+            authNo = BitConverter.ToInt32(segment.Array, segment.Offset + count);
+            count += sizeof(int);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            //email
+            ushort strLen = (ushort)Encoding.Unicode.GetBytes(email, 0, email.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(strLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += strLen;
+
+            //password
+            Array.Copy(BitConverter.GetBytes(authNo), 0, segment.Array, segment.Offset + count, sizeof(int));
+            count += sizeof(int);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
@@ -136,7 +191,14 @@ namespace LoginServer.Packet
     /// </summary>
     public class LTC_RegistAck : IPacket
     {
-        public bool isSuccess;
+        public enum ErrorCode
+        {
+            Success,
+            Duplicate,
+            MailError,
+        }
+
+        public ushort errorCode;
         public ushort Protocol => (ushort)PacketID.LTC_RegistAck;
 
 
@@ -150,8 +212,8 @@ namespace LoginServer.Packet
             //protocol
             count += sizeof(ushort);
 
-            isSuccess = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
-            count += sizeof(bool);
+            errorCode = BitConverter.ToUInt16(segment.Array,segment.Offset + count);
+            count += sizeof(ushort);
         }
 
         public ArraySegment<byte> Write()
@@ -164,8 +226,59 @@ namespace LoginServer.Packet
 
             Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(isSuccess), 0, segment.Array, segment.Offset + count, sizeof(bool));
-            count += sizeof(bool);
+            Array.Copy(BitConverter.GetBytes(errorCode), 0, segment.Array, segment.Offset+count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
+
+    /// <summary>
+    /// 작성자 : 이우열 <br/>
+    /// 메일 인증 결과 반환
+    /// </summary>
+    public class LTC_RegistAuthAck : IPacket
+    {
+        public enum ErrorCode
+        {
+            Success,
+            DBError,
+            WrongCode,
+            Expired,
+        }
+
+        public ushort errorCode;
+        public ushort Protocol => (ushort)PacketID.LTC_RegistAuthAck;
+
+
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            //protocol
+            count += sizeof(ushort);
+
+            errorCode = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            Array.Copy(BitConverter.GetBytes(errorCode), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
 
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 

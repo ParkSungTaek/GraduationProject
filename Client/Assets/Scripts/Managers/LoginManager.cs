@@ -29,6 +29,8 @@ namespace Client
         public Coroutine PacketTimer = null;
         private LoginSession _session;
 
+        public string resentEmail = string.Empty;
+
         /// <summary>
         /// 서버 endPoint 반환 <br/>
         /// 현재는 로컬 서버 가정, 추후 AWS 사용 시 변경 필요
@@ -60,7 +62,6 @@ namespace Client
         public void Post(IPacket packet)
         {
             State = Define.LoginState.SendLogin;
-            GameManager.UI.CloseAllPopUpUI();
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("로그인 서버와 연결 중");
 
             IPEndPoint endPoint = GetServerEndPoint();

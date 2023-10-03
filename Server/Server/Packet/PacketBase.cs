@@ -65,9 +65,11 @@ namespace Server
 
         //--Login--//
         CTL_Regist,
+        CTL_RegistAuth,
         CTL_Login,
 
         LTC_RegistAck,
+        LTC_RegistAuthAck,
         LTC_LoginAck,
 
         LTS_Auth,

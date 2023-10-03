@@ -15,6 +15,17 @@ namespace LoginServer.DB
 
         private QueryQueue _queryQueue = new QueryQueue();
 
+        public void CheckUser(string email, Action<bool> resultCallback)
+        {
+            if (email.Length > 60)
+            {
+                email = email.Substring(0, 60);
+            }
+
+            Query query = new Query { IsInsert = false, QueryStr = $"SELECT email FROM users WHERE email = '{email}'", ResultCallback = resultCallback };
+            _queryQueue.Push(query);
+        }
+
         public void CreateUser(string email, string password, Action<bool> resultCallback)
         {
             if (email.Length > 60)

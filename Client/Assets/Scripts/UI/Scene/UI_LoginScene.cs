@@ -52,6 +52,8 @@ namespace Client
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
 
+            GameManager.Login.resentEmail = email;
+
             using (SHA256 sha256 = SHA256.Create())
             {
                 string encryptedPW = Encoding.ASCII.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
