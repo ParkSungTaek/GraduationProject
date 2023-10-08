@@ -29,10 +29,12 @@ namespace LoginServer.Packet.Manage
         public void Register()
         {
             _makeFunc.Add((ushort)PacketID.CTL_Regist, MakePacket<CTL_Regist>);
+            _makeFunc.Add((ushort)PacketID.CTL_ForceRegist, MakePacket<CTL_ForceRegist>);
             _makeFunc.Add((ushort)PacketID.CTL_RegistAuth, MakePacket<CTL_RegistAuth>);
             _makeFunc.Add((ushort)PacketID.CTL_Login, MakePacket<CTL_Login>);
 
             _handler.Add((ushort)PacketID.CTL_Regist, PacketHandler.CTL_RegistHandler);
+            _handler.Add((ushort)PacketID.CTL_ForceRegist, PacketHandler.CTL_ForceRegistHandler);
             _handler.Add((ushort)PacketID.CTL_RegistAuth, PacketHandler.CTL_RegistAuthHandler);
             _handler.Add((ushort)PacketID.CTL_Login, PacketHandler.CTL_LoginHandler);
 

@@ -45,6 +45,30 @@ namespace LoginServer.Packet.Manage
 
         /// <summary>
         /// 작성자 : 이우열 <br/>
+        /// 디버깅 용 메일 인증 없는 회원가입
+        /// </summary>
+        public static void CTL_ForceRegistHandler(PacketSession session, IPacket packet)
+        {
+            Session.LoginSession loginSession = session as Session.LoginSession;
+            CTL_ForceRegist registPacket = packet as CTL_ForceRegist;
+
+            DB.DBManager.Instance.CreateUser(registPacket.email, registPacket.password, (isSuccess) =>
+            {
+
+                LTC_RegistAuthAck ackPacket = new LTC_RegistAuthAck();
+                if (isSuccess)
+                    ackPacket.errorCode = (ushort)LTC_RegistAuthAck.ErrorCode.Success;
+                else
+                    ackPacket.errorCode = (ushort)LTC_RegistAuthAck.ErrorCode.DBError;
+
+                loginSession.Send(ackPacket.Write());
+
+                JobTimer.Instance.Push(() => loginSession.Disconnect(), 100);
+            });
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
         /// 회원가입 메일 인증 처리
         /// </summary>
         public static void CTL_RegistAuthHandler(PacketSession session, IPacket packet)

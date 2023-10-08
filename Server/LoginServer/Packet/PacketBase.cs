@@ -65,6 +65,7 @@ namespace LoginServer.Packet
 
         //--Login--//
         CTL_Regist,
+        CTL_ForceRegist,
         CTL_RegistAuth,
         CTL_Login,
 

@@ -20,6 +20,7 @@ namespace Client
         enum Buttons
         {
             RegistBtn,
+            ForceRegistBtn,
             LoginBtn,
             QuitBtn,
         }
@@ -43,6 +44,7 @@ namespace Client
         void ButtonBind()
         {
             BindEvent(GetButton((int)Buttons.RegistBtn).gameObject, Btn_Regist);
+            BindEvent(GetButton((int)Buttons.ForceRegistBtn).gameObject, Btn_ForceRegist);
             BindEvent(GetButton((int)Buttons.LoginBtn).gameObject, Btn_Login);
             BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, Btn_Quit);
         }
@@ -59,6 +61,25 @@ namespace Client
                 string encryptedPW = Encoding.ASCII.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
 
                 CTL_Regist registPacket = new CTL_Regist();
+                registPacket.email = email;
+                registPacket.password = encryptedPW;
+
+                GameManager.Login.Post(registPacket);
+            }
+        }
+
+        void Btn_ForceRegist(PointerEventData evt)
+        {
+            string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
+            string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
+
+            GameManager.Login.resentEmail = email;
+
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                string encryptedPW = Encoding.ASCII.GetString(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
+
+                CTL_ForceRegist registPacket = new CTL_ForceRegist();
                 registPacket.email = email;
                 registPacket.password = encryptedPW;
 
