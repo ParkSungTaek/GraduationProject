@@ -49,19 +49,19 @@ namespace Server
             STC_CheckAlive alivePacket = new STC_CheckAlive();
             var segment = alivePacket.Write();
 
+            foreach(ClientSession session in _unloginedSessions)
+            {
+                session.Send(segment);
+            }
+
+            foreach (ClientSession session in _sessions.Values)
+            {
+                session.Send(segment);
+            }
+
             //send 실패 시 _closedSessions에 채워짐
             lock (_lock)
             {
-                foreach (ClientSession session in _unloginedSessions)
-                {
-                    session.Send(segment);
-                }
-
-                foreach (ClientSession session in _sessions.Values)
-                {
-                    session.Send(segment);
-                }
-
                 foreach (ClientSession closedSession in _closedSessions)
                 {
                     if (closedSession.email == string.Empty)
@@ -98,7 +98,7 @@ namespace Server
             {
                 STC_DuplicatedLogin duplicatedPacket = new STC_DuplicatedLogin();
                 duplicatedSession.Send(duplicatedPacket.Write());
-                duplicatedSession.Disconnect(false);
+                duplicatedSession.Disconnect();
             }
         }
     }

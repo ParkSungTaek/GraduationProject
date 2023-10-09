@@ -26,7 +26,7 @@ namespace LoginServer.Session
 
         public override void OnSend(int byteTransfered) { }
 
-        public override void OnDisconnected(EndPoint endPoint, bool needRemove) 
+        public override void OnDisconnected(EndPoint endPoint) 
         {
             Console.WriteLine($"LoginPostDisconnect : {endPoint}");
         }

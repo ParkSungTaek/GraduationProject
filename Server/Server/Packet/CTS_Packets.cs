@@ -117,7 +117,6 @@ namespace Server
 
         public void Read(ArraySegment<byte> segment)
         {
-            //방 Lobby에서 빠른 입장을 
             int count = 0;
             //packet size
             count += sizeof(ushort);
@@ -155,16 +154,6 @@ namespace Server
     public class CTS_QuickEnterRoom : SimplePacket
     {
         public override ushort Protocol => (ushort)PacketID.CTS_QuickEnterRoom;
-    }
-
-    /// <summary>
-    /// 작성자 : 박성택 <br/>
-    /// 새로 입장한 클라이언트가 기존 존재 방 정보 요청
-    /// </summary>
-    public class CTS_GetExistRooms : SimplePacket
-    {
-        public override ushort Protocol => (ushort)PacketID.CTS_GetExistRooms;
-
     }
 
 

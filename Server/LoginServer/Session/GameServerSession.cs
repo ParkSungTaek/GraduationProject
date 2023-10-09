@@ -16,7 +16,7 @@ namespace LoginServer.Session
     {
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"Game Server Connected");
+            Console.WriteLine($"OnConnected : {endPoint}");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer) 
@@ -26,6 +26,6 @@ namespace LoginServer.Session
 
         public override void OnSend(int byteTransfered) { }
 
-        public override void OnDisconnected(EndPoint endPoint, bool needRemove) { }
+        public override void OnDisconnected(EndPoint endPoint) { }
     }
 }

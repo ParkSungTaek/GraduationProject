@@ -95,38 +95,5 @@ namespace ServerCore
                 return default(T);
             return _heap[0];
         }
-
-        /// <summary> 원소를 찾아 제거 </summary>
-        public T Remove(Func<T, bool> finder)
-        {
-            for (int i = 0; i < _heap.Count; i++)
-            {
-                if (finder.Invoke(_heap[i]))
-                {
-                    Replace(i);
-                    return Pop();
-                }
-            }
-
-            return default(T);
-        }
-
-        /// <summary> 원소를 루트로 올림 </summary>
-        void Replace(int now)
-        {
-            while (now > 0)
-            {
-                //부모 원소의 index
-                int next = (now - 1) / 2;
-
-                //위치 교환
-                T tmp = _heap[now];
-                _heap[now] = _heap[next];
-                _heap[next] = tmp;
-
-                //다음 위치로 이동
-                now = next;
-            }
-        }
     }
 }

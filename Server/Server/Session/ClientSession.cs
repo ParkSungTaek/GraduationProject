@@ -33,7 +33,7 @@ namespace Server
             //Do Nothing
         }
 
-        public override void OnDisconnected(EndPoint endPoint, bool needRemove)
+        public override void OnDisconnected(EndPoint endPoint)
         {
             if(Room != null)
             {
@@ -42,9 +42,7 @@ namespace Server
                 Room = null;
             }
 
-            if (needRemove)
-                ClientSessionManager.Instance.OnDisconnect(this);
-
+            ClientSessionManager.Instance.OnDisconnect(this);
             Console.WriteLine($"OnDisconnected : {endPoint}");
         }
     }

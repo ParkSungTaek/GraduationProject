@@ -243,19 +243,6 @@ namespace Client
         public Define.State CurrState { get => _state; }
         #endregion State
 
-        #region RoomList
-        List<string> _roomsNames;
-        public List<string> RoomsNames { 
-            get { return _roomsNames; } 
-            set { 
-                _roomsNames = value;
-                GameManager.UI.ShowSceneUI<UI_TitleScene>()?.SetExistRoomsName();
-            } 
-        }
-
-
-        #endregion RoomList
-
         /// <summary> 아이템 db 초기화, 스텟 정보, 프리팹 불러오기 </summary>
         public void Init()
         {

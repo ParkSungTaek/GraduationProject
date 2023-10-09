@@ -110,7 +110,8 @@ namespace Server
         public static void CTS_QuickEnterRoomHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
-            string roomName = RoomManager.Instance.GetRandomQuickEnterRoomName();
+            CTS_QuickEnterRoom enterPacket = packet as CTS_QuickEnterRoom;
+            string roomName = "aaa";///RoomManager.Instance.RandomQuickEnterRoomName();
             if (roomName != null)
             {
                 RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, roomName));
@@ -118,28 +119,11 @@ namespace Server
             ///빠른참가 방이 없음
             else
             {
-                // 추가적인 행동 필요? 
+                // 추가적인 행동 필요?
             }
 
         }
-        
-        /// <summary>
-        /// 작성자 : 박성택<br/>
-        /// 빠른입장
-        /// </summary>
-        public static void CTS_GetExistRoomsHandler(PacketSession session, IPacket packet)
-        {
-            
-            ClientSession clientSession = session as ClientSession;
-            
-            //CTS_GetExistRooms enterPacket = packet as CTS_GetExistRooms;
-            STC_ExistRooms existRooms = new STC_ExistRooms();
-            
-            existRooms.Rooms = RoomManager.Instance.RoomNames();
 
-            clientSession.Send(existRooms.Write());
-
-        }
 
 
         /// <summary>

@@ -21,76 +21,13 @@ namespace LoginServer.Packet.Manage
             Session.LoginSession loginSession = session as Session.LoginSession;
             CTL_Regist registPacket = packet as CTL_Regist;
 
-            DB.DBManager.Instance.CheckUser(registPacket.email, (isDuplicate) =>
-            {
-                bool mailSuccess = false;
-                if (isDuplicate == false)
-                {
-                    mailSuccess = SMTP.SMTPManager.Instance.Regist(registPacket.email, registPacket.password);
-                }
-
-                LTC_RegistAck ackPacket = new LTC_RegistAck();
-                if (isDuplicate)
-                    ackPacket.errorCode = (ushort)LTC_RegistAck.ErrorCode.Duplicate;
-                else if (mailSuccess == false)
-                    ackPacket.errorCode = (ushort)LTC_RegistAck.ErrorCode.MailError;
-                else
-                    ackPacket.errorCode = (ushort)LTC_RegistAck.ErrorCode.Success;
-
-                loginSession.Send(ackPacket.Write());
-
-                JobTimer.Instance.Push(() => loginSession.Disconnect(), 100);
-            });
-        }
-
-        /// <summary>
-        /// 작성자 : 이우열 <br/>
-        /// 디버깅 용 메일 인증 없는 회원가입
-        /// </summary>
-        public static void CTL_ForceRegistHandler(PacketSession session, IPacket packet)
-        {
-            Session.LoginSession loginSession = session as Session.LoginSession;
-            CTL_ForceRegist registPacket = packet as CTL_ForceRegist;
-
             DB.DBManager.Instance.CreateUser(registPacket.email, registPacket.password, (isSuccess) =>
             {
-
-                LTC_RegistAuthAck ackPacket = new LTC_RegistAuthAck();
-                if (isSuccess)
-                    ackPacket.errorCode = (ushort)LTC_RegistAuthAck.ErrorCode.Success;
-                else
-                    ackPacket.errorCode = (ushort)LTC_RegistAuthAck.ErrorCode.DBError;
-
+                LTC_RegistAck ackPacket = new LTC_RegistAck();
+                ackPacket.isSuccess = isSuccess;
                 loginSession.Send(ackPacket.Write());
 
                 JobTimer.Instance.Push(() => loginSession.Disconnect(), 100);
-            });
-        }
-
-        /// <summary>
-        /// 작성자 : 이우열 <br/>
-        /// 회원가입 메일 인증 처리
-        /// </summary>
-        public static void CTL_RegistAuthHandler(PacketSession session, IPacket packet)
-        {
-            Session.LoginSession loginSession = session as Session.LoginSession;
-            CTL_RegistAuth authPacket = packet as CTL_RegistAuth;
-
-            SMTP.SMTPManager.Instance.Auth(authPacket.email, authPacket.authNo, (isSuccess) =>
-            {
-                LTC_RegistAuthAck ackPacket = new LTC_RegistAuthAck();
-                ackPacket.errorCode = isSuccess ? (ushort)LTC_RegistAuthAck.ErrorCode.Success : (ushort)LTC_RegistAuthAck.ErrorCode.DBError;
-
-                loginSession.Send(ackPacket.Write());
-                JobTimer.Instance.Push(() => loginSession.Disconnect(), 100);
-            },
-            (errorCode) =>
-            {
-                LTC_RegistAuthAck ackPacket = new LTC_RegistAuthAck();
-                ackPacket.errorCode = errorCode;
-
-                loginSession.Send(ackPacket.Write());
-                JobTimer.Instance.Push(()=>loginSession.Disconnect(), 100);
             });
         }
 
