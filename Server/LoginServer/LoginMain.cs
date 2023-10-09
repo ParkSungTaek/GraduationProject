@@ -37,6 +37,7 @@ namespace LoginServer
             while (true) 
             {
                 JobTimer.Instance.Flush();
+                RemovableJobTimer.Instance.Flush();
             }
         }
     }

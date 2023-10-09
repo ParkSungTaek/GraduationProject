@@ -39,6 +39,8 @@ namespace Server
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, MakePacket<CTS_AllowQuickEntryRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_QuickEnterRoom, MakePacket<CTS_QuickEnterRoom>);
+            _makeFunc.Add((ushort)PacketID.CTS_GetExistRooms, MakePacket<CTS_GetExistRooms>);
+
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_ReadyGame, MakePacket<CTS_ReadyGame>);
@@ -46,6 +48,8 @@ namespace Server
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
             _handler.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, PacketHandler.CTS_AllowQuickEntryRoomHandler);
             _handler.Add((ushort)PacketID.CTS_QuickEnterRoom, PacketHandler.CTS_QuickEnterRoomHandler);
+            _handler.Add((ushort)PacketID.CTS_GetExistRooms, PacketHandler.CTS_GetExistRoomsHandler);
+
             _handler.Add((ushort)PacketID.CTS_EnterRoom, PacketHandler.CTS_EnterRoomHandler);
             _handler.Add((ushort)PacketID.CTS_LeaveRoom, PacketHandler.CTS_LeaveRoomHandler);
             _handler.Add((ushort)PacketID.CTS_ReadyGame, PacketHandler.CTS_ReadyGameHandler);

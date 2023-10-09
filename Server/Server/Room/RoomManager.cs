@@ -35,11 +35,10 @@ namespace Server
         }
 
         /// <summary>
-        /// 랜덤한 빠른입장 가능하면 true & 방 이름을 out 해주고 빠른 입장이 불가능하다면 false RoomName = null
+        /// 랜덤한 빠른 입장 가능한 방 Get 빠른 입장이 불가능하다면 return null;
         /// </summary>
-        /// <param name="roomName">빠른 입장 가능한 방 이름 out </param>
-        /// <returns>현재 빠른 입장이 가능한가?</returns>
-        public string RandomQuickEnterRoomName()
+        /// <returns> 빠른 입장 가능한 방 이름 없으면 null</returns>
+        public string GetRandomQuickEnterRoomName()
         {
             Random rand = new Random();
             int randnum = rand.Next(0, _quickEnterRooms.Count);

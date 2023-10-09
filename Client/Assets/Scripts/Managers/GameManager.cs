@@ -48,11 +48,21 @@ namespace Client
                 _instance = gm.GetComponent<GameManager>();
                 DontDestroyOnLoad(gm);
 
+                var con = JsonUtility.FromJson<ConnectionInfo>(Resources.Load<TextAsset>("Jsons/ConnectionInfo").text);
+                if (string.IsNullOrEmpty(con.Host))
+                {
+                    con.Host = System.Net.Dns.GetHostName();
+                }
+
+                _instance._networkManager.Init(con);
+                _instance._loginManager.Init(con);
+
                 _instance._poolManager.Init();
                 _instance._soundManager.Init();
                 _instance._inGameDataManager.Init();
             }
         }
+
         /// <summary> 게임 시작, 상태 변경, 인게임 정보 초기화 </summary>
         public static void GameStart(Dictionary<int, PlayerClassInfo> players)
         {   
@@ -85,11 +95,6 @@ namespace Client
         private void Update()
         {
             _instance._networkManager.Flush();
-        }
-        ///
-        public static void TmpDebug()
-        {
-            Debug.Log("????????????");
         }
 
         public static Coroutine SetCoroutine(System.Collections.IEnumerator enumerator) => Instance.StartCoroutine(enumerator);
