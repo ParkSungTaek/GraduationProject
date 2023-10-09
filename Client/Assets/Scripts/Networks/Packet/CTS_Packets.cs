@@ -8,6 +8,7 @@
 
 using ServerCore;
 using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace Client
@@ -157,6 +158,19 @@ namespace Client
 
         public override ushort Protocol => (ushort)PacketID.CTS_QuickEnterRoom;
     }
+
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 새로 입장한 클라이언트가 기존 존재 방 정보 요청
+    /// </summary>
+    public class CTS_GetExistRooms : SimplePacket
+    {
+        public override ushort Protocol => (ushort)PacketID.CTS_GetExistRooms;
+        
+    }
+
+
+
     /// <summary>
     /// 작성자 : 이우열<br/>
     /// 방 입장 패킷

@@ -6,8 +6,6 @@
 최근 수정 내용 : 연결 끊김 시 로그인 화면으로 전환 추가
  ******/
 
-//#define AWS
-
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -21,41 +19,20 @@ namespace Client
     {
         ServerSession _session;
 
+        /// <summary> 현재 접속 중인 계정 이메일 </summary>
         public string Email { get; set; } = string.Empty;
 
         object _lock = new object();
         Queue<Action> _jobQueue = new Queue<Action>();
+        IPEndPoint _endPoint { get; set; }
 
-        const int PORT = 7777;
-
-        /// <summary>
-        /// 서버 endPoint 반환 <br/>
-        /// 현재는 로컬 서버 가정, 추후 AWS 사용 시 변경 필요
-        /// </summary>
-        IPEndPoint GetServerEndPoint()
+        /// <summary> endPoint 설정 </summary>
+        public void Init(ConnectionInfo con)
         {
-            IPHostEntry ipHost;
+            IPHostEntry host = Dns.GetHostEntry(con.Host);
+            IPAddress addr = host.AddressList[0];
 
-            if (Application.platform == RuntimePlatform.Android)
-            {
-                ipHost = Dns.GetHostEntry("3.35.30.92");
-            }
-            else
-            {
-#if AWS 
-                Debug.Log("Is AWS");
-                ipHost = Dns.GetHostEntry("3.35.30.92");
-#else
-                Debug.Log("Is Local");
-
-                string host = Dns.GetHostName();
-                ipHost = Dns.GetHostEntry(host);
-#endif
-            }
-
-            IPAddress ipAddr = ipHost.AddressList[0];
-
-            return new IPEndPoint(ipAddr, PORT);
+            _endPoint = new IPEndPoint(addr, con.GamePort);
         }
 
         /// <summary> connector를 사용하여 서버에 연결 </summary>
@@ -64,11 +41,9 @@ namespace Client
             GameManager.UI.CloseAllPopUpUI();
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("게임 서버와 연결 중");
 
-            IPEndPoint endPoint = GetServerEndPoint();
-
             Connector connector = new Connector(authPacket);
 
-            connector.Connect(endPoint,
+            connector.Connect(_endPoint,
                 () => { return Generate(); });
         }
 

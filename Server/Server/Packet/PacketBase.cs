@@ -19,6 +19,7 @@ namespace Server
         CTS_CreateRoom,
         CTS_AllowQuickEntryRoom,
         CTS_QuickEnterRoom,
+        CTS_GetExistRooms,
         CTS_EnterRoom,
         CTS_LeaveRoom,
         CTS_ReadyGame,
@@ -65,9 +66,12 @@ namespace Server
 
         //--Login--//
         CTL_Regist,
+        CTL_ForceRegist,
+        CTL_RegistAuth,
         CTL_Login,
 
         LTC_RegistAck,
+        LTC_RegistAuthAck,
         LTC_LoginAck,
 
         LTS_Auth,

@@ -52,13 +52,13 @@ namespace ServerCore
         }
 
         /// <summary> 연결 끊기 </summary>
-        public void Disconnect()
+        public void Disconnect(bool needRemove = true)
         {
             //이미 다른 쓰레드에서 연결 끊음
             if (Interlocked.Exchange(ref _disconnected, 1) == 1)
                 return;
 
-            OnDisconnected(_socket.RemoteEndPoint);
+            OnDisconnected(_socket.RemoteEndPoint, needRemove);
             _socket.Shutdown(SocketShutdown.Both);
             _socket.Close();
             Clear();
@@ -72,7 +72,7 @@ namespace ServerCore
         /// <summary> 송신 콜백 </summary>
         public abstract void OnSend(int byteTransfered);
         /// <summary> 연결 종료 콜백 </summary>
-        public abstract void OnDisconnected(EndPoint endPoint);
+        public abstract void OnDisconnected(EndPoint endPoint, bool needRemove);
         #endregion Callbacks
 
         #region Send

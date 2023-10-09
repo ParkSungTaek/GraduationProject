@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.10.01
 
-최근 수정 일자 : 23.10.01
-최근 수정 내용 : 로그인 서버 패킷 매니저 클래스 생성
+최근 수정 일자 : 23.10.03
+최근 수정 내용 : 메일 인증 패킷 추가
  ******/
 
 using ServerCore;
@@ -29,9 +29,13 @@ namespace LoginServer.Packet.Manage
         public void Register()
         {
             _makeFunc.Add((ushort)PacketID.CTL_Regist, MakePacket<CTL_Regist>);
+            _makeFunc.Add((ushort)PacketID.CTL_ForceRegist, MakePacket<CTL_ForceRegist>);
+            _makeFunc.Add((ushort)PacketID.CTL_RegistAuth, MakePacket<CTL_RegistAuth>);
             _makeFunc.Add((ushort)PacketID.CTL_Login, MakePacket<CTL_Login>);
 
             _handler.Add((ushort)PacketID.CTL_Regist, PacketHandler.CTL_RegistHandler);
+            _handler.Add((ushort)PacketID.CTL_ForceRegist, PacketHandler.CTL_ForceRegistHandler);
+            _handler.Add((ushort)PacketID.CTL_RegistAuth, PacketHandler.CTL_RegistAuthHandler);
             _handler.Add((ushort)PacketID.CTL_Login, PacketHandler.CTL_LoginHandler);
 
 
@@ -50,7 +54,8 @@ namespace LoginServer.Packet.Manage
             ushort id = BitConverter.ToUInt16(buffer.Array, buffer.Offset + count);
             count += 2;
 
-            Console.WriteLine($"OnRecv : {(PacketID)id}");
+            if (id != (ushort)PacketID.STC_CheckAlive)
+                Console.WriteLine($"OnRecv : {(PacketID)id}");
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
             if (_makeFunc.TryGetValue(id, out func))

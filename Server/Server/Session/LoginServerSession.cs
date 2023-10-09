@@ -26,7 +26,7 @@ namespace Server
 
         public override void OnSend(int byteTransfered) { }
 
-        public override void OnDisconnected(EndPoint endPoint) 
+        public override void OnDisconnected(EndPoint endPoint, bool needRemove) 
         {
             Console.WriteLine("Login Server Disconnected");
             LoginSessionManager.Instance.Disconnected();
