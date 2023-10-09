@@ -19,6 +19,7 @@ namespace Client
         CTS_CreateRoom,
         CTS_AllowQuickEntryRoom,
         CTS_QuickEnterRoom,
+        CTS_GetExistRooms,
         CTS_EnterRoom,
         CTS_LeaveRoom,
         CTS_ReadyGame,

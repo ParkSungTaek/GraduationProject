@@ -6,9 +6,11 @@
 최근 수정 내용 : 로그아웃 버튼 추가
  ******/
 
+using Assets.HeroEditor4D.Common.Scripts.Common;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -18,8 +20,10 @@ namespace Client
     public class UI_TitleScene : UI_Scene
     {
         bool BeforeInit = false;
-        const int ExistRoomsButtons = 3;
+        const int ExistRoomsButtons = 6;
+        #region Entity
         /// <summary> 버튼 목록 </summary>
+
         enum Buttons
         {
             QuickEnter,
@@ -27,9 +31,18 @@ namespace Client
             EnterBtn,
             LogoutBtn,
             QuitBtn,
+
+            Room0Btn,
             Room1Btn,
             Room2Btn,
             Room3Btn,
+            Room4Btn,
+            Room5Btn,
+
+            Right,
+            Left,
+            Refresh,
+
         }
 
         enum InputFields
@@ -38,32 +51,58 @@ namespace Client
         }
         enum Texts 
         {
+            Room0Name,
             Room1Name,
             Room2Name, 
             Room3Name,
+            Room4Name,
+            Room5Name,
         }
+        #endregion Entity
 
+        #region 방 리스트 처리
+        /// <summary>
+        /// 방 리스트
+        /// </summary>
+        List<string> _roomsNames { get; set; }
 
-        public void SetExistRoomsName(List<string> roomsName)
+        /// <summary>
+        /// 0장 = 0~5, 1장 6~11
+        /// </summary>
+        int _listPage { get; set; } = 0;
+        public void SetExistRoomsName()
         {
 
             if (!BeforeInit)
             {
                 Init();
             }
-            for (int i = 0;i < roomsName.Count; i++)
+            if (GameManager.InGameData.RoomsNames != null )
             {
-                Debug.Log($"roomsName {i} : {roomsName[i]}");
-                GetText(i).text = roomsName[i];
+                _roomsNames = GameManager.InGameData.RoomsNames;
+                ShowListIdx(_listPage);
             }
-            for (int i = roomsName.Count; i < 3; i++)
-            {
-                GetText(i).text = "Empty";
-
-            }
-
 
         }
+
+        void ShowListIdx(int listPage)
+        {
+            for (int i = listPage * 6; i < Mathf.Min(_roomsNames.Count, (listPage + 1) * 6); i++)
+            {
+                Debug.Log($"roomsName {i} : {_roomsNames[i]}");
+                GetText(i - (listPage * 6)).text = _roomsNames[i];
+            }
+            
+            for (int i = _roomsNames.Count; i < (listPage + 1) * 6; i++)
+            {
+                GetText(i - (listPage * 6)).text = "Empty";
+            }
+
+            BlockLeftOrRight(_listPage);
+        }
+
+
+        #endregion 방 리스트 처리;
 
         /// <summary> 바인드 </summary>
         public override void Init()
@@ -92,9 +131,18 @@ namespace Client
             BindEvent(GetButton((int)Buttons.LogoutBtn).gameObject, LogoutBtn);
             BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, QuitBtn);
 
+            BindEvent(GetButton((int)Buttons.Room0Btn).gameObject, ExistRoomEnterBtn);
             BindEvent(GetButton((int)Buttons.Room1Btn).gameObject, ExistRoomEnterBtn);
             BindEvent(GetButton((int)Buttons.Room2Btn).gameObject, ExistRoomEnterBtn);
             BindEvent(GetButton((int)Buttons.Room3Btn).gameObject, ExistRoomEnterBtn);
+            BindEvent(GetButton((int)Buttons.Room4Btn).gameObject, ExistRoomEnterBtn);
+            BindEvent(GetButton((int)Buttons.Room5Btn).gameObject, ExistRoomEnterBtn);
+
+            BindEvent(GetButton((int)Buttons.Right).gameObject, RightListBtn);
+            BindEvent(GetButton((int)Buttons.Left).gameObject, LeftListBtn);
+            BindEvent(GetButton((int)Buttons.Refresh).gameObject, RefreshListBtn);
+
+
 
         }
         /// <summary> 방 생성 버튼 </summary>
@@ -177,6 +225,48 @@ namespace Client
             GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 종료하시겠습니까?", AcceptQuitBtn);
         }
 
+        void RightListBtn(PointerEventData evt)
+        {
+            _listPage++;
+            ShowListIdx(_listPage);
+            
+
+        }
+        void LeftListBtn(PointerEventData evt)
+        {
+            if (_listPage <= 0) return;
+            _listPage--;
+            ShowListIdx(_listPage);
+
+
+
+        }
+        void BlockLeftOrRight(int listPage)
+        {
+            if(listPage <= 0)
+            {
+                GetButton((int)Buttons.Left).SetActive(false);
+            }
+            else
+            {
+                GetButton((int)Buttons.Left).SetActive(true);
+            }
+            
+            if(_roomsNames.Count <= (listPage + 1) * 6)
+            {
+                GetButton((int)Buttons.Right).SetActive(false);
+            }
+            else
+            {
+                GetButton((int)Buttons.Right).SetActive(true);
+            }
+        }
+        void RefreshListBtn(PointerEventData evt)
+        {
+            CTS_GetExistRooms pkt = new CTS_GetExistRooms();
+            GameManager.Network.Send(pkt.Write());
+        }
+
         void AcceptLogoutBtn()
         {
             GameManager.Network.Disconnect();
@@ -190,6 +280,9 @@ namespace Client
             Application.Quit();
 #endif
         }
+
+       
+
 #endregion Btn
     }
 }

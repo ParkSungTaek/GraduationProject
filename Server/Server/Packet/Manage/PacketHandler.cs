@@ -123,7 +123,24 @@ namespace Server
             }
 
         }
+        
+        /// <summary>
+        /// 작성자 : 박성택<br/>
+        /// 빠른입장
+        /// </summary>
+        public static void CTS_GetExistRoomsHandler(PacketSession session, IPacket packet)
+        {
+            
+            ClientSession clientSession = session as ClientSession;
+            
+            //CTS_GetExistRooms enterPacket = packet as CTS_GetExistRooms;
+            STC_ExistRooms existRooms = new STC_ExistRooms();
+            
+            existRooms.Rooms = RoomManager.Instance.RoomNames();
 
+            clientSession.Send(existRooms.Write());
+
+        }
 
 
         /// <summary>

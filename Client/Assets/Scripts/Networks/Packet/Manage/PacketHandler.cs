@@ -139,6 +139,8 @@ namespace Client
                 GameManager.Network.Push(() =>
                 {
 					SceneManager.LoadScene(Define.Scenes.Title);
+                    CTS_GetExistRooms pkt = new CTS_GetExistRooms();
+                    GameManager.Network.Send(pkt.Write());
                 });
             }
             else
@@ -279,7 +281,7 @@ namespace Client
 
             GameManager.Network.Push(() =>
             {
-				//GameManager.UI.ShowSceneUI<UI_TitleScene>().SetExistRoomsName(pkt.Rooms);
+				GameManager.InGameData.RoomsNames =  pkt.Rooms;
             });
         }
         

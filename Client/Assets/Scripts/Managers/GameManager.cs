@@ -96,11 +96,6 @@ namespace Client
         {
             _instance._networkManager.Flush();
         }
-        ///
-        public static void TmpDebug()
-        {
-            Debug.Log("????????????");
-        }
 
         public static Coroutine SetCoroutine(System.Collections.IEnumerator enumerator) => Instance.StartCoroutine(enumerator);
         public static void RemoveCoroutine(Coroutine coroutine) => Instance.StopCoroutine(coroutine);

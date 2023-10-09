@@ -12,13 +12,14 @@ using System;
 namespace LoginServer.Packet
 {
     /// <summary> 패킷 종류 enum </summary>
-    public enum PacketID
+    public enum PacketID    
     {
         CTS_Auth,
 
         CTS_CreateRoom,
         CTS_AllowQuickEntryRoom,
         CTS_QuickEnterRoom,
+        CTS_GetExistRooms,
         CTS_EnterRoom,
         CTS_LeaveRoom,
         CTS_ReadyGame,
