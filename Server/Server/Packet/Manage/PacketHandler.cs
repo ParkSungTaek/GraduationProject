@@ -110,8 +110,7 @@ namespace Server
         public static void CTS_QuickEnterRoomHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
-            CTS_QuickEnterRoom enterPacket = packet as CTS_QuickEnterRoom;
-            string roomName = "aaa";///RoomManager.Instance.RandomQuickEnterRoomName();
+            string roomName = RoomManager.Instance.GetRandomQuickEnterRoomName();
             if (roomName != null)
             {
                 RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, roomName));
@@ -119,7 +118,7 @@ namespace Server
             ///빠른참가 방이 없음
             else
             {
-                // 추가적인 행동 필요?
+                // 추가적인 행동 필요? 
             }
 
         }

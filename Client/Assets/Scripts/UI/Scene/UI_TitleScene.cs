@@ -209,6 +209,7 @@ namespace Client
             GameManager.Network.Send(pkt.Write());
             GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 입장 중");
         }
+        /// <summary> 빠른 입장 버튼 </summary>
         void QuickEnterBtn(PointerEventData evt)
         {
 
@@ -216,6 +217,7 @@ namespace Client
             Debug.Log("Enter");
             GameManager.Network.Send(pkt.Write());
         }
+        /// <summary> 로그아웃 버튼 </summary>
         void LogoutBtn(PointerEventData evt)
         {
             GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("로그아웃 하시겠습니까?", AcceptLogoutBtn);
@@ -225,6 +227,8 @@ namespace Client
             GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 종료하시겠습니까?", AcceptQuitBtn);
         }
 
+        /// <summary> 방 리스트 오른쪽 버튼</summary>
+
         void RightListBtn(PointerEventData evt)
         {
             _listPage++;
@@ -232,15 +236,15 @@ namespace Client
             
 
         }
+        /// <summary> 방 리스트 왼쪽 버튼</summary>
         void LeftListBtn(PointerEventData evt)
         {
             if (_listPage <= 0) return;
             _listPage--;
             ShowListIdx(_listPage);
-
-
-
         }
+
+        /// <summary> 왼,오른쪽 버튼 ON/OFF </summary>
         void BlockLeftOrRight(int listPage)
         {
             if(listPage <= 0)
@@ -261,6 +265,8 @@ namespace Client
                 GetButton((int)Buttons.Right).SetActive(true);
             }
         }
+
+        /// <summary> 방 리스트 새로고침 버튼 </summary>
         void RefreshListBtn(PointerEventData evt)
         {
             CTS_GetExistRooms pkt = new CTS_GetExistRooms();
