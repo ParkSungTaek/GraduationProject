@@ -253,6 +253,7 @@ namespace Client
 
 			void OnLoadScene(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
 			{
+				GameManager.Room.SetPublic(pkt.IsPublicRoom);
 				GameManager.Room.SetExistPlayers(players);
 				UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnLoadScene;
 			}
@@ -307,14 +308,23 @@ namespace Client
 		{
 			GameManager.Network.Push(() => SceneManager.LoadScene(Define.Scenes.Game));
 		}
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
+		/// 공개방 설정 ack
+		/// </summary>
+		public static void STC_SetPublicRoomAckHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(() => GameManager.Room.SetPublic(true));
+		}
         #endregion Lobby
 
         #region Ingame
-		/// <summary>
-		/// 작성자 : 이우열 <br/>
-		/// 다른 플레이어의 클래스 선택 정보 공유받음 처리
-		/// </summary>
-		public static void STC_SelectClassHandler(PacketSession session, IPacket packet)
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
+        /// 다른 플레이어의 클래스 선택 정보 공유받음 처리
+        /// </summary>
+        public static void STC_SelectClassHandler(PacketSession session, IPacket packet)
 		{
 			STC_SelectClass pkt = packet as STC_SelectClass;
 

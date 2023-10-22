@@ -39,6 +39,7 @@ namespace LoginServer.Packet
 
         STC_SetSuper,
         STC_ReadyGame,
+        STC_SetPublicRoomAck,
 
         //---Ingame---//
         CTS_SelectClass,

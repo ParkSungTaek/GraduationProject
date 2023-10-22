@@ -65,9 +65,11 @@ namespace Client
             #region Lobby
             _makeFunc.Add((ushort)PacketID.STC_SetSuper, MakePacket<STC_SetSuper>);
 			_makeFunc.Add((ushort)PacketID.STC_ReadyGame, MakePacket<STC_ReadyGame>);
+			_makeFunc.Add((ushort)PacketID.STC_SetPublicRoomAck, MakePacket<STC_SetPublicRoomAck>);
 
 			_handler.Add((ushort)PacketID.STC_SetSuper, PacketHandler.STC_SetSuperHandler);
 			_handler.Add((ushort)PacketID.STC_ReadyGame, PacketHandler.STC_ReadyGameHandler);
+			_handler.Add((ushort)PacketID.STC_SetPublicRoomAck, PacketHandler.STC_SetPublicRoomAckHandler);
             #endregion Lobby
 
             #region Ingame

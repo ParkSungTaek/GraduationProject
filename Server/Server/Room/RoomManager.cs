@@ -70,7 +70,7 @@ namespace Server
         /// <summary> 공개방 설정 </summary>
         public void SetPublicRoom(Room room, bool isPublic)
         {
-            room.Push(() => room.IsPublicRoom = isPublic);
+            room.Push(() => room.SetPublicRoom(isPublic));
 
             if (isPublic)
             {
@@ -79,7 +79,6 @@ namespace Server
                     ServerCore.Logger.Log($"public room ADD : {room.RoomName}");
                     _publicRooms.AddLast(room);
                 }
-
             }
             else
             {
@@ -142,7 +141,6 @@ namespace Server
         public void Remove(Room room)
         {
             _rooms.Remove(room.RoomName);
-
             _publicRooms.Remove(room);
         }
         #endregion jobs

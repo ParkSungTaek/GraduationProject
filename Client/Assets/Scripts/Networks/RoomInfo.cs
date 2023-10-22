@@ -21,6 +21,7 @@ namespace Client
     {
         /// <summary> 이 방의 호스트 여부 </summary>
         public bool IsHost = false;
+        public bool IsPublic { get; set; } = false;
         public int MyId { get; set; } = -1;
         /// <summary> 이 방에 존재하는 클라이언트 정보 </summary>
         public Dictionary<int, PlayerClassInfo> PlayerClasses = new Dictionary<int, PlayerClassInfo>();

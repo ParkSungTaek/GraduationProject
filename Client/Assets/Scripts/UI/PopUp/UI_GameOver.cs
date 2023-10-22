@@ -1,4 +1,4 @@
-﻿/******
+/******
 작성자 : 박성택
 작성 일자 : 23.04.08
 
@@ -23,8 +23,8 @@ namespace Client
         }
         enum Images
         {
-            WinImg,
-            DefeatImg,
+            WinImage,
+            DefeatImage,
         }
 
         public override void Init()
@@ -34,7 +34,7 @@ namespace Client
             Bind<Image>(typeof(Images));
 
             ButtonBind();
-            ImageBind();
+            SetImage();
         }
 
         #region Button
@@ -60,27 +60,13 @@ namespace Client
         /// 나중에 Win Defeat 이미지 생기면 그때 이미지 갈아 끼우는 것으로 변경 예정
         /// 지금은 그냥 Set True False로 간략하게 나타냄
         /// </summary>
-        void ImageBind()
+        void SetImage()
         {
-            if(GameManager.InGameData.CurrState == Define.State.Win)
-            {
-                GetImage((int)Images.WinImg).gameObject.SetActive(true);
-                GetImage((int)Images.DefeatImg).gameObject.SetActive(false);
-
-            }
-            else
-            {
-
-                GetImage((int)Images.WinImg).gameObject.SetActive(false);
-                GetImage((int)Images.DefeatImg).gameObject.SetActive(true);
-            }
+            GetImage((int)Images.WinImage).gameObject.SetActive(GameManager.InGameData.CurrState == Define.State.Win);
+            GetImage((int)Images.DefeatImage).gameObject.SetActive(GameManager.InGameData.CurrState != Define.State.Win);
         }
-
         #endregion
 
-        public override void ReOpen()
-        {
-
-        }
+        public override void ReOpen() { }
     }
 }

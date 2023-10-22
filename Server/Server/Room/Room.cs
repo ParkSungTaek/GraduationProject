@@ -8,9 +8,7 @@
 
 using ServerCore;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Server
@@ -67,6 +65,12 @@ namespace Server
             {
                 return false;
             }
+
+            if (_ingameData != null && _ingameData.State != IngameData.state.Lobby)
+            {
+                return false;
+            }
+
             return true;
         }
 
@@ -96,6 +100,7 @@ namespace Server
             session.Room = this;
 
             STC_ExistPlayers existPacket = new STC_ExistPlayers();
+            existPacket.IsPublicRoom = this.IsPublicRoom;
             foreach (var s in _sessions)
                 existPacket.Players.Add(new STC_ExistPlayers.PlayerInfo { playerId = s.SessionId, email = s.email });
 
@@ -134,6 +139,14 @@ namespace Server
             leavePacket.playerId = session.SessionId;
 
             Broadcast(leavePacket.Write());
+        }
+
+        public void SetPublicRoom(bool isPublic)
+        {
+            this.IsPublicRoom = isPublic;
+
+            STC_SetPublicRoomAck publicPacket = new STC_SetPublicRoomAck();
+            Broadcast(publicPacket.Write());
         }
 
         /// <summary> 로비 -> 캐릭터 선택 전환 </summary>

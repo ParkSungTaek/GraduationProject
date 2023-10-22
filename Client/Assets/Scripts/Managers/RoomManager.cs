@@ -22,6 +22,7 @@ namespace Client
         /// 현재 참여 중인 방 정보 
         /// </summary>
         RoomInfo _roomInfo = new RoomInfo();
+        public Action OnSetPublic { get; set; } = null;
 
         public int MyId
         {
@@ -48,6 +49,20 @@ namespace Client
             _roomInfo.IsHost = true;
             LobbyUpdate?.Invoke(_roomInfo);
         }
+
+        /// <summary> 공개방으로 설정 </summary>
+        public void SetPublic(bool isPublic)
+        {
+            _roomInfo.IsPublic = isPublic;
+
+            if (isPublic)
+            {
+                OnSetPublic?.Invoke();
+            }
+        }
+
+        /// <summary> 공개방 인지 반환 </summary>
+        public bool IsPublic() => _roomInfo.IsPublic;
 
         /// <summary> 
         /// 작성자 : 이우열 <br/>

@@ -312,6 +312,7 @@ namespace Client
         }
 
         public ushort Protocol => (ushort)PacketID.STC_ExistPlayers;
+        public bool IsPublicRoom;
         public List<PlayerInfo> Players = new List<PlayerInfo>();
 
         public void Read(ArraySegment<byte> segment)
@@ -322,6 +323,9 @@ namespace Client
             count += sizeof(ushort);
             //protocol
             count += sizeof(ushort);
+
+            IsPublicRoom = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+            count += sizeof(bool);
 
             ushort listLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
             count += sizeof(ushort);
@@ -350,6 +354,9 @@ namespace Client
 
             Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(IsPublicRoom), 0, segment.Array, segment.Offset + count, sizeof(bool));
+            count += sizeof(bool);
 
             Array.Copy(BitConverter.GetBytes((ushort)Players.Count), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
@@ -388,6 +395,12 @@ namespace Client
     public class STC_ReadyGame : SimplePacket
     {
         public override ushort Protocol => (ushort)PacketID.STC_ReadyGame;
+    }
+
+    /// <summary> 공개 방으로 설정됨을 모든 플레이어게 알림 </summary>
+    public class STC_SetPublicRoomAck : SimplePacket
+    {
+        public override ushort Protocol => (ushort)PacketID.STC_SetPublicRoomAck;
     }
     #endregion Lobby
 }
