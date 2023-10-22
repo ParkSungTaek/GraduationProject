@@ -78,7 +78,7 @@ namespace Client
 				case (ushort)LTC_RegistAuthAck.ErrorCode.WrongCode:
                     GameManager.Network.Push(() =>
                     {
-						GameManager.UI.ClosePopUpUI();
+						GameManager.UI.ClosePopUpUI(typeof(UI_Log));
                         GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("인증번호가 틀렸습니다.");
                     });
 					break;
@@ -139,8 +139,6 @@ namespace Client
                 GameManager.Network.Push(() =>
                 {
 					SceneManager.LoadScene(Define.Scenes.Title);
-                    CTS_GetExistRooms pkt = new CTS_GetExistRooms();
-                    GameManager.Network.Send(pkt.Write());
                 });
             }
             else
@@ -173,7 +171,7 @@ namespace Client
 		{
 			GameManager.Network.Push(() => 
 			{ 
-				GameManager.UI.CloseAllPopUpUI(); 
+				GameManager.UI.ClosePopUpUI(typeof(UI_Log)); 
 				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("중복된 방 이름입니다."); 
 			});
 		}
@@ -182,40 +180,29 @@ namespace Client
 		/// 작성자 : 이우열 <br/>
 		/// 풀방이라 입장 실패 패킷 처리
 		/// </summary>
-		public static void STC_RejectEnter_FullHandler(PacketSession session, IPacket packet)
+		public static void STC_RejectEnterHandler(PacketSession session, IPacket packet)
 		{
+			STC_RejectEnter rejectPacket = packet as STC_RejectEnter;
 			GameManager.Network.Push(() =>
 			{
-				GameManager.UI.CloseAllPopUpUI();
-				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("가득찬 방입니다.");
-			});
-		}
+				GameManager.UI.ClosePopUpUI(typeof(UI_Log));
 
-		/// <summary>
-		/// 작성자 : 이우열 <br/>
-		/// 없는 방이라 입장 실패 패킷 처리
-		/// </summary>
-		public static void STC_RejectEnter_ExistHandler(PacketSession session, IPacket packet)
-		{
-			GameManager.Network.Push(() =>
-			{
-				GameManager.UI.CloseAllPopUpUI();
-				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("존재하지 않는 방입니다.");
-			});
-        }
-        
-		/// <summary>
-        /// 작성자 : 이우열 <br/>
-        /// 없는 방이라 입장 실패 패킷 처리
-        /// </summary>
-        public static void STC_RejectEnter_StartHandler(PacketSession session, IPacket packet)
-        {
-            GameManager.Network.Push(() =>
-            {
-                GameManager.UI.CloseAllPopUpUI();
-                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("이미 시작한 방입니다.");
+				string reason = string.Empty;
+				switch (rejectPacket.errorCode)
+				{
+					case STC_RejectEnter.ErrorCode.NotExist:
+						reason = "존재하지 않는 방입니다.";
+						break;
+					case STC_RejectEnter.ErrorCode.Full:
+                        reason = "가득찬 방입니다.";
+                        break;
+                    case STC_RejectEnter.ErrorCode.Start:
+                        reason = "이미 시작한 방입니다.";
+                        break;
+                }
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog(reason);
             });
-        }
+		}
 
         /// <summary>
         /// 작성자 : 이우열 <br/>
@@ -273,19 +260,30 @@ namespace Client
 
         /// <summary>
         /// 작성자 : 박성택 <br/>
-        /// 최초 입장 시, 이미 존재하는 방 이름 목록 받음
+        /// 공개 방 목록 새로고침
         /// </summary>
-        public static void STC_ExistRoomsHandler(PacketSession session, IPacket packet)
+        public static void STC_PublicRoomListHandler(PacketSession session, IPacket packet)
         {
-            STC_ExistRooms pkt = packet as STC_ExistRooms;
+            STC_PublicRoomList pkt = packet as STC_PublicRoomList;
 
             GameManager.Network.Push(() =>
             {
-				GameManager.InGameData.RoomsNames =  pkt.Rooms;
+				GameManager.ExistRoom.PublicRoomsUpdate(pkt.RoomNames);
             });
         }
-        
 
+		/// <summary>
+		/// 작성자 : 박성택 <br/>
+		/// 빠른 입장 실패
+		/// </summary>
+        public static void STC_QuickEnterFailHandler(PacketSession session, IPacket packet)
+		{
+			GameManager.Network.Push(() =>
+			{
+				GameManager.UI.ClosePopUpUI(typeof(UI_Log));
+				GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("입장 가능한 공개 방이 없습니다.");
+			});
+		}
         #endregion Create/Enter Room
 
         #region Lobby

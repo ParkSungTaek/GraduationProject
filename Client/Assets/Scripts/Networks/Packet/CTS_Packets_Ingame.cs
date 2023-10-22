@@ -17,8 +17,8 @@ namespace Client
     /// </summary>
     public class CTS_SelectClass : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_SelectClass;
         public ushort PlayerClass;
-        public ushort Protocol { get => (ushort)PacketID.CTS_SelectClass; }
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -59,12 +59,11 @@ namespace Client
     /// </summary>
     public class CTS_TowerDamage : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_TowerDamage;
         /// <summary> 몬스터 데미지</summary>
         public ushort DMG;
         public ushort MonsterID;
         public ushort AttackCnt;
-        public ushort Protocol => (ushort)PacketID.CTS_TowerDamage;
-
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -113,12 +112,11 @@ namespace Client
     /// </summary>
     public class CTS_PlayerMove : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_PlayerMove;
         /// <summary> x 좌표 </summary>
         public float posX;
         /// <summary> y 좌표 </summary>
         public float posY;
-
-        public ushort Protocol => (ushort)PacketID.CTS_PlayerMove;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -163,12 +161,11 @@ namespace Client
     /// </summary>
     public class CTS_PlayerAttack : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_PlayerAttack;
         /// <summary> 0 : 기본 공격, 1 : 스킬 </summary>
         public ushort skillType;
         /// <summary> 0 상, 1 우, 2 하, 3 좌 </summary>
         public ushort direction;
-
-        public ushort Protocol => (ushort)PacketID.CTS_PlayerAttack;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -213,11 +210,11 @@ namespace Client
     /// </summary>
     public class CTS_PriestBuff : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_PriestBuff;
         /// <summary> 대상 플레이어 </summary>
         public int playerId;
         /// <summary> 버프 수치 </summary>
         public float buffRate;
-        public ushort Protocol => (ushort)PacketID.CTS_PriestBuff;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -262,12 +259,11 @@ namespace Client
     /// </summary>
     public class CTS_ItemUpdate : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_ItemUpdate;
         /// <summary> 새로운 아이템 </summary>
         public ushort itemIdx;
         /// <summary> 해당 아이템의 위치 </summary>
         public ushort position;
-
-        public ushort Protocol => (ushort)PacketID.CTS_ItemUpdate;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -314,14 +310,11 @@ namespace Client
     /// </summary>
     public class CTS_MonsterHPUpdate : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_MonsterHPUpdate;
         /// <summary> 몬스터의 ID</summary>
         public ushort ID;
-
         /// <summary> 몬스터의 HP 0 이하의 음수라면 죽음 -가능 할수도</summary>
         public short updateHP;
-
-        public ushort Protocol => (ushort)PacketID.CTS_MonsterHPUpdate;
-
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -360,5 +353,4 @@ namespace Client
             return SendBufferHelper.Close(count);
         }
     }
-
 }

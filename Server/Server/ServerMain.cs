@@ -42,9 +42,9 @@ namespace Server
             IPAddress ipAddr = ipHost.AddressList[0];
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 7777);
 
-            //TODO : Listener listen
+            Logger.HeadString = "[GameServer]";
+
             _listener.Init(endPoint, () => { return ClientSessionManager.Instance.Generate(); });
-            Console.WriteLine("I'm Game Server");
 
             LoginSessionManager.Instance.Connect();
 

@@ -37,18 +37,18 @@ namespace Server
             _handler.Add((ushort)PacketID.CTS_Auth, PacketHandler.CTS_AuthHandler);
 
             _makeFunc.Add((ushort)PacketID.CTS_CreateRoom, MakePacket<CTS_CreateRoom>);
-            _makeFunc.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, MakePacket<CTS_AllowQuickEntryRoom>);
-            _makeFunc.Add((ushort)PacketID.CTS_QuickEnterRoom, MakePacket<CTS_QuickEnterRoom>);
-            _makeFunc.Add((ushort)PacketID.CTS_GetExistRooms, MakePacket<CTS_GetExistRooms>);
+            _makeFunc.Add((ushort)PacketID.CTS_SetPublicRoom, MakePacket<CTS_SetPublicRoom>);
+            _makeFunc.Add((ushort)PacketID.CTS_QuickEnter, MakePacket<CTS_QuickEnter>);
+            _makeFunc.Add((ushort)PacketID.CTS_GetPublicRoomList, MakePacket<CTS_GetPublicRoomList>);
 
             _makeFunc.Add((ushort)PacketID.CTS_EnterRoom, MakePacket<CTS_EnterRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_LeaveRoom, MakePacket<CTS_LeaveRoom>);
             _makeFunc.Add((ushort)PacketID.CTS_ReadyGame, MakePacket<CTS_ReadyGame>);
             
             _handler.Add((ushort)PacketID.CTS_CreateRoom, PacketHandler.CTS_CreateRoomHandler);
-            _handler.Add((ushort)PacketID.CTS_AllowQuickEntryRoom, PacketHandler.CTS_AllowQuickEntryRoomHandler);
-            _handler.Add((ushort)PacketID.CTS_QuickEnterRoom, PacketHandler.CTS_QuickEnterRoomHandler);
-            _handler.Add((ushort)PacketID.CTS_GetExistRooms, PacketHandler.CTS_GetExistRoomsHandler);
+            _handler.Add((ushort)PacketID.CTS_SetPublicRoom, PacketHandler.CTS_SetPublicRoomHandler);
+            _handler.Add((ushort)PacketID.CTS_QuickEnter, PacketHandler.CTS_QuickEnterRoomHandler);
+            _handler.Add((ushort)PacketID.CTS_GetPublicRoomList, PacketHandler.CTS_GetExistRoomsHandler);
 
             _handler.Add((ushort)PacketID.CTS_EnterRoom, PacketHandler.CTS_EnterRoomHandler);
             _handler.Add((ushort)PacketID.CTS_LeaveRoom, PacketHandler.CTS_LeaveRoomHandler);
@@ -87,7 +87,7 @@ namespace Server
             count += 2;
 
             if(id != (ushort)PacketID.CTS_PlayerMove)
-                Console.WriteLine($"Packet 수신 : {(PacketID)id}");
+                ServerCore.Logger.Log($"Packet 수신 : {(PacketID)id}");
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
             if(_makeFunc.TryGetValue(id, out func))

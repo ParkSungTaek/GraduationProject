@@ -25,14 +25,14 @@ namespace LoginServer
             IPAddress ipAddr = ipHost.AddressList[0];
             IPEndPoint endPoint = new IPEndPoint(ipAddr, 9999);
 
+            Logger.HeadString = "[LoginServer]";
+
             //From Game Server
             _serverListener.Init(endPoint, () => { return Session.SessionManager.Instance.GenerateServerSession(); });
 
             //From Client
             endPoint.Port = 8888;
             _loginListener.Init(endPoint, () => { return Session.SessionManager.Instance.GenerateLoginSession(); });
-
-            Console.WriteLine("I'm Login Server");
 
             while (true) 
             {

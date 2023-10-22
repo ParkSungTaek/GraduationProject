@@ -107,69 +107,22 @@ namespace Client
     }
 
     /// <summary>
-    /// 작성자 : 박성택 <br/>
-    /// 방의 빠른 입장을 허용/불허 
-    /// </summary>
-    public class CTS_AllowQuickEntryRoom : IPacket
-    {
-        public bool AllowQuickEntry;
-        public ushort Protocol => (ushort)PacketID.CTS_AllowQuickEntryRoom;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            int count = 0;
-            //packet size
-            count += sizeof(ushort);
-            //protocol
-            count += sizeof(ushort);
-
-            AllowQuickEntry = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
-            count += sizeof(bool);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(AllowQuickEntry), 0, segment.Array, segment.Offset + count, sizeof(bool));
-            count += sizeof(bool);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
-    }
-
-
-    /// <summary>
     /// 작성자 : 박성택<br/>
-    /// 방 입장 패킷
+    /// 빠른 입장 패킷
     /// </summary>
-    public class CTS_QuickEnterRoom : SimplePacket
+    public class CTS_QuickEnter : SimplePacket
     {
-        //public string roomName;
-
-        public override ushort Protocol => (ushort)PacketID.CTS_QuickEnterRoom;
+        public override ushort Protocol => (ushort)PacketID.CTS_QuickEnter;
     }
 
     /// <summary>
     /// 작성자 : 박성택 <br/>
-    /// 새로 입장한 클라이언트가 기존 존재 방 정보 요청
+    /// 공개 방 목록 요청
     /// </summary>
-    public class CTS_GetExistRooms : SimplePacket
+    public class CTS_GetPublicRoomList : SimplePacket
     {
-        public override ushort Protocol => (ushort)PacketID.CTS_GetExistRooms;
-        
+        public override ushort Protocol => (ushort)PacketID.CTS_GetPublicRoomList;
     }
-
-
 
     /// <summary>
     /// 작성자 : 이우열<br/>
@@ -235,5 +188,44 @@ namespace Client
         public override ushort Protocol => (ushort)PacketID.CTS_ReadyGame;
     }
 
+    /// <summary>
+    /// 작성자 : 박성택 <br/>
+    /// 방의 빠른 입장을 허용/불허 
+    /// </summary>
+    public class CTS_SetPublicRoom : IPacket
+    {
+        public bool isPublic;
+        public ushort Protocol => (ushort)PacketID.CTS_SetPublicRoom;
 
+        public void Read(ArraySegment<byte> segment)
+        {
+            int count = 0;
+            //packet size
+            count += sizeof(ushort);
+            //protocol
+            count += sizeof(ushort);
+
+            isPublic = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
+            count += sizeof(bool);
+        }
+
+        public ArraySegment<byte> Write()
+        {
+            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
+            ushort count = 0;
+
+            //packet size
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+
+            Array.Copy(BitConverter.GetBytes(isPublic), 0, segment.Array, segment.Offset + count, sizeof(bool));
+            count += sizeof(bool);
+
+            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
+
+            return SendBufferHelper.Close(count);
+        }
+    }
 }

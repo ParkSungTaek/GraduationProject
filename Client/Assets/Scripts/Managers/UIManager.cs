@@ -2,8 +2,8 @@
 작성자 : 이우열
 작성 일자 : 23.03.29
 
-최근 수정 일자 : 23.09.18
-최근 수정 사항 : <박성택> ShowSceneUI 함수가 단순히 UI를 생성하는 것이 아니라 만약 UI가 이미 Scene에 존재한다면 그 UI를 찾아서 반환하는것으로 바꿈 
+최근 수정 일자 : 23.10.22
+최근 수정 사항 : 팝업 다시 띄울 때 스택에서 제거
 ******/
 
 using System.Collections;
@@ -18,7 +18,7 @@ namespace Client
         /// 팝업 UI 관리를 위한 stack
         /// </summary>
         [Header("Pop Up")]
-        Stack<UI_PopUp> _popupStack = new Stack<UI_PopUp>();
+        RemovableStack<UI_PopUp> _popupStack = new RemovableStack<UI_PopUp>();
         /// <summary>
         /// popup ui 정렬 순서를 위한 변수
         /// </summary>
@@ -52,7 +52,7 @@ namespace Client
         /// </summary>
         /// <param name="go">canvas 속성이 있는 게임 오브젝트</param>
         /// <param name="sort">canvas 정렬 여부(popup->true, scene->false)</param>
-        public void SetCanvas(GameObject go, bool sort = true, int order = 0)
+        public Canvas SetCanvas(GameObject go, bool sort = true, int order = 0)
         {
             Canvas canvas = Util.GetOrAddComponent<Canvas>(go);
 
@@ -63,6 +63,8 @@ namespace Client
                 canvas.sortingOrder = _order++;
             else
                 canvas.sortingOrder = order;
+
+            return canvas;
         }
 
         /// <summary>
@@ -72,24 +74,16 @@ namespace Client
         /// <param name="name">Scene UI 이름, null이면 T 이름</param>
         public T ShowSceneUI<T>(string name = null) where T : UI_Scene
         {
-            if(string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(name))
                 name = typeof(T).Name;
-            T sceneUI = Root.GetComponentInChildren<T>();
-            if (sceneUI)
-            {
-                return sceneUI;
-            }
-            else
-            {
-                GameObject go = GameManager.Resource.Instantiate($"UI/Scene/{name}");
-                sceneUI = Util.GetOrAddComponent<T>(go);
 
-                go.transform.SetParent(Root.transform);
-                sceneUI.Init();
+            GameObject go = GameManager.Resource.Instantiate($"UI/Scene/{name}");
+            T sceneUI = Util.GetOrAddComponent<T>(go);
 
-                return sceneUI;
-            }
-            
+            go.transform.SetParent(Root.transform);
+            sceneUI.Init();
+
+            return sceneUI;
         }
 
         /// <summary>
@@ -118,7 +112,16 @@ namespace Client
             else
             {
                 popupUI = Util.GetOrAddComponent<T>(popup);
-                popupUI.GetComponent<Canvas>().sortingOrder = _order++;
+                //지금도 보이고 있는 경우, 스택에서 제거
+                if (popup.activeInHierarchy)
+                {
+                    if (true == _popupStack.Remove(popupUI, (ui) => ui.Canvas.sortingOrder--))
+                    {
+                        _order--;
+                    }
+                }
+
+                popupUI.Canvas.sortingOrder = _order++;
                 popupUI.ReOpen();
             }
 
@@ -146,10 +149,23 @@ namespace Client
 
             ClosePopUpUI();
         }
+
+        public void ClosePopUpUI(System.Type type)
+        {
+            if (_popupStack.Count <= 0) return;
+
+            if (_popupStack.Peek().GetType() != type)
+            {
+                Debug.LogError("Popup Type doesn't match. Can't close pop up.");
+                return;
+            }
+
+            ClosePopUpUI();
+        }
         /// <summary>
         /// 가장 위의 pop up UI 닫기
         /// </summary>
-        public void ClosePopUpUI()
+        private void ClosePopUpUI()
         {
             if (_popupStack.Count <= 0) return;
 

@@ -33,7 +33,7 @@ namespace Server
         /// <summary> 로그인 서버로 연결 </summary>
         public void Connect()
         {
-            Console.WriteLine("Login Server Connecting..");
+            ServerCore.Logger.Log("Login Server Connecting..");
 
             string host = Dns.GetHostName();
             IPHostEntry ipHost = Dns.GetHostEntry(host);

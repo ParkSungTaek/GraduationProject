@@ -23,15 +23,17 @@ namespace Client
         InGameDataManager _inGameDataManager = new InGameDataManager();
         UIManager _uiManager = new UIManager();
         RoomManager _roomManager = new RoomManager();
+        ExistRoomManager _existRoomManager = new ExistRoomManager();
 
-        public static LoginManager Login { get { return Instance._loginManager; } }
-        public static NetworkManager Network { get { return Instance._networkManager; } }
-        public static PoolManager Pool { get { return Instance._poolManager; } }
-        public static ResourceManager Resource { get { return Instance._resourceManager; } }
-        public static SoundManager Sound { get { return Instance._soundManager; } }
-        public static InGameDataManager InGameData { get { return Instance._inGameDataManager; } }
-        public static UIManager UI { get { return Instance._uiManager; } }
+        public static LoginManager Login => Instance._loginManager;
+        public static NetworkManager Network => Instance._networkManager;
+        public static PoolManager Pool => Instance._poolManager;
+        public static ResourceManager Resource => Instance._resourceManager;
+        public static SoundManager Sound => Instance._soundManager;
+        public static InGameDataManager InGameData => Instance._inGameDataManager;
+        public static UIManager UI => Instance._uiManager;
         public static RoomManager Room => Instance._roomManager;
+        public static ExistRoomManager ExistRoom => Instance._existRoomManager;
         #endregion
 
         /// <summary> instance 생성, 산하 매니저들 초기화 </summary>

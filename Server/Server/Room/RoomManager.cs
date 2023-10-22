@@ -9,6 +9,7 @@
 using ServerCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Server
@@ -21,7 +22,7 @@ namespace Server
         /// <summary> 작업 관리 큐 </summary>
         JobQueue _jobQueue = new JobQueue();
 
-        LinkedList<Room> _quickEnterRooms = new LinkedList<Room>();
+        LinkedList<Room> _publicRooms = new LinkedList<Room>();
 
         #region Singleton
         /// <summary> 싱글톤 </summary>
@@ -29,98 +30,63 @@ namespace Server
         RoomManager() { }
         #endregion Singleton
         
-        public List<string> RoomNames() 
+        /// <summary> 공개 방 목록 반환 </summary>
+        public List<string> GetPublicRooms() 
         {
-            return new List<string>(_rooms.Keys);
+            var list = new List<string>(_publicRooms.Count);
+            foreach (var room in _publicRooms)
+                list.Add(room.RoomName);
+
+            return list;
         }
 
-        /// <summary>
-        /// 랜덤한 빠른 입장 가능한 방 Get 빠른 입장이 불가능하다면 return null;
-        /// </summary>
-        /// <returns> 빠른 입장 가능한 방 이름 없으면 null</returns>
-        public string GetRandomQuickEnterRoomName()
+        /// <summary> 빠른 입장
+        public void TryQuickEnter(ClientSession session)
         {
-            Random rand = new Random();
-            int randnum = rand.Next(0, _quickEnterRooms.Count);
-            if(_quickEnterRooms.Count == 0)
+            if (_publicRooms.Count <= 0)
             {
-                return null;
+                STC_QuickEnterFail failPacket = new STC_QuickEnterFail();
+                session.Send(failPacket.Write());
+                return;
             }
 
-            LinkedListNode<Room> currentNode = _quickEnterRooms.First;
+            var canEnterRooms = from room in _publicRooms
+                                where room.CanEnter() && room.IsPublicRoom
+                                select room;
 
-            for (int i = 1; i < randnum; i++)
+            if (canEnterRooms.Count() <= 0)
             {
-                currentNode = currentNode.Next;
+                STC_QuickEnterFail failPacket = new STC_QuickEnterFail();
+                session.Send(failPacket.Write());
+                return;
             }
 
-            Room item;
-            int find = 0;
+            int rand = new Random().Next(0, canEnterRooms.Count() - 1);
+            var selectedRoom = canEnterRooms.Skip(rand).First();
 
-            ///아직 방이 남아있어
-            if (_rooms.TryGetValue(currentNode.Value.RoomName, out item))
+            selectedRoom.Push(() => selectedRoom.Enter(session));
+        }
+
+        /// <summary> 공개방 설정 </summary>
+        public void SetPublicRoom(Room room, bool isPublic)
+        {
+            room.Push(() => room.IsPublicRoom = isPublic);
+
+            if (isPublic)
             {
-                //빈 자리도 있고 & 빠른입장도 허용했어
-                if (item.CanEnter() && item.AllowQuickEntry)
+                if (!_publicRooms.Contains(room))
                 {
-                    return item.RoomName;
+                    ServerCore.Logger.Log($"public room ADD : {room.RoomName}");
+                    _publicRooms.AddLast(room);
                 }
 
             }
             else
             {
-                _quickEnterRooms.Remove(currentNode.Value);                
-            }
-
-            // 렌덤으로 빠른방 찾기는 실패 맨 앞부터 사용 가능한 빠른방이 있나 확인
-            
-            for (LinkedListNode<Room> node = _quickEnterRooms.First; node != null; node = node.Next)
-            {
-                if (_rooms.TryGetValue(currentNode.Value.RoomName, out item))
-                {
-                    //빈 자리도 있고 & 빠른입장도 허용했어
-                    if (item.CanEnter() && item.AllowQuickEntry)
-                    {
-                        return item.RoomName;
-                    }
-                }
-                else
-                {
-                    _quickEnterRooms.Remove(currentNode.Value);
-                }
-            }
-
-            return null;
-
-        }
-
-        /// <summary>
-        /// 빠른 입장 허용 || 비허용
-        /// </summary>
-        /// <param name="RoomName"></param>
-        public void AllowQuickEnter(Room room, bool allowQuickEnter)
-        {
-            if (allowQuickEnter)
-            {
-                room.AllowQuickEntry = true;
-                if (!_quickEnterRooms.Contains(room))
-                {
-                    Console.WriteLine($"ADD {room.RoomName}");
-                    _quickEnterRooms.AddLast(room);
-                }
-
-            }
-            else
-            {
-                room.AllowQuickEntry = false;
-                if (_quickEnterRooms.Contains(room))
-                {
-                    Console.WriteLine($"Delete {room.RoomName}");
-                    _quickEnterRooms.Remove(room);
-                }
+                ServerCore.Logger.Log($"public room Delete : {room.RoomName}");
+                _publicRooms.Remove(room);
             }
         }
-
 
         public void Push(Action job) => _jobQueue.Push(job);
 
@@ -163,7 +129,8 @@ namespace Server
             //방 존재하지 않음
             if(_rooms.TryGetValue(roomName, out room) == false || room.RoomName == string.Empty)
             {
-                STC_RejectEnter_Exist existPacket = new STC_RejectEnter_Exist();
+                STC_RejectEnter existPacket = new STC_RejectEnter();
+                existPacket.errorCode = STC_RejectEnter.ErrorCode.NotExist;
                 session.Send(existPacket.Write());
                 return;
             }
@@ -176,7 +143,7 @@ namespace Server
         {
             _rooms.Remove(room.RoomName);
 
-            _quickEnterRooms.Remove(room);
+            _publicRooms.Remove(room);
         }
         #endregion jobs
     }

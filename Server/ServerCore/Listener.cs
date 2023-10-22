@@ -70,11 +70,11 @@ namespace ServerCore
                     session.OnConnected(args.AcceptSocket.RemoteEndPoint);
                 }
                 else
-                    Console.WriteLine(args.SocketError.ToString());
+                    ServerCore.Logger.Log(args.SocketError.ToString());
             }
             catch(Exception e)
             {
-                Console.WriteLine(e.ToString());
+                ServerCore.Logger.Log(e.ToString());
             }
 
             RegisterAccept(args);

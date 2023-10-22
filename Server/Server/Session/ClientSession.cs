@@ -20,7 +20,7 @@ namespace Server
 
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"OnConnected : {endPoint}");
+            ServerCore.Logger.Log($"OnConnected : {endPoint}");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer)
@@ -45,7 +45,7 @@ namespace Server
             if (needRemove)
                 ClientSessionManager.Instance.OnDisconnect(this);
 
-            Console.WriteLine($"OnDisconnected : {endPoint}");
+            ServerCore.Logger.Log($"OnDisconnected : {endPoint}");
         }
     }
 

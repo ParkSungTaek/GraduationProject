@@ -89,16 +89,16 @@ namespace Server
         /// 작성자 : 박성택<br/>
         /// 빠른입장 혀용 또는 불가
         /// </summary>
-        public static void CTS_AllowQuickEntryRoomHandler(PacketSession session, IPacket packet)
+        public static void CTS_SetPublicRoomHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
-            CTS_AllowQuickEntryRoom allowPacket = packet as CTS_AllowQuickEntryRoom;
+            CTS_SetPublicRoom allowPacket = packet as CTS_SetPublicRoom;
 
             Room room = clientSession.Room;
 
             if (room != null)
             {
-                RoomManager.Instance.Push(() => RoomManager.Instance.AllowQuickEnter(room, allowPacket.AllowQuickEntry));
+                RoomManager.Instance.Push(() => RoomManager.Instance.SetPublicRoom(room, allowPacket.isPublic));
             }
             
             //RoomManager.Instance.Push(() => RoomManager.Instance.AllowQuickEnter(allowPacket.roomName, allowPacket.AllowQuickEntry));
@@ -110,22 +110,12 @@ namespace Server
         public static void CTS_QuickEnterRoomHandler(PacketSession session, IPacket packet)
         {
             ClientSession clientSession = session as ClientSession;
-            string roomName = RoomManager.Instance.GetRandomQuickEnterRoomName();
-            if (roomName != null)
-            {
-                RoomManager.Instance.Push(() => RoomManager.Instance.EnterRoom(clientSession, roomName));
-            }
-            ///빠른참가 방이 없음
-            else
-            {
-                // 추가적인 행동 필요? 
-            }
-
+            RoomManager.Instance.Push(() => RoomManager.Instance.TryQuickEnter(clientSession));
         }
         
         /// <summary>
         /// 작성자 : 박성택<br/>
-        /// 빠른입장
+        /// 공개 방 목록 요청 처리
         /// </summary>
         public static void CTS_GetExistRoomsHandler(PacketSession session, IPacket packet)
         {
@@ -133,12 +123,11 @@ namespace Server
             ClientSession clientSession = session as ClientSession;
             
             //CTS_GetExistRooms enterPacket = packet as CTS_GetExistRooms;
-            STC_ExistRooms existRooms = new STC_ExistRooms();
+            STC_PublicRoomList existRooms = new STC_PublicRoomList();
             
-            existRooms.Rooms = RoomManager.Instance.RoomNames();
+            existRooms.RoomNames = RoomManager.Instance.GetPublicRooms();
 
             clientSession.Send(existRooms.Write());
-
         }
 
 

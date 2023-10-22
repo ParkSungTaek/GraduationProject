@@ -51,7 +51,7 @@ namespace LoginServer.SMTP
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"mail error : {ex}");
+                ServerCore.Logger.Log($"mail error : {ex}");
                 return false;
             }
 

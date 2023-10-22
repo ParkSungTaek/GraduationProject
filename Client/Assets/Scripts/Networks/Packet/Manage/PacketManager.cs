@@ -46,23 +46,20 @@ namespace Client
 
             #region Create/Enter Room
 			_makeFunc.Add((ushort)PacketID.STC_RejectRoom, MakePacket<STC_RejectRoom>);
-			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Full, MakePacket<STC_RejectEnter_Full>);
-			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Exist, MakePacket<STC_RejectEnter_Exist>);
-			_makeFunc.Add((ushort)PacketID.STC_RejectEnter_Start, MakePacket<STC_RejectEnter_Start>);
+			_makeFunc.Add((ushort)PacketID.STC_RejectEnter, MakePacket<STC_RejectEnter>);
 			_makeFunc.Add((ushort)PacketID.STC_PlayerEnter,MakePacket<STC_PlayerEnter>);
 			_makeFunc.Add((ushort)PacketID.STC_PlayerLeave, MakePacket<STC_PlayerLeave>);
 			_makeFunc.Add((ushort)PacketID.STC_ExistPlayers, MakePacket<STC_ExistPlayers>);
-			_makeFunc.Add((ushort)PacketID.STC_ExistRooms, MakePacket<STC_ExistRooms>);
+			_makeFunc.Add((ushort)PacketID.STC_PublicRoomList, MakePacket<STC_PublicRoomList>);
+			_makeFunc.Add((ushort)PacketID.STC_QuickEnterFail, MakePacket<STC_QuickEnterFail>);
 
             _handler.Add((ushort)PacketID.STC_RejectRoom, PacketHandler.STC_RejectRoomHandler);
-            _handler.Add((ushort)PacketID.STC_RejectEnter_Full, PacketHandler.STC_RejectEnter_FullHandler);
-            _handler.Add((ushort)PacketID.STC_RejectEnter_Exist, PacketHandler.STC_RejectEnter_ExistHandler);
-			_handler.Add((ushort)PacketID.STC_RejectEnter_Start, PacketHandler.STC_RejectEnter_StartHandler);
+            _handler.Add((ushort)PacketID.STC_RejectEnter, PacketHandler.STC_RejectEnterHandler);
             _handler.Add((ushort)PacketID.STC_PlayerEnter, PacketHandler.STC_PlayerEnterHandler);
             _handler.Add((ushort)PacketID.STC_PlayerLeave, PacketHandler.STC_PlayerLeaveHandler);
 			_handler.Add((ushort)PacketID.STC_ExistPlayers, PacketHandler.STC_ExistPlayersHandler);
-			_handler.Add((ushort)PacketID.STC_ExistRooms, PacketHandler.STC_ExistRoomsHandler);
-
+			_handler.Add((ushort)PacketID.STC_PublicRoomList, PacketHandler.STC_PublicRoomListHandler);
+			_handler.Add((ushort)PacketID.STC_QuickEnterFail, PacketHandler.STC_QuickEnterFailHandler);
             #endregion Create/Enter Room
 
             #region Lobby

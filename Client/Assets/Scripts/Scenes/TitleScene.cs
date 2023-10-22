@@ -14,10 +14,7 @@ namespace Client
     {
         void Start()
         {
-
             GameManager.UI.ShowSceneUI<UI_TitleScene>();
-
-
         }
     }
 }

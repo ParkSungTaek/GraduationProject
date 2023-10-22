@@ -17,8 +17,8 @@ namespace Server
     /// </summary>
     public class CTS_SelectClass : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_SelectClass;
         public ushort PlayerClass;
-        public ushort Protocol { get => (ushort)PacketID.CTS_SelectClass; }
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -59,13 +59,11 @@ namespace Server
     /// </summary>
     public class CTS_TowerDamage : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_TowerDamage;
         /// <summary> 몬스터 데미지</summary>
         public ushort DMG;
         public ushort MonsterID;
         public ushort AttackCnt;
-
-        public ushort Protocol => (ushort)PacketID.CTS_TowerDamage;
-
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -82,7 +80,6 @@ namespace Server
             count += sizeof(ushort);
             AttackCnt = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
             count += sizeof(ushort);
-
         }
 
         public ArraySegment<byte> Write()
@@ -102,7 +99,6 @@ namespace Server
             Array.Copy(BitConverter.GetBytes(AttackCnt), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
 
-
             Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
 
             return SendBufferHelper.Close(count);
@@ -116,12 +112,11 @@ namespace Server
     /// </summary>
     public class CTS_PlayerMove : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_PlayerMove;
         /// <summary> x 좌표 </summary>
         public float posX;
         /// <summary> y 좌표 </summary>
         public float posY;
-
-        public ushort Protocol => (ushort)PacketID.CTS_PlayerMove;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -166,12 +161,11 @@ namespace Server
     /// </summary>
     public class CTS_PlayerAttack : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_PlayerAttack;
         /// <summary> 0 : 기본 공격, 1 : 스킬 </summary>
         public ushort skillType;
         /// <summary> 0 상, 1 우, 2 하, 3 좌 </summary>
         public ushort direction;
-
-        public ushort Protocol => (ushort)PacketID.CTS_PlayerAttack;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -209,18 +203,18 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
-    
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 사제 버프 패킷
     /// </summary>
     public class CTS_PriestBuff : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_PriestBuff;
         /// <summary> 대상 플레이어 </summary>
         public int playerId;
         /// <summary> 버프 수치 </summary>
         public float buffRate;
-        public ushort Protocol => (ushort)PacketID.CTS_PriestBuff;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -258,19 +252,18 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
-    
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 아이템 정보 업데이트 패킷
     /// </summary>
     public class CTS_ItemUpdate : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_ItemUpdate;
         /// <summary> 새로운 아이템 </summary>
         public ushort itemIdx;
         /// <summary> 해당 아이템의 위치 </summary>
         public ushort position;
-
-        public ushort Protocol => (ushort)PacketID.CTS_ItemUpdate;
 
         public void Read(ArraySegment<byte> segment)
         {
@@ -310,111 +303,18 @@ namespace Server
 
     /// <summary>
     /// 작성자 : 박성택 <br/>
-    /// 몬스터 HP 업데이트 패킷 (Monster ID 기반 식별)
-    /// </summary>
-    public class CTS_MonsterDamage : IPacket
-    {
-        /// <summary> 새로운 아이템 </summary>
-        public ushort ID;
-        /// <summary> 해당 아이템의 위치 </summary>
-        public ushort updateHP;
+    /// CTS_MonsterHPUpdate 로 class명 수정 모든 몬스터 OBJ는 체력이 0이하인 OBJ를 죽은것으로 간주한다. 따로 죽음을 처리해주지는 않는다.
+    /// ID : 데미지를 입은 몬스터의 ID 
+    /// updateHP : 후의 HP;
 
-
-        public ushort Protocol => (ushort)PacketID.CTS_MonsterDamage;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-            //protocol
-            count += sizeof(ushort);
-
-            ID = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-            count += sizeof(ushort);
-            updateHP = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-            count += sizeof(ushort);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(ID), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-            Array.Copy(BitConverter.GetBytes(updateHP), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
-    }
-
-    /// <summary>
-    /// 작성자 : 박성택 <br/>
-    /// 몬스터 행동 애니메이션 동기화를 위한 패킷
-    /// </summary>
-    public class CTS_MonsterAttack : IPacket
-    {
-        //몬스터 공격 ID로 사용
-        public ushort AttackCnt;
-        public ushort Protocol => (ushort)PacketID.CTS_MonsterAttack;
-
-        public void Read(ArraySegment<byte> segment)
-        {
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-            //protocol
-            count += sizeof(ushort);
-
-            AttackCnt = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
-            count += sizeof(ushort);
-        }
-
-        public ArraySegment<byte> Write()
-        {
-            ArraySegment<byte> segment = SendBufferHelper.Open(4096);
-            ushort count = 0;
-
-            //packet size
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(AttackCnt), 0, segment.Array, segment.Offset + count, sizeof(ushort));
-            count += sizeof(ushort);
-
-            Array.Copy(BitConverter.GetBytes(count), 0, segment.Array, segment.Offset, sizeof(ushort));
-
-            return SendBufferHelper.Close(count);
-        }
-    }
-
-    /// <summary>
-    /// 작성자 : 박성택 <br/>
-    /// 몬스터 체력 동기화를 위한 패킷
     /// </summary>
     public class CTS_MonsterHPUpdate : IPacket
     {
+        public ushort Protocol => (ushort)PacketID.CTS_MonsterHPUpdate;
         /// <summary> 몬스터의 ID</summary>
         public ushort ID;
-
         /// <summary> 몬스터의 HP 0 이하의 음수라면 죽음 -가능 할수도</summary>
         public short updateHP;
-
-        public ushort Protocol => (ushort)PacketID.CTS_MonsterHPUpdate;
-
 
         public void Read(ArraySegment<byte> segment)
         {

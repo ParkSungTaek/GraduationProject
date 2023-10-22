@@ -29,7 +29,8 @@ namespace Server
         /// <summary> broadcasting 대기 중인 데이터들 </summary>
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
 
-        public bool AllowQuickEntry { get; set; } = false;
+        /// <summary> 공개 방 여부 </summary>
+        public bool IsPublicRoom { get; set; } = false;
         /// <summary> 새로운 작업 수행 예약 </summary>
         public void Push(Action job) => _jobQueue.Push(job);
 
@@ -76,14 +77,16 @@ namespace Server
             //풀방 -> 입장 불가
             if (_sessions.Count >= RoomManager.MAX_PLAYER_COUNT)
             {
-                STC_RejectEnter_Full fullPacket = new STC_RejectEnter_Full();
+                STC_RejectEnter fullPacket = new STC_RejectEnter();
+                fullPacket.errorCode = STC_RejectEnter.ErrorCode.Full;
                 session.Send(fullPacket.Write());
                 return;
             }
 
             if (_ingameData.State != IngameData.state.Lobby)
             {
-                STC_RejectEnter_Start alreadyStartPacket = new STC_RejectEnter_Start();
+                STC_RejectEnter alreadyStartPacket = new STC_RejectEnter();
+                alreadyStartPacket.errorCode = STC_RejectEnter.ErrorCode.Start;
                 session.Send(alreadyStartPacket.Write());
                 return;
             }
@@ -242,7 +245,7 @@ namespace Server
             Broadcast(packet.Write());
             if (_ingameData.MonsterControlInfo.MonsterTypeNum >= 59)
             {
-                Console.WriteLine("End");
+                ServerCore.Logger.Log("End");
                 _ingameData.State = IngameData.state.EndWave;
             }
         }
@@ -277,8 +280,8 @@ namespace Server
 
         public void TowerHPUpdate(CTS_TowerDamage towerDamage)
         {
-            Console.WriteLine($"ID {towerDamage.MonsterID}, DMG {towerDamage.DMG} towerDamage.AttackCnt {towerDamage.AttackCnt}");
-            Console.WriteLine($"ingame.MonsterID.Cnt{_ingameData.MontersDic.Count}");
+            ServerCore.Logger.Log($"ID {towerDamage.MonsterID}, DMG {towerDamage.DMG} towerDamage.AttackCnt {towerDamage.AttackCnt}");
+            ServerCore.Logger.Log($"ingame.MonsterID.Cnt{_ingameData.MontersDic.Count}");
             //Clinet 몬스터 시작 시 AttackCnt == 1
             if (_ingameData.MontersDic.ContainsKey(towerDamage.MonsterID) && towerDamage.AttackCnt > _ingameData.MontersDic[towerDamage.MonsterID].AttackCnt)
             {
@@ -295,14 +298,14 @@ namespace Server
                 _ingameData.TowerInfo = towerInfo;
 
 
-                Console.WriteLine($"Monster ID {towerDamage.MonsterID}   AttackCount{towerDamage.AttackCnt}   DMG{towerDamage.DMG}");
+                ServerCore.Logger.Log($"Monster ID {towerDamage.MonsterID}   AttackCount{towerDamage.AttackCnt}   DMG{towerDamage.DMG}");
 
                 //만약 몬스터 key에 값이 존재한다면
                 Broadcast(updatePacket.Write());
             }
             else
             {
-                Console.WriteLine("동일 타격은 무시");
+                ServerCore.Logger.Log("동일 타격은 무시");
             }
 
         }

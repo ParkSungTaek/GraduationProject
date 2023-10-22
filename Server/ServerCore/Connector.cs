@@ -63,7 +63,7 @@ namespace ServerCore
             }
             else
             {
-                Console.WriteLine($"Fail To Connect To Login Server : {args.SocketError}");
+                ServerCore.Logger.Log($"Fail To Connect To Login Server : {args.SocketError}");
                 _retryConnect?.Invoke();
             }
         }

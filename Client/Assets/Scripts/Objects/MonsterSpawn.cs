@@ -39,14 +39,14 @@ namespace Client
         const int _cycle = 10;
         #endregion
 
-        #region 벨런싱 데이터 
-        /// <summary>  tmp 변수 한 Wave에서 나올 몬스터 숫자 </summary>
-        int _wavenum { get { return GameManager.InGameData.Wave % _cycle != _cycle - 1 ? (4 * (GameManager.InGameData.Wave / _cycle) + 2 * (GameManager.InGameData.Wave % _cycle) + 8) : 1 ; } }
-        /// <summary> Monster 나오고 다음 Monster나올때까지 시간 텀  </summary>
-        float _monsterToMonster { get { return (26.0f / (16.0f + GameManager.InGameData.Wave)); } }
-        /// <summary>   Wave끝나고(==이번 Wave의 마지막 몬스터 나온 시점) 다음 Wave 시작 전까지 시간 텀 </summary>
-        float _waveToWave = 8.0f;
-        #endregion
+        //#region 벨런싱 데이터 
+        ///// <summary>  tmp 변수 한 Wave에서 나올 몬스터 숫자 </summary>
+        //int _wavenum { get { return GameManager.InGameData.Wave % _cycle != _cycle - 1 ? (4 * (GameManager.InGameData.Wave / _cycle) + 2 * (GameManager.InGameData.Wave % _cycle) + 8) : 1 ; } }
+        ///// <summary> Monster 나오고 다음 Monster나올때까지 시간 텀  </summary>
+        //float _monsterToMonster { get { return (26.0f / (16.0f + GameManager.InGameData.Wave)); } }
+        ///// <summary>   Wave끝나고(==이번 Wave의 마지막 몬스터 나온 시점) 다음 Wave 시작 전까지 시간 텀 </summary>
+        //float _waveToWave = 8.0f;
+        //#endregion
 
         /// <summary> 소환된 몬스터 관리 </summary>
         Dictionary<ushort,MonsterController> _monsters = new Dictionary<ushort, MonsterController>();

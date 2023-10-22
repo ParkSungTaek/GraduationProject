@@ -89,7 +89,7 @@ namespace Client
         }
         void QuickEnterAllow(PointerEventData evt)
         {
-            CTS_AllowQuickEntryRoom pkt = new CTS_AllowQuickEntryRoom();
+            CTS_SetPublicRoom pkt = new CTS_SetPublicRoom();
 
             if (AllowQuickEnter)
             {
@@ -101,7 +101,7 @@ namespace Client
                 AllowQuickEnter = true;
                 GetText((int)Texts.QuickBtnTxt).text = "Allow Quick ON";
             }
-            pkt.AllowQuickEntry = AllowQuickEnter;
+            pkt.isPublic = AllowQuickEnter;
             GameManager.Network.Send(pkt.Write());
 
         }

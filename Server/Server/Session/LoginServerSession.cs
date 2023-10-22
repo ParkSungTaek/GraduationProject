@@ -16,7 +16,7 @@ namespace Server
     {
         public override void OnConnected(EndPoint endPoint) 
         {
-            Console.WriteLine("Login Server Connected");
+            ServerCore.Logger.Log("Login Server Connected");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer) 
@@ -28,7 +28,7 @@ namespace Server
 
         public override void OnDisconnected(EndPoint endPoint, bool needRemove) 
         {
-            Console.WriteLine("Login Server Disconnected");
+            ServerCore.Logger.Log("Login Server Disconnected");
             LoginSessionManager.Instance.Disconnected();
         }
     }

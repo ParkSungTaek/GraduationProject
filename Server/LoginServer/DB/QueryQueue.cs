@@ -98,7 +98,7 @@ namespace LoginServer.DB
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine($"sql error : {e}");
+                    ServerCore.Logger.Log($"sql error : {e}");
                 }
                 finally
                 {

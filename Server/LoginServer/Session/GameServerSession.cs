@@ -16,7 +16,7 @@ namespace LoginServer.Session
     {
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"Game Server Connected");
+            ServerCore.Logger.Log($"Game Server Connected");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer) 

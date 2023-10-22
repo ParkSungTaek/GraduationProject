@@ -137,7 +137,7 @@ namespace ServerCore
             }
             catch(Exception e)
             {
-                Console.WriteLine($"Failed to RegisterSend : {e}");
+                ServerCore.Logger.Log($"Failed to RegisterSend : {e}");
                 Disconnect();
             }
         }
@@ -162,7 +162,7 @@ namespace ServerCore
                     }
                     catch(Exception e)
                     {
-                        Console.WriteLine($"Failed to OnSendCompleted : {e}");
+                        ServerCore.Logger.Log($"Failed to OnSendCompleted : {e}");
                         Disconnect();
                     }
                 }
@@ -199,7 +199,7 @@ namespace ServerCore
             }
             catch(Exception e)
             {
-                Console.WriteLine($"Failed To RegisterRecv : {e}");
+                ServerCore.Logger.Log($"Failed To RegisterRecv : {e}");
                 Disconnect();
             }
 
@@ -235,7 +235,7 @@ namespace ServerCore
                 }
                 catch(Exception e)
                 {
-                    Console.WriteLine($"Failed To OnRecvCompleted : {e}");
+                    ServerCore.Logger.Log($"Failed To OnRecvCompleted : {e}");
                     Disconnect();
                 }
             }

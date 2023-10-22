@@ -17,26 +17,24 @@ namespace Server
         CTS_Auth,
 
         CTS_CreateRoom,
-        CTS_AllowQuickEntryRoom,
-        CTS_QuickEnterRoom,
-        CTS_GetExistRooms,
+        CTS_SetPublicRoom,
+        CTS_QuickEnter,
+        CTS_GetPublicRoomList,
         CTS_EnterRoom,
         CTS_LeaveRoom,
         CTS_ReadyGame,
 
-        STC_OnConnect,
         STC_AuthAck,
         STC_DuplicatedLogin,
         STC_CheckAlive,
 
         STC_RejectRoom,
-        STC_RejectEnter_Exist,
-        STC_RejectEnter_Full,
-        STC_RejectEnter_Start,
+        STC_RejectEnter,
+        STC_QuickEnterFail,
 
         STC_PlayerEnter,
         STC_ExistPlayers,
-        STC_ExistRooms,
+        STC_PublicRoomList,
         STC_PlayerLeave,
 
         STC_SetSuper,
@@ -49,8 +47,6 @@ namespace Server
         CTS_PriestBuff,
         CTS_ItemUpdate,
         CTS_TowerDamage,
-        CTS_MonsterDamage,
-        CTS_MonsterAttack,
         CTS_MonsterHPUpdate,
 
         STC_SelectClass,

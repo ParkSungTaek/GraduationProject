@@ -53,6 +53,7 @@ namespace Server
             return SendBufferHelper.Close(count);
         }
     }
+
     /// <summary>
     /// 작성자 : 이우열 <br/>
     /// 모든 클라이언트가 캐릭터 선택 완료 -> 게임 시작 브로드캐스팅
@@ -63,9 +64,6 @@ namespace Server
     }
 
     #region Non-Playable
-
-    //삭제 : STC_MonsterMove
-
     /// <summary>
     /// 작성자 : 박성택 
     /// Monster create위치, Monster type, Monster ID

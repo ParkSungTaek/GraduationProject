@@ -31,28 +31,44 @@ namespace Client
             PasswordInput,
         }
 
+        enum Toggles
+        {
+            EmailToggle,
+        }
+
         public override void Init()
         {
             base.Init();
             Bind<Button>(typeof(Buttons));
             Bind<TMP_InputField>(typeof(InputFields));
+            Bind<Toggle>(typeof(Toggles));
             ButtonBind();
-
+            ToggleBind();
         }
 
         #region Btn
-        void ButtonBind()
+        private void ButtonBind()
         {
             BindEvent(GetButton((int)Buttons.RegistBtn).gameObject, Btn_Regist);
+#if UNITY_EDITOR
             BindEvent(GetButton((int)Buttons.ForceRegistBtn).gameObject, Btn_ForceRegist);
+#else
+            GetButton((int)Buttons.ForceRegistBtn).gameObject.SetActive(false);
+#endif
+
             BindEvent(GetButton((int)Buttons.LoginBtn).gameObject, Btn_Login);
             BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, Btn_Quit);
         }
 
-        void Btn_Regist(PointerEventData evt)
+        private void Btn_Regist(PointerEventData evt)
         {
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
+
+            if (true == Get<Toggle>((int)Toggles.EmailToggle).isOn)
+            {
+                PlayerPrefs.SetString("EmailSave", email);
+            }
 
             GameManager.Login.resentEmail = email;
 
@@ -68,7 +84,8 @@ namespace Client
             }
         }
 
-        void Btn_ForceRegist(PointerEventData evt)
+#if UNITY_EDITOR
+        private void Btn_ForceRegist(PointerEventData evt)
         {
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
@@ -86,11 +103,17 @@ namespace Client
                 GameManager.Login.Post(registPacket);
             }
         }
+#endif
 
-        void Btn_Login(PointerEventData evt)
+        private void Btn_Login(PointerEventData evt)
         {
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
+
+            if(true == Get<Toggle>((int)Toggles.EmailToggle).isOn)
+            {
+                PlayerPrefs.SetString("EmailSave", email);
+            }
 
             using (SHA256 sha256 = SHA256.Create())
             {
@@ -101,17 +124,16 @@ namespace Client
                 registPacket.password = encryptedPW;
 
                 GameManager.Network.Email = email;
-
                 GameManager.Login.Post(registPacket);
             }
         }
 
-        void Btn_Quit(PointerEventData evt)
+        private void Btn_Quit(PointerEventData evt)
         {
             GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 종료하시겠습니까?", AcceptQuitBtn);
         }
 
-        void AcceptQuitBtn()
+        private void AcceptQuitBtn()
         {
 #if UNITY_EDITOR
             UnityEditor.EditorApplication.ExitPlaymode();
@@ -120,5 +142,37 @@ namespace Client
 #endif
         }
         #endregion
+
+        private void ToggleBind()
+        {
+            var toggle = Get<Toggle>((int)Toggles.EmailToggle);
+            toggle.isOn = PlayerPrefs.GetInt("EmailSaveToggle", 1) == 1;
+            toggle.onValueChanged.AddListener((isOn) =>
+            {
+                PlayerPrefs.SetInt("EmailSaveToggle", isOn ? 1 : 0);
+            });
+
+            if(true == toggle.isOn)
+            {
+                Get<TMP_InputField>((int)InputFields.EmailInput).text = PlayerPrefs.GetString("EmailSave", string.Empty);
+            }
+        }
+
+        private void Update()
+        {
+            if(Input.GetKeyDown(KeyCode.Escape))
+            {
+                Btn_Quit(null);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Tab))
+            {
+                if (true == Get<TMP_InputField>((int)InputFields.EmailInput).isFocused)
+                {
+                    Get<TMP_InputField>((int)InputFields.PasswordInput).Select();
+                }
+            }
+
+        }
     }
 }

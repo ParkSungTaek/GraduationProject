@@ -55,7 +55,7 @@ namespace LoginServer.Packet.Manage
             count += 2;
 
             if (id != (ushort)PacketID.STC_CheckAlive)
-                Console.WriteLine($"OnRecv : {(PacketID)id}");
+                ServerCore.Logger.Log($"OnRecv : {(PacketID)id}");
 
             Func<PacketSession, ArraySegment<byte>, IPacket> func = null;
             if (_makeFunc.TryGetValue(id, out func))

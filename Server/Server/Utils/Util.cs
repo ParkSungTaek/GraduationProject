@@ -39,7 +39,7 @@ namespace Server
                 int idx = currentPath.IndexOf("Server.dll");
                 currentPath = currentPath.Substring(0, idx);
                 jsonPath = Path.Combine(currentPath, $@"Json/Datas/{relativePath}.json");
-                Console.WriteLine(jsonPath);
+                ServerCore.Logger.Log(jsonPath);
             }
             else
             {

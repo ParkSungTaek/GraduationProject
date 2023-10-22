@@ -16,7 +16,7 @@ namespace LoginServer.Session
     {
         public override void OnConnected(EndPoint endPoint)
         {
-            Console.WriteLine($"LoginPostConnect : {endPoint}");
+            ServerCore.Logger.Log($"LoginPost : {endPoint}");
         }
 
         public override void OnRecvPacket(ArraySegment<byte> buffer) 
@@ -26,9 +26,6 @@ namespace LoginServer.Session
 
         public override void OnSend(int byteTransfered) { }
 
-        public override void OnDisconnected(EndPoint endPoint, bool needRemove) 
-        {
-            Console.WriteLine($"LoginPostDisconnect : {endPoint}");
-        }
+        public override void OnDisconnected(EndPoint endPoint, bool needRemove) { }
     }
 }
