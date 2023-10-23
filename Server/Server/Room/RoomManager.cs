@@ -35,7 +35,12 @@ namespace Server
         {
             var list = new List<string>(_publicRooms.Count);
             foreach (var room in _publicRooms)
-                list.Add(room.RoomName);
+            {
+                if (room.Count < 4 && room.IsLobby())
+                {
+                    list.Add(room.RoomName);
+                }
+            }
 
             return list;
         }

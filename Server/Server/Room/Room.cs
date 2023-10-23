@@ -26,7 +26,6 @@ namespace Server
         JobQueue _jobQueue = new JobQueue();
         /// <summary> broadcasting 대기 중인 데이터들 </summary>
         List<ArraySegment<byte>> _pendingList = new List<ArraySegment<byte>>();
-
         /// <summary> 공개 방 여부 </summary>
         public bool IsPublicRoom { get; set; } = false;
         /// <summary> 새로운 작업 수행 예약 </summary>
@@ -153,7 +152,7 @@ namespace Server
         public void Ready(ClientSession session)
         {
             _ingameData.Init(_sessions);
-
+            Console.WriteLine("Start!");
             STC_ReadyGame readyPacket = new STC_ReadyGame();
 
             Broadcast(readyPacket.Write());
@@ -179,6 +178,15 @@ namespace Server
                 JobTimer.Instance.Push(Start, 100);
             }
         }
+        /// <summary>
+        /// 방이 로비인지 확인 (다른 유저 입장 가능한 상태)
+        /// </summary>
+        /// <returns></returns>
+        public bool IsLobby()
+        {
+            return _ingameData.State == IngameData.state.Lobby ? true : false;
+        }
+
         #endregion ReadyToPlay
 
         #region Ingame
