@@ -19,7 +19,7 @@ namespace Client
         enum Buttons
         {
             TitleBtn,
-            RetryBtn,
+            //RetryBtn,
         }
         enum Images
         {
@@ -41,7 +41,7 @@ namespace Client
         void ButtonBind()
         {
             BindEvent(GetButton((int)Buttons.TitleBtn).gameObject, Btn_GoToTitle);
-            BindEvent(GetButton((int)Buttons.RetryBtn).gameObject, Btn_Retry);
+            //BindEvent(GetButton((int)Buttons.RetryBtn).gameObject, Btn_Retry);
         }
 
         void Btn_GoToTitle(PointerEventData evt)
