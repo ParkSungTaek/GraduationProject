@@ -54,12 +54,14 @@ namespace Client
                 GetText(i).text = GameManager.InGameData.MyInventory[i].Name;
 
             GameManager.InGameData.OnMoneyChanged += Buy_ActiveControl;
+
         }
 
         /// <summary> 비활성화 상태에서 다시 열 시 호출 </summary>
         public override void ReOpen()
         {
             Buy_ActiveControl();
+
         }
 
         #region Buttons

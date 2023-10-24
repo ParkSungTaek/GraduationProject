@@ -1,6 +1,6 @@
 {
   "-Host": "3.35.30.92",
-  "Host" : "",
+  "Host": "",
   "GamePort": 7777,
   "LoginPort": 8888
 }

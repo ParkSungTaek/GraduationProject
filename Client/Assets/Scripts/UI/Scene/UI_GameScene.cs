@@ -221,10 +221,16 @@ namespace Client
         /// </summary>
         void Btn_GetItem(PointerEventData evt)
         {
-            GetButton((int)Buttons.ItemBtn).gameObject.SetActive(false);
-            GameManager.UI.ShowPopUpUI<UI_GetItem>().OnClose = OnCloseGetItem;
-        }
+            //GetButton((int)Buttons.ItemBtn).gameObject.SetActive(false);
+            //GameManager.UI.ShowPopUpUI<UI_GetItem>().OnClose = OnCloseGetItem;
 
+            if (GameManager.InGameData.CanBuyItem)
+                GameManager.InGameData.AddRandomItem(ItemTxtUpdate);
+        }
+        void ItemTxtUpdate(int idx)
+        {
+            //GetText(idx).text = GameManager.InGameData.MyInventory[idx].Name;
+        }
         void Btn_Quit(PointerEventData evt)
         {
             GameManager.UI.ShowPopUpUI<UI_SimpleSelect>().SetData("정말로 나가시겠습니까?", Btn_AcceptQuit);

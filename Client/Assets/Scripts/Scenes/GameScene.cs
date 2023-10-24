@@ -14,6 +14,8 @@ namespace Client
     {
         private void Start()
         {
+
+            Application.targetFrameRate = 60;
             GameManager.UI.ShowSceneUI<UI_GameScene>();
             GameManager.UI.ShowPopUpUI<UI_ClassSelect>();
 

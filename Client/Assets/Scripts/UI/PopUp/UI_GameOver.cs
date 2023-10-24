@@ -46,6 +46,7 @@ namespace Client
 
         void Btn_GoToTitle(PointerEventData evt)
         {
+            GameManager.Room.Leave();
             SceneManager.LoadScene(Define.Scenes.Title);
         }
 
