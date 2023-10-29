@@ -23,7 +23,6 @@ namespace Client
         /// </summary>
         RoomInfo _roomInfo = new RoomInfo();
         public Action OnSetPublic { get; set; } = null;
-
         public int MyId
         {
             get => _roomInfo.MyId;
@@ -39,6 +38,16 @@ namespace Client
                 _lobbyUpdate?.Invoke(_roomInfo);
             }
         }
+        private Action<string> _onSetRoomName = null;
+        public Action<string> OnSetRoomName
+        {
+            get => _onSetRoomName;
+            set
+            {
+                _onSetRoomName = value;
+                _onSetRoomName?.Invoke(_roomInfo.Name);
+            }
+        }
 
         /// <summary> 
         /// 작성자 : 이우열 <br/>
@@ -48,6 +57,12 @@ namespace Client
         {
             _roomInfo.IsHost = true;
             LobbyUpdate?.Invoke(_roomInfo);
+        }
+
+        public void SetName(string name)
+        {
+            _roomInfo.Name = name;
+            OnSetRoomName?.Invoke(name);
         }
 
         /// <summary> 공개방으로 설정 </summary>
@@ -129,6 +144,13 @@ namespace Client
         public void Clear()
         {
             _roomInfo.Clear();
+        }
+
+        public void ClearActions()
+        {
+            OnSetPublic = null;
+            OnSetRoomName = null;
+            LobbyUpdate = null;
         }
     }
 }

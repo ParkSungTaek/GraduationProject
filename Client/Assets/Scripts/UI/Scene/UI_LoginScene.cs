@@ -65,6 +65,12 @@ namespace Client
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
 
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("공백은 입력할 수 없습니다.");
+                return;
+            }
+
             if (true == Get<Toggle>((int)Toggles.EmailToggle).isOn)
             {
                 PlayerPrefs.SetString("EmailSave", email);
@@ -90,6 +96,12 @@ namespace Client
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
 
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("공백은 입력할 수 없습니다.");
+                return;
+            }
+
             GameManager.Login.resentEmail = email;
 
             using (SHA256 sha256 = SHA256.Create())
@@ -110,7 +122,13 @@ namespace Client
             string email = Get<TMP_InputField>((int)InputFields.EmailInput).text;
             string password = Get<TMP_InputField>((int)InputFields.PasswordInput).text;
 
-            if(true == Get<Toggle>((int)Toggles.EmailToggle).isOn)
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+            {
+                GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("공백은 입력할 수 없습니다.");
+                return;
+            }
+
+            if (true == Get<Toggle>((int)Toggles.EmailToggle).isOn)
             {
                 PlayerPrefs.SetString("EmailSave", email);
             }

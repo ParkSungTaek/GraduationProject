@@ -312,6 +312,7 @@ namespace Client
         }
 
         public ushort Protocol => (ushort)PacketID.STC_ExistPlayers;
+        public string RoomName;
         public bool IsPublicRoom;
         public List<PlayerInfo> Players = new List<PlayerInfo>();
 
@@ -323,6 +324,11 @@ namespace Client
             count += sizeof(ushort);
             //protocol
             count += sizeof(ushort);
+
+            ushort nameLen = BitConverter.ToUInt16(segment.Array, segment.Offset + count);
+            count += sizeof(ushort);
+            RoomName = Encoding.Unicode.GetString(segment.Array, segment.Offset + count, nameLen);
+            count += nameLen;
 
             IsPublicRoom = BitConverter.ToBoolean(segment.Array, segment.Offset + count);
             count += sizeof(bool);
@@ -354,6 +360,11 @@ namespace Client
 
             Array.Copy(BitConverter.GetBytes(Protocol), 0, segment.Array, segment.Offset + count, sizeof(ushort));
             count += sizeof(ushort);
+
+            ushort nameLen = (ushort)Encoding.Unicode.GetBytes(RoomName, 0, RoomName.Length, segment.Array, segment.Offset + count + sizeof(ushort));
+            Array.Copy(BitConverter.GetBytes(nameLen), 0, segment.Array, segment.Offset + count, sizeof(ushort));
+            count += sizeof(ushort);
+            count += nameLen;
 
             Array.Copy(BitConverter.GetBytes(IsPublicRoom), 0, segment.Array, segment.Offset + count, sizeof(bool));
             count += sizeof(bool);

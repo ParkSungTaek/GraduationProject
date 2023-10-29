@@ -19,6 +19,7 @@ namespace Client
     /// <summary> 방에 존재하는 인원 정보 저장 클래스 </summary>
     public class RoomInfo
     {
+        public string Name;
         /// <summary> 이 방의 호스트 여부 </summary>
         public bool IsHost = false;
         public bool IsPublic { get; set; } = false;
@@ -60,6 +61,7 @@ namespace Client
         /// <summary> 정보 초기화 </summary>
         public void Clear()
         {
+            Name = string.Empty;
             IsHost = false;
             MyId = -1;
             PlayerClasses.Clear();

@@ -253,6 +253,7 @@ namespace Client
 
 			void OnLoadScene(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode mode)
 			{
+				GameManager.Room.SetName(pkt.RoomName);
 				GameManager.Room.SetPublic(pkt.IsPublicRoom);
 				GameManager.Room.SetExistPlayers(players);
 				UnityEngine.SceneManagement.SceneManager.sceneLoaded -= OnLoadScene;

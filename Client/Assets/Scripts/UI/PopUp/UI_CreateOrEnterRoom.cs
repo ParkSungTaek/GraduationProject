@@ -73,7 +73,7 @@ namespace Client
             CTS_EnterRoom enterPacket = new CTS_EnterRoom();
             enterPacket.roomName = roomName;
 
-            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 생성 중");
+            GameManager.UI.ShowPopUpUI<UI_Log>().SetLog("방 입장 중");
             GameManager.Network.Send(enterPacket.Write());
         }
         #endregion Buttons

@@ -29,7 +29,8 @@ namespace Client
             PlayerTxt2,
             PlayerTxt3,
             PlayerTxt4,
-            SetPublicText,
+            SetPublicTxt,
+            RoomNameTxt,
         }
 
         public override void Init()
@@ -40,11 +41,12 @@ namespace Client
             ButtonBind();
 
             GameManager.Room.LobbyUpdate = LobbyUpdate;
-            GameManager.Room.OnSetPublic = PublicRoomSet;
+            GameManager.Room.OnSetPublic = OnSetPublic;
+            GameManager.Room.OnSetRoomName = OnSetRoomName;
 
             //나중에 들어온 유저인 경우
             if (GameManager.Room.IsPublic())
-                PublicRoomSet();
+                OnSetPublic();
         }
 
         #region Button
@@ -97,7 +99,7 @@ namespace Client
 
         private void AcceptSetPublicBtn()
         {
-            PublicRoomSet();
+            OnSetPublic();
 
             CTS_SetPublicRoom pkt = new CTS_SetPublicRoom();
             AllowQuickEnter = true;
@@ -107,11 +109,16 @@ namespace Client
             GameManager.UI.ClosePopUpUI(typeof(UI_SimpleSelect));
         }
 
-        private void PublicRoomSet()
+        private void OnSetPublic()
         {
             var button = GetButton((int)Buttons.SetPublicBtn);
             button.interactable = false;
-            GetText((int)Texts.SetPublicText).text = "공개방으로 전환됨";
+            GetText((int)Texts.SetPublicTxt).text = "공개방으로 전환됨";
+        }
+
+        private void OnSetRoomName(string name)
+        {
+            GetText((int)Texts.RoomNameTxt).text = $"Room : {name}";
         }
         #endregion Button
 

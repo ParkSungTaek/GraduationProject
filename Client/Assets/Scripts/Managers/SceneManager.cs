@@ -18,8 +18,7 @@ namespace Client
             //게임 진행사항 초기화
             GameManager.InGameData.Clear();
             //방 입장 함수 연결 해제
-            GameManager.Room.LobbyUpdate = null;
-            GameManager.Room.OnSetPublic = null;
+            GameManager.Room.ClearActions();
             GameManager.ExistRoom.Clear();
 
             UnityEngine.SceneManagement.SceneManager.LoadScene((int)scene);

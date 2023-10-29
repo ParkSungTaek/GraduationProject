@@ -99,6 +99,7 @@ namespace Server
             session.Room = this;
 
             STC_ExistPlayers existPacket = new STC_ExistPlayers();
+            existPacket.RoomName = this.RoomName;
             existPacket.IsPublicRoom = this.IsPublicRoom;
             foreach (var s in _sessions)
                 existPacket.Players.Add(new STC_ExistPlayers.PlayerInfo { playerId = s.SessionId, email = s.email });
