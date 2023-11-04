@@ -37,8 +37,7 @@ namespace Client
         }
         public enum BGM
         {
-
-
+            GAMEPLAY,
 
             MaxCount
         }

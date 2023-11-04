@@ -62,6 +62,8 @@ namespace Client
                 _instance._poolManager.Init();
                 _instance._soundManager.Init();
                 _instance._inGameDataManager.Init();
+
+                Sound.Play(Define.BGM.GAMEPLAY);
             }
         }
 

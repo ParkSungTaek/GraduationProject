@@ -57,7 +57,7 @@ namespace Client
                     SendAnimationInfo(direction, true);
                     GameManager.Sound.Play(Define.SFX.WizzardAttack);
 
-                    GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
+                    GenerateTargetArea(1, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG), 1.5f);
                     GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
                 }
             }

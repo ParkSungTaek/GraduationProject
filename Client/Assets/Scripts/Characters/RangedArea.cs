@@ -17,11 +17,11 @@ namespace Client
         int _dmg;
         List<Collider2D> _damaged = new List<Collider2D>();
 
-        public void SetDamage(int dmg)
+        public void SetDamage(int dmg,float damageTime = 0.1f)
         {
             _damaged.Clear();
             _dmg = dmg;
-            Destroy(gameObject, 0.1f);
+            Destroy(gameObject, damageTime);
         }
 
         private void OnTriggerEnter2D(Collider2D collision)
