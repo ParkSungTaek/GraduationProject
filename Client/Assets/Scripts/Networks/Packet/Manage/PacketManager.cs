@@ -30,10 +30,12 @@ namespace Client
 		{
 			#region Login
 			_makeFunc.Add((ushort)PacketID.LTC_RegistAck, MakePacket<LTC_RegistAck>);
+			_makeFunc.Add((ushort)PacketID.LTC_UnregistAck, MakePacket<LTC_UnregistAck>);
 			_makeFunc.Add((ushort)PacketID.LTC_RegistAuthAck, MakePacket<LTC_RegistAuthAck>);
 			_makeFunc.Add((ushort)PacketID.LTC_LoginAck, MakePacket<LTC_LoginAck>);
 
 			_handler.Add((ushort)PacketID.LTC_RegistAck, PacketHandler.LTC_RegistAckHandler);
+			_handler.Add((ushort)PacketID.LTC_UnregistAck, PacketHandler.LTC_UnregistAckHandler);
 			_handler.Add((ushort)PacketID.LTC_RegistAuthAck, PacketHandler.LTC_RegistAuthAckHandler);
 			_handler.Add((ushort)PacketID.LTC_LoginAck, PacketHandler.LTC_LoginAckHandler);
 

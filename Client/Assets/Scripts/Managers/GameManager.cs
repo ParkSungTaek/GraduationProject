@@ -101,6 +101,15 @@ namespace Client
             _instance._networkManager.Flush();
         }
 
+        private void OnApplicationPause(bool pause)
+        {
+            if (true == pause)
+            {
+                Network.Disconnect();
+                Network.GoBackToLogin();
+            }
+        }
+
         public static Coroutine SetCoroutine(System.Collections.IEnumerator enumerator) => Instance.StartCoroutine(enumerator);
         public static void RemoveCoroutine(Coroutine coroutine) => Instance.StopCoroutine(coroutine);
     }

@@ -52,6 +52,35 @@ namespace Client
 
 		/// <summary>
 		/// 작성자 : 이우열 <br/>
+		/// 회원탈퇴 성공 여부 처리 패킷
+		/// </summary>
+		public static void LTC_UnregistAckHandler(PacketSession session, IPacket packet)
+		{
+            LTC_UnregistAck pkt = packet as LTC_UnregistAck;
+            LoginSession loginSession = session as LoginSession;
+
+            switch (pkt.errorCode)
+            {
+                case (ushort)LTC_UnregistAck.ErrorCode.Success:
+                    GameManager.Network.Push(() => {
+                        GameManager.UI.CloseAllPopUpUI();
+                        GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("성공적으로 탈퇴되었습니다.");
+                    });
+                    break;
+                case (ushort)LTC_UnregistAck.ErrorCode.AccountError:
+                    GameManager.Network.Push(() => {
+                        GameManager.UI.ClosePopUpUI(typeof(UI_Log));
+                        GameManager.UI.ShowPopUpUI<UI_ClosableLog>().SetLog("존재하지 않는 계정입니다.");
+                    });
+                    break;
+            }
+
+            GameManager.Login.RemoveTimer();
+            loginSession.Disconnect();
+        }
+
+		/// <summary>
+		/// 작성자 : 이우열 <br/>
 		/// 이메일 인증 처리 결과 패킷 처리
 		/// </summary>
 		public static void LTC_RegistAuthAckHandler(PacketSession session, IPacket packet)

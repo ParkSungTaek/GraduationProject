@@ -14,7 +14,7 @@ namespace LoginServer.DB
 {
     public class Query
     {
-        public bool IsInsert;
+        public bool IsInsertOrDelete;
         public string QueryStr;
         public Action<bool> ResultCallback;
     }
@@ -51,7 +51,6 @@ namespace LoginServer.DB
         /// <summary> 예약된 작업들 수행 </summary>
         void Flush()
         {
-
             using (NpgsqlConnection connection = new NpgsqlConnection(connectionStr))
             {
                 try
@@ -72,7 +71,7 @@ namespace LoginServer.DB
                         {
                             try
                             {
-                                if (query.IsInsert)
+                                if (query.IsInsertOrDelete)
                                 {
                                     var result = command.ExecuteNonQuery();
 
@@ -88,7 +87,7 @@ namespace LoginServer.DB
                             }
                             catch (NpgsqlException ex)
                             {
-                                if (query.IsInsert)
+                                if (query.IsInsertOrDelete)
                                 {
                                     query.ResultCallback?.Invoke(false);
                                 }

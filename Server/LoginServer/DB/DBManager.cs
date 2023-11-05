@@ -22,7 +22,7 @@ namespace LoginServer.DB
                 email = email.Substring(0, 60);
             }
 
-            Query query = new Query { IsInsert = false, QueryStr = $"SELECT email FROM users WHERE email = '{email}'", ResultCallback = resultCallback };
+            Query query = new Query { IsInsertOrDelete = false, QueryStr = $"SELECT email FROM users WHERE email = '{email}'", ResultCallback = resultCallback };
             _queryQueue.Push(query);
         }
 
@@ -33,7 +33,7 @@ namespace LoginServer.DB
             if (password.Length > 32)
                 password = password.Substring(0, 32);
 
-            Query query = new Query { IsInsert = true, QueryStr = $"INSERT INTO users VALUES('{email}', '{password}')", ResultCallback = resultCallback };
+            Query query = new Query { IsInsertOrDelete = true, QueryStr = $"INSERT INTO users VALUES('{email}', '{password}')", ResultCallback = resultCallback };
             _queryQueue.Push(query);
         }
 
@@ -44,7 +44,18 @@ namespace LoginServer.DB
             if (password.Length > 32)
                 password = password.Substring(0, 32);
 
-            Query query = new Query { IsInsert = false, QueryStr = $"SELECT email from users WHERE email = '{email}' AND passwd = '{password}'", ResultCallback = resultCallback };
+            Query query = new Query { IsInsertOrDelete = false, QueryStr = $"SELECT email from users WHERE email = '{email}' AND passwd = '{password}'", ResultCallback = resultCallback };
+            _queryQueue.Push(query);
+        }
+
+        public void DeleteUser(string email, string password, Action<bool> resultCallback)
+        {
+            if (email.Length > 60)
+                email = email.Substring(0, 60);
+            if (password.Length > 32)
+                password = password.Substring(0, 32);
+
+            Query query = new Query { IsInsertOrDelete = true, QueryStr = $"DELETE from users WHERE email = '{email}' AND passwd = '{password}'", ResultCallback = resultCallback };
             _queryQueue.Push(query);
         }
     }

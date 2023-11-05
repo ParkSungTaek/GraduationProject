@@ -45,6 +45,29 @@ namespace LoginServer.Packet.Manage
 
         /// <summary>
         /// 작성자 : 이우열 <br/>
+        /// 회원탈퇴 패킷 처리
+        /// </summary>
+        public static void CTL_UnregistHandler(PacketSession session, IPacket packet)
+        {
+            Session.LoginSession loginSession = session as Session.LoginSession;
+            CTL_Unregist unregistPacket = packet as CTL_Unregist;
+
+            DB.DBManager.Instance.DeleteUser(unregistPacket.email, unregistPacket.password, (isSuccess) =>
+            {
+                LTC_UnregistAck ackPacket = new LTC_UnregistAck();
+                if (isSuccess)
+                    ackPacket.errorCode = (ushort)LTC_UnregistAck.ErrorCode.Success;
+                else
+                    ackPacket.errorCode = (ushort)LTC_UnregistAck.ErrorCode.AccountError;
+
+                loginSession.Send(ackPacket.Write());
+
+                JobTimer.Instance.Push(() => loginSession.Disconnect(), 100);
+            });
+        }
+
+        /// <summary>
+        /// 작성자 : 이우열 <br/>
         /// 디버깅 용 메일 인증 없는 회원가입
         /// </summary>
         public static void CTL_ForceRegistHandler(PacketSession session, IPacket packet)

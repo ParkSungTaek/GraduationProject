@@ -20,6 +20,7 @@ namespace Client
         enum Buttons
         {
             RegistBtn,
+            UnregistBtn,
             ForceRegistBtn,
             LoginBtn,
             QuitBtn,
@@ -58,6 +59,8 @@ namespace Client
 
             BindEvent(GetButton((int)Buttons.LoginBtn).gameObject, Btn_Login);
             BindEvent(GetButton((int)Buttons.QuitBtn).gameObject, Btn_Quit);
+
+            BindEvent(GetButton((int)Buttons.UnregistBtn).gameObject, Btn_Unregist);
         }
 
         private void Btn_Regist(PointerEventData evt)
@@ -88,6 +91,11 @@ namespace Client
 
                 GameManager.Login.Post(registPacket);
             }
+        }
+
+        private void Btn_Unregist(PointerEventData evt)
+        {
+            GameManager.UI.ShowPopUpUI<UI_Unregist>();
         }
 
 #if UNITY_EDITOR

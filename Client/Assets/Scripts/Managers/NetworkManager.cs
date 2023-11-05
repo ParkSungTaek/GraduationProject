@@ -53,6 +53,7 @@ namespace Client
             Email = string.Empty;
             Debug.Log("Disconnect");
             _session?.Disconnect();
+            _session = null;
         }
 
         /// <summary> 서버 연결 끊김 시 로그인 화면으로 전환 </summary>

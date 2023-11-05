@@ -63,11 +63,13 @@ namespace Server
 
         //--Login--//
         CTL_Regist,
+        CTL_Unregist,
         CTL_ForceRegist,
         CTL_RegistAuth,
         CTL_Login,
 
         LTC_RegistAck,
+        LTC_UnregistAck,
         LTC_RegistAuthAck,
         LTC_LoginAck,
 
