@@ -22,7 +22,7 @@ namespace LoginServer.SMTP
 
     class SMTPManager
     {
-        const string senderEmail = "teamphoton@naver.com";
+        const string senderEmail = "team.photoncannongp@gmail.com";
         private System.Net.NetworkCredential credential;
 
         /// <summary> 이메일 보내고 기다리는 애들 </summary>
@@ -30,7 +30,7 @@ namespace LoginServer.SMTP
         public static SMTPManager Instance { get; } = new SMTPManager();
         private SMTPManager()
         {
-            credential = new System.Net.NetworkCredential(senderEmail, "U8Q3QSQ299SV");
+            credential = new System.Net.NetworkCredential(senderEmail, "dwur nchs gtgz cjjs");
         }
 
         private object _lock = new object();
@@ -125,7 +125,7 @@ namespace LoginServer.SMTP
         }
         private void SendMail(MailMessage mail)
         {
-            SmtpClient smtpClient = new SmtpClient("smtp.naver.com", 587);
+            SmtpClient smtpClient = new SmtpClient("smtp.gmail.com", 587);
             smtpClient.Timeout = 10000;
             smtpClient.UseDefaultCredentials = false;
             smtpClient.EnableSsl = true;
