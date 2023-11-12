@@ -55,7 +55,10 @@ namespace LoginServer.DB
             {
                 try
                 {
-                    connection.Open();
+                    if (connection.State != System.Data.ConnectionState.Open)
+                    {
+                        connection.Open();
+                    }
 
                     while (true)
                     {
