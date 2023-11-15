@@ -79,7 +79,22 @@ namespace Client
             Epic,
             Legendary
         }
+        public enum ItemIdx
+        {
+            Damage0,
+            Damage1,
 
+            Range0,
+            Range1,
+
+            Cooldown0,
+            Cooldown1,
+
+            Weight,
+            Speed,
+
+            MaxCount
+        }
         public enum Tag
         {
             Monster,

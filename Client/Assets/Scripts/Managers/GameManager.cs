@@ -63,7 +63,8 @@ namespace Client
                 _instance._soundManager.Init();
                 _instance._inGameDataManager.Init();
 
-                Sound.Play(Define.BGM.GAMEPLAY);
+                //BGM은 끄기로 합의
+                //Sound.Play(Define.BGM.GAMEPLAY);
             }
         }
 

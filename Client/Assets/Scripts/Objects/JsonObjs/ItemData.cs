@@ -46,6 +46,17 @@ namespace Client
     [Serializable]
     public class ItemData
     {
+
+        public ItemData()
+        {
+            Idx = 0;
+            Name = string.Empty;
+            Kind = Define.ItemKind.MaxCount;
+            Rank = Define.ItemRank.Normal;
+            Stat = 0;
+            Prob = 0;
+        }
+
         /// <summary> 아이템 인덱스 </summary>
         public int Idx;
         /// <summary> 아이템 이름 </summary>

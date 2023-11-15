@@ -45,6 +45,11 @@ namespace Client
         /// <summary> 아이템 정보 텍스트 업데이트 </summary>
         public void ImageUpdate(int idx, ItemData item)
         {
+            if(item.Kind == Define.ItemKind.MaxCount)
+            {
+                return;
+            }
+
             GetImage((int)Images.ItemGrid0 + idx).sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/Grid_{(int)item.Rank}");
             GetImage((int)Images.ItemIcon0 + idx).sprite = GameManager.Resource.Load<Sprite>($"Sprites/Items/{item.Kind}");
             GetImage(idx).gameObject.SetActive(true);
