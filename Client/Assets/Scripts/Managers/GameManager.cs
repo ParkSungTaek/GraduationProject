@@ -104,10 +104,13 @@ namespace Client
 
         private void OnApplicationPause(bool pause)
         {
-            if (true == pause)
+            if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex != (int)Define.Scenes.Login)
             {
-                Network.Disconnect();
-                Network.GoBackToLogin();
+                if (true == pause)
+                {
+                    Network.Disconnect();
+                    Network.GoBackToLogin();
+                }
             }
         }
 
