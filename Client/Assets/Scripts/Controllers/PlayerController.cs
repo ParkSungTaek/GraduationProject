@@ -265,6 +265,8 @@ namespace Client
             {
                 switch(item.Kind)
                 {
+                    case Define.ItemKind.MaxCount:
+                        break;
                     case Define.ItemKind.Cooldown:
                         pivots[(int)item.Kind] = Mathf.Max(0, pivots[(int)item.Kind] - item.Stat);
                         break;
