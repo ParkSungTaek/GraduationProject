@@ -19,25 +19,21 @@
     - 원활한 소통과 높은 퀄리티를 위하여 모든 설계를 완료한 뒤 구현 하였습니다.
 
 - 담당 역할
-    - [**Server**](https://www.notion.so/Server-73a73ad4976644cf930fe40ba4ae99cf?pvs=21)
-        - [**Server Listener**](https://www.notion.so/Server-Listener-9d8f0169d18e413685e3f65a3bfd7065?pvs=21)
-        - [JobQueue](https://www.notion.so/JobQueue-44f212f6f6334906ad8c9d96a7400477?pvs=21)
-        - [**Packet 송수신**](https://www.notion.so/Packet-68b2fe5f6a274a1a9a4cfac22686f5c3?pvs=21)
-    - [**Client**](https://www.notion.so/Client-aa32cb1e5cb64bdb98d85e7c2158ed03?pvs=21)
-        - [Manger](https://www.notion.so/Manger-a66123265c32456199838d7daac68d1e?pvs=21)
-        - [Entity](https://www.notion.so/Entity-bf65e65ecdc94365a2b95525b53e84b9?pvs=21)
-        - [**Json**](https://www.notion.so/Json-85def84d00de4b70a983bab33d0a562d?pvs=21)
+    - [**Server**](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#73a73ad4976644cf930fe40ba4ae99cf)
+        - [**Server Listener**](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#9d8f0169d18e413685e3f65a3bfd7065)
+        - [JobQueue](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#44f212f6f6334906ad8c9d96a7400477)
+        - [**Packet 송수신**](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#68b2fe5f6a274a1a9a4cfac22686f5c3)
+    - [**Client**](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#aa32cb1e5cb64bdb98d85e7c2158ed03)
+        - [Manger](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#a66123265c32456199838d7daac68d1e)
+        - [Entity](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#bf65e65ecdc94365a2b95525b53e84b9)
+        - [**Json**](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#85def84d00de4b70a983bab33d0a562d)
 
 ### **Server**
 
-- [**Server**](https://www.notion.so/Server-73a73ad4976644cf930fe40ba4ae99cf?pvs=21)
-    - [**Server Listener**](https://www.notion.so/Server-Listener-9d8f0169d18e413685e3f65a3bfd7065?pvs=21)
-    - [JobQueue](https://www.notion.so/JobQueue-44f212f6f6334906ad8c9d96a7400477?pvs=21)
-    - [**Packet 송수신**](https://www.notion.so/Packet-68b2fe5f6a274a1a9a4cfac22686f5c3?pvs=21)
 
 **Server Listener**
 
-![졸프-서버구조.drawio (2).png](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e1915bbd-e6de-4ef7-a076-6ab81001f6c0/%EC%A1%B8%ED%94%84-%EC%84%9C%EB%B2%84%EA%B5%AC%EC%A1%B0.drawio_(2).png)
+![졸프-서버구조.drawio (2).png](https://www.notion.so/6d24e70871254eb8a9e825f7ba365cec?pvs=4#80b1c8095fbc43bfae22cd2ad7339d4e)
 
 **Server 전체 UML**
 
@@ -87,10 +83,6 @@ JobQueue는 작업을 큐에 추가(Push)하거나, 가장 앞선 작업을 제�
 
 ### **Client**
 
-- [**Client**](https://www.notion.so/Client-aa32cb1e5cb64bdb98d85e7c2158ed03?pvs=21)
-    - [Manger](https://www.notion.so/Manger-a66123265c32456199838d7daac68d1e?pvs=21)
-    - [Entity](https://www.notion.so/Entity-bf65e65ecdc94365a2b95525b53e84b9?pvs=21)
-    - [**Json**](https://www.notion.so/Json-85def84d00de4b70a983bab33d0a562d?pvs=21)
 
 **Client Class Diagram**
 
