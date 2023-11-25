@@ -32,7 +32,7 @@ namespace Client
                     SendAnimationInfo(direction, false);
                     GameManager.Sound.Play(Define.SFX.WarriorAttack);
 
-                    GenerateRangedArea(_itemStat.AttackRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
+                    GenerateRangedArea(_itemStat.AttackRange, mon.CorrectPosition).SetDamage(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
                 }
             }
@@ -55,7 +55,7 @@ namespace Client
                     SendAnimationInfo(direction, true);
                     GameManager.Sound.Play(Define.SFX.WarriorAttack);
 
-                    GenerateRangedArea(_itemStat.SkillRange, mon.transform.position).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
+                    GenerateRangedArea(_itemStat.SkillRange, mon.CorrectPosition).SetDamage(Mathf.RoundToInt(_itemStat.SkillRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
                 }
             }
