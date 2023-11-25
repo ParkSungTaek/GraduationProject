@@ -257,12 +257,14 @@ namespace Client
         /// <summary> 아이템 및 버프 상태에 따른 스텟 계산 </summary>
         public void StatUpdate()
         {
-            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0 };
+            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0 };
 
             //아이템 효과 추가
             List<ItemData> items = GameManager.InGameData.MyInventory;
             foreach(ItemData item in items)
             {
+                if(null == item) continue;
+
                 switch(item.Kind)
                 {
                     case Define.ItemKind.MaxCount:
@@ -290,19 +292,18 @@ namespace Client
             _itemStat.AttackCool = basicStat.AttackCool * pivots[(int)Define.ItemKind.Cooldown];
             _itemStat.SkillCool = basicStat.SkillCool * pivots[(int)Define.ItemKind.Cooldown];
 
-            gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
             _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
-
-            Debug.Log($"stat update : {_itemStat}");
         }
         
         /// <summary> 패킷으로 받은 아이템 정보 스텟 계산 </summary>
         public void StatUpdate(List<ItemData> items)
         {
-            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0, 0 };
+            float[] pivots = new float[(int)Define.ItemKind.MaxCount] { 1, 1, 1, 0 };
 
             foreach (ItemData item in items)
             {
+                if (null == item) continue;
+
                 switch (item.Kind)
                 {
                     case Define.ItemKind.Cooldown:
@@ -328,10 +329,7 @@ namespace Client
             _itemStat.AttackCool = basicStat.AttackCool * pivots[(int)Define.ItemKind.Cooldown];
             _itemStat.SkillCool = basicStat.SkillCool * pivots[(int)Define.ItemKind.Cooldown];
 
-            gameObject.GetComponent<Rigidbody2D>().mass = _itemStat.Weight = basicStat.Weight + pivots[(int)Define.ItemKind.Weight];
             _itemStat.Speed = basicStat.Speed + pivots[(int)Define.ItemKind.Speed];
-
-            Debug.Log($"stat update : {_itemStat}");
         }
         #endregion StatUpdate
     }

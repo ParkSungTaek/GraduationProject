@@ -65,7 +65,6 @@ namespace Client
             Damage,
             Range,
             Cooldown,
-            Weight,
             Speed,
             MaxCount
         }

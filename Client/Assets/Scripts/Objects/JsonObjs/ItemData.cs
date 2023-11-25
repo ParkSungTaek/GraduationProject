@@ -21,7 +21,6 @@ namespace Client
         {
             //확률 계산
             float randValue = UnityEngine.Random.Range(0, 1f);
-            UnityEngine.Debug.Log("rand : " + randValue.ToString());
 
             //확률 누적합
             float accumulateProb = 0;

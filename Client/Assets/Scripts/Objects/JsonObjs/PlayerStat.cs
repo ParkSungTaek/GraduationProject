@@ -34,12 +34,11 @@ namespace Client
         public float AttackCool;
         public float SkillCool;
 
-        public float Weight;
         public float Speed;
 
         public override string ToString()
         {
-            return $"Attack : {AttackRatio}, {AttackRange}, {AttackCool} / Skill : {SkillRatio}, {SkillRange}, {SkillCool} / W : {Weight} / S : {Speed}";
+            return $"Attack : {AttackRatio}, {AttackRange}, {AttackCool} / Skill : {SkillRatio}, {SkillRange}, {SkillCool} / S : {Speed}";
         }
     }
 }
