@@ -90,7 +90,7 @@ namespace Client
 
 
         /// <summary> 플레이어들의 아이템 정보 </summary>
-        SortedDictionary<int, List<ItemData>> _inventorys { get; set; } = new SortedDictionary<int, List<ItemData>>();
+        Dictionary<int, List<ItemData>> _inventorys { get; set; } = new Dictionary<int, List<ItemData>>();
         /// <summary> 내 플레이어 아이템 정보 </summary>
         public List<ItemData> MyInventory { get => _inventorys[GameManager.Room.MyId]; }
 
@@ -141,16 +141,7 @@ namespace Client
 
                 if (newItem.Rank >= Define.ItemRank.Epic)
                 {
-                    int order = 1;
-                    foreach (var pair in _inventorys)
-                    {
-                        if (pair.Key == GameManager.Room.MyId)
-                        {
-                            HighItemLogAction?.Invoke(order, newItem);
-                            break;
-                        }
-                        order++;
-                    }
+                    HighItemLogAction?.Invoke(MyPlayer.Order, newItem);
                 }
             }
 
@@ -196,19 +187,10 @@ namespace Client
 
                 if (_playerControllers.TryGetValue(playerId, out player))
                     player.StatUpdate(inventory);
-            }
 
-            if (_itemData[itemIdx].Rank >= Define.ItemRank.Epic)
-            {
-                int order = 1;
-                foreach (var pair in _inventorys)
+                if (_itemData[itemIdx].Rank >= Define.ItemRank.Epic)
                 {
-                    if (pair.Key == playerId)
-                    {
-                        HighItemLogAction?.Invoke(order, _itemData[itemIdx]);
-                        break;
-                    }
-                    order++;
+                    HighItemLogAction?.Invoke(player.Order, _itemData[itemIdx]);
                 }
             }
         }
@@ -351,6 +333,7 @@ namespace Client
             _inventorys.Clear();
 
             int xPos = -3;
+            int order = 1;
 
             foreach (var player in players)
             {
@@ -379,6 +362,7 @@ namespace Client
 
                 playerGO.transform.position = 2 * Vector3.up + Vector3.right * xPos;
                 xPos += 2;
+                playerController.Order = order++;
 
                 _playerControllers.Add(player.Key, playerController);
 
@@ -396,6 +380,9 @@ namespace Client
                     camera.transform.parent = playerController.transform;
                     camera.transform.localPosition = new Vector3(0, 1, -10);
                 }
+
+                playerController.Indicator = GameManager.Resource.Instantiate<PlayerIndicator>("UI/PlayerIndicator", MonsterSpawn.MonsterHPCanvas);
+                playerController.Indicator.Set(playerController.Order, playerController.MyPlayer);
             }
         }
 #endregion GameStart_Generate
@@ -409,6 +396,11 @@ namespace Client
 
             if (true == _playerControllers.TryGetValue(playerId, out leavePlayer))
             {
+                if (null != leavePlayer.Indicator)
+                {
+                    GameObject.Destroy(leavePlayer.Indicator.gameObject);
+                }
+
                 GameObject.Destroy(leavePlayer.gameObject);
                 PlayerUpdate?.Invoke(playerId);
             }

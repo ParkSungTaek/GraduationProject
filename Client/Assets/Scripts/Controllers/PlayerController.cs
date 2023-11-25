@@ -19,6 +19,11 @@ namespace Client
         /// <summary> 내 플레이어 여부 </summary>
         public bool MyPlayer { get; set; }
 
+        /// <summary> 플레이어 순서(1p, 2p, 3p, 4p) </summary>
+        public int Order { get; set; }
+
+        public PlayerIndicator Indicator;
+
         /// <summary> 내 직업 </summary>
         public Define.Charcter MyClass { get; protected set; }
 
@@ -63,6 +68,11 @@ namespace Client
                 Move(_targetPos);
 
             SyncMove();
+
+            if (null != Indicator)
+            {
+                Indicator.transform.position = Camera.main.WorldToScreenPoint(transform.position + Vector3.up * 3);
+            }
         }
 
         /// <summary> 패킷으로 받은 목표 지점 </summary>

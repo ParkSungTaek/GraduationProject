@@ -310,13 +310,13 @@ namespace Client
 
         private float _highItemLogLifeTime = 0;
         private Coroutine _highItemLogCoroutine = null;
-        private void ShowHighItemLog(int playerId, ItemData item)
+        private void ShowHighItemLog(int playerOrder, ItemData item)
         {
             _highItemLogLifeTime = 3;
 
             stringBuilder.Append("플레이어 ");
-            stringBuilder.Append(playerId);
-            if (playerId % 2 == 1)
+            stringBuilder.Append(playerOrder);
+            if (playerOrder % 2 == 1)
             {
                 stringBuilder.Append("이 ");
             }
