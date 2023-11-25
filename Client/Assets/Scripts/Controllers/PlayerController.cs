@@ -109,12 +109,20 @@ namespace Client
             _state = PlayerState.Idle;
             _char4D?.AnimationManager.SetState(CharacterState.Idle);
         }
-        
+
+        private int delay = 0;
         /// <summary> 플레이어 이동 동기화 패킷 전송 </summary>
         void SyncMove()
         {
             if (!MyPlayer)
                 return;
+
+            delay++;
+            if (delay < 5)
+            {
+                return;
+            }
+            delay = 0;
 
             CTS_PlayerMove movePacket = new CTS_PlayerMove();
             movePacket.posX = transform.position.x;
