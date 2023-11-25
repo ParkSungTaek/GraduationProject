@@ -56,7 +56,6 @@ namespace Client
         GameObject InstantiateMonster(Define.MonsterName monster,Transform SpawnPoint)
         {
             string monsterStr = Enum.GetName(typeof(Define.MonsterName), monster);
-            Debug.Log("monsterStr:  " + monsterStr);
             return GameManager.Resource.Instantiate($"Monster/{monsterStr}", SpawnPoint);
         }
 

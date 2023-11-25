@@ -442,6 +442,7 @@ namespace Client
             
             GameManager.Network.Push(() =>
             {
+				GameManager.InGameData.Wave = pkt.typeNum + 1;
                 GameManager.InGameData.MonsterSpawn.CreateMonster(pkt.createIDX, pkt.typeNum, pkt.ID);
 				
             });
@@ -458,7 +459,11 @@ namespace Client
 
             GameManager.Network.Push(() =>
             {
-				GameManager.InGameData.MonsterSpawn.Monsters[pkt.ID].HPUpdate((int)pkt.updateHP);
+				MonsterController mon = null;
+				if (true == GameManager.InGameData.MonsterSpawn.Monsters.TryGetValue(pkt.ID, out mon))
+				{
+					mon.HPUpdate((int)pkt.updateHP);
+				}
             });
         }
         public static void STC_TowerUpdateHandler(PacketSession session, IPacket packet)
@@ -469,7 +474,7 @@ namespace Client
 
             GameManager.Network.Push(() =>
             {
-                GameManager.InGameData.Tower.HPUpdate((int)pkt.updateHP);
+                GameManager.InGameData.Tower?.HPUpdate((int)pkt.updateHP);
             });
         }
         #endregion Ingame

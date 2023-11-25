@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
+using System.Collections;
 using System.Collections.Generic;
 using Assets.HeroEditor4D.Common.Scripts.Common;
 
@@ -33,7 +34,10 @@ namespace Client
         enum Texts 
         { 
             MoneyTxt,
-            ScoreTxt
+            ScoreTxt,
+            HighItemLogTxt,
+            MyItemLogTxt,
+            WaveTxt
         }
 
         public override void Init()
@@ -48,9 +52,14 @@ namespace Client
 
             JoystickBind();
             ButtonBind();
-            GameManager.InGameData.OnMoneyChanged += TextUpdate;
-
             ItemPanelInit();
+
+            GameManager.InGameData.OnMoneyChanged += TextUpdate;
+            GameManager.InGameData.ItemInfoUpdate += ItemInfoUpdate;
+            GameManager.InGameData.PlayerUpdate += OnLeavePlayer;
+            GameManager.InGameData.HighItemLogAction += ShowHighItemLog;
+            GameManager.InGameData.MyItemLogAction += ShowMyItemLog;
+            GameManager.InGameData.WaveUpdate += WaveTextUpdate;
         }
 
         #region ItemInfo
@@ -95,9 +104,6 @@ namespace Client
 
             for (; panel <= ItemPanels.ItemPanel4; panel++)
                 _itemPanelList[(int)panel].SetActive(false);
-
-            GameManager.InGameData.ItemInfoUpdate += ItemInfoUpdate;
-            GameManager.InGameData.PlayerUpdate += OnLeavePlayer;
         }
         
         /// <summary> 해당 플레이어의 아이템 정보 업데이트 </summary>
@@ -221,15 +227,8 @@ namespace Client
         /// </summary>
         void Btn_GetItem(PointerEventData evt)
         {
-            //GetButton((int)Buttons.ItemBtn).gameObject.SetActive(false);
-            //GameManager.UI.ShowPopUpUI<UI_GetItem>().OnClose = OnCloseGetItem;
-
             if (GameManager.InGameData.CanBuyItem)
-                GameManager.InGameData.AddRandomItem(ItemTxtUpdate);
-        }
-        void ItemTxtUpdate(int idx)
-        {
-            //GetText(idx).text = GameManager.InGameData.MyInventory[idx].Name;
+                GameManager.InGameData.AddRandomItem();
         }
         void Btn_Quit(PointerEventData evt)
         {
@@ -254,6 +253,110 @@ namespace Client
         {
             GetText((int)Texts.MoneyTxt).text = $"Money: {GameManager.InGameData.Money}";
             GetText((int)Texts.ScoreTxt).text = $"Score: {GameManager.InGameData.Score}";
+        }
+
+        private void WaveTextUpdate(int wave)
+        {
+            GetText((int)Texts.WaveTxt).text = $"Wave {wave}";
+        }
+
+        private float _myItemLogLifeTime = 0;
+        private Coroutine _myItemLogCoroutine = null;
+        private System.Text.StringBuilder stringBuilder = new System.Text.StringBuilder();
+        private void ShowMyItemLog(ItemData item, bool isAdded)
+        {
+            _myItemLogLifeTime = 3;
+            
+            stringBuilder.Append(item.Name);
+
+            if (item.Kind == Define.ItemKind.Cooldown)
+            {
+                stringBuilder.Append("을 뽑았습니다.");
+            }
+            else
+            {
+                stringBuilder.Append("를 뽑았습니다.");
+            }
+
+            if (false == isAdded)
+            {
+                stringBuilder.Append("(자동으로 버립니다)");
+            }
+            var textObject = GetText((int)Texts.MyItemLogTxt);
+            textObject.text = stringBuilder.ToString();
+            stringBuilder.Clear();
+
+            textObject.gameObject.SetActive(true);
+
+            if (null == _myItemLogCoroutine)
+            {
+                _myItemLogCoroutine = StartCoroutine(MyItemLogCoroutine());
+            }
+        }
+
+        private WaitForSeconds wait = new WaitForSeconds(0.2f);
+
+        private IEnumerator MyItemLogCoroutine()
+        {
+            while (_myItemLogLifeTime > 0)
+            {
+                _myItemLogLifeTime -= 0.2f;
+                yield return wait;
+            }
+
+            GetText((int)Texts.MyItemLogTxt).gameObject.SetActive(false);
+            _myItemLogCoroutine = null;
+        }
+
+        private float _highItemLogLifeTime = 0;
+        private Coroutine _highItemLogCoroutine = null;
+        private void ShowHighItemLog(int playerId, ItemData item)
+        {
+            _highItemLogLifeTime = 3;
+
+            stringBuilder.Append("플레이어 ");
+            stringBuilder.Append(playerId);
+            if (playerId % 2 == 1)
+            {
+                stringBuilder.Append("이 ");
+            }
+            else
+            {
+                stringBuilder.Append("가 ");
+            }
+
+            stringBuilder.Append(item.Name);
+            if (item.Kind == Define.ItemKind.Cooldown)
+            {
+                stringBuilder.Append("을 뽑았습니다.");
+            }
+            else
+            {
+                stringBuilder.Append("를 뽑았습니다.");
+            }
+
+            var textObject = GetText((int)Texts.HighItemLogTxt);
+            textObject.text = stringBuilder.ToString();
+            stringBuilder.Clear();
+
+            textObject.gameObject.SetActive(true);
+
+            if (null == _highItemLogCoroutine)
+            {
+                _highItemLogCoroutine = StartCoroutine(HighItemLogCoroutine());
+            }
+        }
+
+        private IEnumerator HighItemLogCoroutine()
+        {
+            while (_highItemLogLifeTime > 0)
+            {
+                _highItemLogLifeTime -= 0.2f;
+                yield return wait;
+            }
+
+            GetText((int)Texts.HighItemLogTxt).gameObject.SetActive(false);
+            _highItemLogCoroutine = null;
         }
         #endregion
     }

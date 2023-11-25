@@ -36,8 +36,6 @@ namespace Client
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
                 }
             }
-            else
-                Debug.Log("attack cool");
         }
         /// <summary> 워리어 스킬 : 근접, 범위 </summary>
         public override void IsSkill()
@@ -61,8 +59,6 @@ namespace Client
                     GameManager.InGameData.Cooldown.SetSkillCool(stat.SkillCool);
                 }
             }
-            else
-                Debug.Log("skill cool");
         }
 
         /// <summary> 패킷으로 받은 애니메이션 동기화 </summary>

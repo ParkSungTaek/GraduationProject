@@ -50,7 +50,6 @@ namespace Client
             _animator.SetInteger("State", 3);
             _monsterState = Define.MonsterState.Idle;
 
-            //Debug.Log(mystat.Name);
             MaxHP = mystat.MaxHP;
             AttackDMG = mystat.AttackDMG;
             MoveSpeed = mystat.MoveSpeed;

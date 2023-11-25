@@ -6,15 +6,10 @@
 최근 수정 사항 : 플레이어 퇴장 처리
 ******/
 
-//#define Oldver
-#define Newver
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Client
 {
@@ -52,7 +47,20 @@ namespace Client
         public int ScoreRewards { get { return _scoreRewards; } }
 
         int _wave = 0;
-        public int Wave { get { return _wave; } set { _wave = value; } }
+        public int Wave
+        {
+            get => _wave;
+            set
+            {
+                if (_wave != value)
+                {
+                    _wave = value;
+                    WaveUpdate?.Invoke(_wave);
+                }
+            }
+        }
+
+        public Action<int> WaveUpdate { get; set; } = null;
 
         int _score = 0;
         public int Score
@@ -75,8 +83,6 @@ namespace Client
         /// <summary> 모든 아이템 정보 </summary>
         ItemDataHandler _itemData;
 
-        /// <summary> 아이템 최대 보유 가능 수 </summary>
-        public readonly int MAXITEMCOUNT = 8;
         /// <summary> 아이템 구매에 필요한 비용 </summary>
         public int ItemCost { get; set; } = 10;
         /// <summary> 아이템 구매 가능 여부 반환 </summary>
@@ -84,114 +90,71 @@ namespace Client
 
 
         /// <summary> 플레이어들의 아이템 정보 </summary>
-        Dictionary<int, List<ItemData>> _inventorys { get; set; } = new Dictionary<int, List<ItemData>>();
+        SortedDictionary<int, List<ItemData>> _inventorys { get; set; } = new SortedDictionary<int, List<ItemData>>();
         /// <summary> 내 플레이어 아이템 정보 </summary>
         public List<ItemData> MyInventory { get => _inventorys[GameManager.Room.MyId]; }
 
         public Action<int, int, ItemData> ItemInfoUpdate { get; set; } = null;
+        public Action<ItemData, bool> MyItemLogAction { get; set; } = null;
+        public Action<int, ItemData> HighItemLogAction { get; set; } = null;
 
         public Action<int> PlayerUpdate { get; set; } = null;
 
         /// <summary> 작성자 : 이우열 <br/>
         /// 새로운 아이템 구매
         /// </summary>
-        public void AddRandomItem(Action<int> uiImageUpdate) 
+        public void AddRandomItem() 
         {
             Money -= ItemCost;
 
-#if Oldver
-            //빈 자리 있음 -> 새로운 아이템 만들어 채우기
-            if (MyInventory.Count < MAXITEMCOUNT)
-            {
-
-                MyInventory.Add(_itemData.GetRandomItem());
-                GameManager.InGameData.MyPlayer.StatUpdate();
-                uiImageUpdate.Invoke(MyInventory.Count - 1);
-
-                SendItemInfo(MyInventory.Count - 1, MyInventory[MyInventory.Count - 1].Idx);
-                ItemInfoUpdate?.Invoke(GameManager.Room.MyId, MyInventory.Count - 1, MyInventory[MyInventory.Count - 1]);
-            }
-            //빈 자리 없음 -> 버리기 UI 띄우기
-            else
-            {
-                UI_DropItem ui_DropItem = GameManager.UI.ShowPopUpUI<UI_DropItem>();
-                ui_DropItem.ItemUpdate(_itemData.GetRandomItem(), uiImageUpdate);
-            }
-
-#elif Newver
             ItemData newItem = _itemData.GetRandomItem();
+            int position = -1;
 
-            switch (newItem.Kind)
+            //빈 자리 있음 -> 새로운 아이템 만들어 채우기
+            if (MyInventory[(int)newItem.Kind * 2] == null || MyInventory[(int)newItem.Kind * 2 + 1] == null)
             {
-                
-                case Define.ItemKind.Weight:
-                    if (MyInventory[(int)Define.ItemIdx.Weight] == null)
-                    {
-                        ReplaceItem((int)Define.ItemIdx.Weight, newItem);
-                        uiImageUpdate.Invoke((int)Define.ItemIdx.Weight);
-                    }
-                    //빈 자리 없음 -> 판단 후 교체
-                    else if (MyInventory[(int)Define.ItemIdx.Weight].Rank <= newItem.Rank)
-                    {
-                        ReplaceItem((int)Define.ItemIdx.Weight, newItem);
-                        uiImageUpdate.Invoke((int)Define.ItemIdx.Weight);
-                    }
-                    break;
-                case Define.ItemKind.Speed:
-                    if (MyInventory[(int)Define.ItemIdx.Speed] == null)
-                    {
-                        ReplaceItem((int)Define.ItemIdx.Speed, newItem);
-                        uiImageUpdate.Invoke((int)Define.ItemIdx.Speed);
-                    }
-                    //빈 자리 없음 -> 판단 후 교체
-                    else if (MyInventory[(int)Define.ItemIdx.Speed].Rank <= newItem.Rank)
-                    {
-                        ReplaceItem((int)Define.ItemIdx.Speed, newItem);
-                        uiImageUpdate.Invoke((int)Define.ItemIdx.Speed);
-
-                    }
-                    break;
-
-                default:
-
-                    //빈 자리 있음 -> 새로운 아이템 만들어 채우기
-                    if (MyInventory[(int)newItem.Kind * 2] == null || MyInventory[(int)newItem.Kind * 2 + 1] == null)
-                    {
-                        if (MyInventory[(int)newItem.Kind * 2] == null)
-                        {
-                            ReplaceItem((int)newItem.Kind * 2, newItem);
-                            uiImageUpdate.Invoke((int)newItem.Kind * 2);
-
-                        }
-                        else
-                        {
-                            ReplaceItem((int)newItem.Kind * 2 + 1, newItem);
-                            uiImageUpdate.Invoke((int)newItem.Kind * 2 + 1);
-
-                        }
-                    }
-                    //빈 자리 없음 -> 판단 후 교체
-                    else if (MyInventory[(int)newItem.Kind * 2].Rank <= newItem.Rank || MyInventory[(int)newItem.Kind * 2 + 1].Rank <= newItem.Rank)
-                    {
-                        if (MyInventory[(int)newItem.Kind * 2].Rank < MyInventory[(int)newItem.Kind * 2 + 1].Rank)
-                        {
-                            ReplaceItem((int)newItem.Kind * 2, newItem);
-                            uiImageUpdate.Invoke((int)newItem.Kind * 2);
-
-                        }
-                        else
-                        {
-                            ReplaceItem((int)newItem.Kind * 2 + 1, newItem);
-                            uiImageUpdate.Invoke((int)newItem.Kind * 2 + 1);
-
-                        }
-                    }
-                    break;
+                if (MyInventory[(int)newItem.Kind * 2] == null)
+                {
+                    position = (int)newItem.Kind * 2;
+                }
+                else
+                {
+                    position = (int)newItem.Kind * 2 + 1;
+                }
             }
-            
-            Debug.Log($"Item {newItem.Kind}, Rank {newItem.Rank}");
-            GameManager.InGameData.MyPlayer.StatUpdate();
-#endif
+            //빈 자리 없음 -> 판단 후 교체
+            else if (MyInventory[(int)newItem.Kind * 2].Rank < newItem.Rank || MyInventory[(int)newItem.Kind * 2 + 1].Rank < newItem.Rank)
+            {
+                if (MyInventory[(int)newItem.Kind * 2].Rank < MyInventory[(int)newItem.Kind * 2 + 1].Rank)
+                {
+                    position = (int)newItem.Kind * 2;
+                }
+                else
+                {
+                    position = (int)newItem.Kind * 2 + 1;
+                }
+            }
+
+            if (position >= 0)
+            {
+                ReplaceItem(position, newItem);
+
+                if (newItem.Rank >= Define.ItemRank.Epic)
+                {
+                    int order = 1;
+                    foreach (var pair in _inventorys)
+                    {
+                        if (pair.Key == GameManager.Room.MyId)
+                        {
+                            HighItemLogAction?.Invoke(order, newItem);
+                            break;
+                        }
+                        order++;
+                    }
+                }
+            }
+
+            MyItemLogAction?.Invoke(newItem, position >= 0);
         }
         /// <summary> 작성자 : 이우열 <br/>
         /// 보유 중인 아이템 버리기 
@@ -233,6 +196,20 @@ namespace Client
 
                 if (_playerControllers.TryGetValue(playerId, out player))
                     player.StatUpdate(inventory);
+            }
+
+            if (_itemData[itemIdx].Rank >= Define.ItemRank.Epic)
+            {
+                int order = 1;
+                foreach (var pair in _inventorys)
+                {
+                    if (pair.Key == playerId)
+                    {
+                        HighItemLogAction?.Invoke(order, _itemData[itemIdx]);
+                        break;
+                    }
+                    order++;
+                }
             }
         }
 #endregion
@@ -405,16 +382,12 @@ namespace Client
 
                 _playerControllers.Add(player.Key, playerController);
 
-#if Oldver
-                _inventorys.Add(player.Key, new List<ItemData>());
-#elif Newver
-                _inventorys.Add(player.Key, new List<ItemData>());
-
-                for (int i=0;i < 8; i++)
+                var inventory = new List<ItemData>();
+                for (int i = 0; i < (int)Define.ItemKind.MaxCount * 2; i++)
                 {
-                    _inventorys[player.Key].Add(new ItemData());
+                    inventory.Add(null);
                 }
-#endif
+                _inventorys.Add(player.Key, inventory);
 
                 playerController.MyPlayer = player.Key == GameManager.Room.MyId;
                 if (playerController.MyPlayer)
@@ -493,12 +466,14 @@ namespace Client
         {
             _money = _score = _wave = 0;
             _money = 1000;
-            _score = 0;
 
             OnMoneyChanged = null;
             OnScoreChanged = null;
             ItemInfoUpdate = null;
+            MyItemLogAction = null;
+            HighItemLogAction = null;
             PlayerUpdate = null;
+            WaveUpdate = null;
 
             _playerControllers.Clear();
             Cooldown.Clear();

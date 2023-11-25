@@ -36,12 +36,7 @@ namespace Client
                     mon.BeAttacked(Mathf.RoundToInt(_itemStat.AttackRatio * AttackDMG));
                     GameManager.InGameData.Cooldown.SetAttackCool(_itemStat.AttackCool);
                 }
-                else
-                    Debug.Log("no near mon");
             }
-            else
-                Debug.Log("attack cool");
-
         }
 
         /// <summary>
@@ -67,8 +62,6 @@ namespace Client
 
                 GameManager.InGameData.Cooldown.SetSkillCool(_itemStat.SkillCool);
             }
-            else
-                Debug.Log("skill cool");
         }
 
         /// <summary> 패킷으로 받은 애니메이션 동기화 </summary>
