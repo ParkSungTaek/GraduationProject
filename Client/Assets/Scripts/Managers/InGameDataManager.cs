@@ -457,7 +457,7 @@ namespace Client
         public void Clear()
         {
             _money = _score = _wave = 0;
-            _money = 1000;
+            _money = 0;
 
             OnMoneyChanged = null;
             OnScoreChanged = null;
