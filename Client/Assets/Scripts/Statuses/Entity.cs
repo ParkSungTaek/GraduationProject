@@ -41,21 +41,7 @@ namespace Client
 
         public virtual void BeAttacked(int DMG)
         {
-            /*
-            _nowhp -= DMG;
-            if (_nowhp <= 0)
-            {
-                Dead();
-            }
-            if (_hpBarSlider != null)
-            {
-                _hpBarSlider.value = (float)Nowhp / (float)MaxHP;
-            }
-            else
-            {
-                Debug.Log($"{name} Don't have HpBar!");
-            }
-            */
+            
         }
 
 
